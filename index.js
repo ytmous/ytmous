@@ -20,10 +20,15 @@ app.get("/search", async (req, res) => {
 });
 
 app.get("/watch/:id", async (req, res) => {
-	res.render("watch.ejs", {
-		id: req.params.id,
-		info: await ytdl.getInfo("https://www.youtube.com/watch?v=" + req.params.id)
-	});
+	try {
+		res.render("watch.ejs", {
+			id: req.params.id,
+			info: await ytdl.getInfo("https://www.youtube.com/watch?v=" + req.params.id)
+		});
+	} catch (error) {
+		console.error(error);
+		res.redirect('/');
+	}
 });
 
 app.get("/stream/:id", (req, res) => {
@@ -41,3 +46,5 @@ app.get("/stream/:id", (req, res) => {
 const listener = app.listen(process.env.PORT || 3000, () => {
 	console.log("Your app is now listening on port", listener.address().port);
 });
+
+process.on("unhandledRejection", console.error);

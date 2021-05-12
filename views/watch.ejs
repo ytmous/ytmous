@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= info.videoDetails.title %> - ytmous</title>
+  <meta name="description" content="A anonymous Youtube that does not spy on you.">
+  <meta property="og:title" content="<%= info.videoDetails.title %> - ytmous">
+  <meta property="og:type" content="video">
+  <meta property="twitter:player" content="/watch/<%= id %>">
+  <meta name="twitter:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url %>">
+  <meta property="og:description" content="A anonymous Youtube that does not spy on you.">
+  <meta property="og:site_name" content="ytmous | Watch Anonymously!">
+  <meta property="og:image" content="/banner.png">
+  <meta name="theme-color" content="#ff8181">
+  <link rel="shortcut icon" href="/logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="author" content="ytmous | Watch Anonymously!">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <script src="/js/jquery-3.2.1.slim.min.js"></script>
+  <script src="/js/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-light bg-light" aria-label="We hope you enjoy it!">
+    <div class="container-fluid">
+      <a href="/" class="navbar-brand">
+        <img width="30" src="/logo.png"> ytmous
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarsExample01">
+        <ul class="navbar-nav me-auto mb-2">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Github</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Community</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdown01">
+              <li><a class="dropdown-item" href="https://dsc.gg/yonle">Discord Server</a></li>
+              <li><a class="dropdown-item" href="https://t.me/yonlecoder">Telegram Group</a></li>
+              <li><a class="dropdown-item" href="https://guilded.gg/yonlecoder">Guilded Server</a></li>
+              <li><a class="dropdown-item" href="https://join.slack.com/t/yonle/shared_invite/zt-p5lauqvp-pMXb7RMqvmtcDf~UZcIHsA">Slack</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form action="/search">
+          <input name="q" class="form-control" type="text" placeholder="Search" aria-label="Search">
+        </form>
+      </div>
+    </div>
+  </nav>
+  <div class="card">
+    <video autoplay controls src="/stream/<%= id %>" width="100%"></video>
+    <div class="card-header">
+      <small class="text-muted"><%= info.videoDetails.author.name %></small>
+    </div>
+    <div class="card-body">
+      <h5><%= info.videoDetails.title %></h5>
+      <p><%= info.videoDetails.description %></p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted"><%= info.videoDetails.uploadDate %></small>
+    </div>
+  </div><br>
+  <!-- Related Video Query -->
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <% info.related_videos.forEach(video => { %>
+    <div class="col">
+      <div class="card h-100">
+        <div class="card-header">
+          <small class="text-muted"><%= video.author.name %></small>
+        </div>
+        <a href="/watch/<%= video.id %>"><img src="<%= video.thumbnails[video.thumbnails.length-1].url %>" class="card-img-top" alt="<%= video.title %>"></a>
+        <div class="card-body">
+          <h5 class="card-title"><%= video.title %></h5>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted"><%= video.published %></small>
+        </div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</body>
+
+</html>

@@ -1,6 +1,6 @@
-<div align="center".
-	<h1>ytmous</h1>
-	A anonymous Youtube that does not spy on you.
+<div align="center">
+	<img src="https://github.com/Yonle/ytmous/blob/master/public/banner.png?raw=true">
+	<p>A anonymous Youtube that does not spy on you.</p>
 </div>
 
 ## Feature

@@ -5,14 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= info.videoDetails.title %> - ytmous</title>
-  <meta name="description" content="A anonymous Youtube that does not spy on you.">
+  <meta name="description" content="<%= info.videoDetails.description %>">
   <meta property="og:title" content="<%= info.videoDetails.title %> - ytmous">
   <meta property="og:type" content="video">
   <meta property="twitter:player" content="/watch/<%= id %>">
   <meta name="twitter:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url %>">
-  <meta property="og:description" content="A anonymous Youtube that does not spy on you.">
+  <meta property="og:description" content="<%= info.videoDetails.description %>">
   <meta property="og:site_name" content="ytmous | Watch Anonymously!">
-  <meta property="og:image" content="/banner.png">
+  <meta property="og:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url %>">
   <meta name="theme-color" content="#ff8181">
   <link rel="shortcut icon" href="/logo.png">
   <meta name="twitter:card" content="summary_large_image">

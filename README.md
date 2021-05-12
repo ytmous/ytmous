@@ -9,9 +9,9 @@
 - Download Youtube Videos while you watch them
 
 ## Screenshots
-[homepage](https://github.com/Yonle/ytmous/blob/master/Screenshots/homepage.png?raw=true)
-[search](https://github.com/Yonle/ytmous/blob/master/Screenshots/search.png?raw=true)
-[watch](https://github.com/Yonle/ytmous/blob/master/Screenshots/watch.png?raw=true)
+![homepage](https://github.com/Yonle/ytmous/blob/master/Screenshots/homepage.png?raw=true)
+![search](https://github.com/Yonle/ytmous/blob/master/Screenshots/search.png?raw=true)
+![watch](https://github.com/Yonle/ytmous/blob/master/Screenshots/watch.png?raw=true)
 
 ## Installation
 ```bash

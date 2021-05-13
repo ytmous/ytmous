@@ -4,8 +4,8 @@ const ytpl = require("ytpl");
 module.exports.search = (str, page) => {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let res = await ytsr(str, { limit: Infinity, pages: Infinity });
-			resolve(parse(res.items.filter(c => c.type == "video")));
+			let res = await ytsr(str);
+			resolve(parse(res.items));
 		} catch (error) {
 			reject(error);
 		}
@@ -46,8 +46,9 @@ module.exports.channel = id => {
 function parse(item) {
 	return item.filter(c => c.isPlayable || (c.type && !c.type.isUpcoming)).map(v => {
 		return {
+			type: v.type,
 			title: v.title,
-			thumbnail: v.bestThumbnail.url.slice(19),
+			thumbnail: ((v.firstVideo || {}).bestThumbnail || v.bestThumbnail).url.slice(19),
 			id: v.id,
 			url: v.url,
 			author: v.author,

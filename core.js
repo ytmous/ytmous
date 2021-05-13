@@ -5,7 +5,7 @@ module.exports.search = (str, page) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			let res = await ytsr(str);
-			resolve(parse(res.items.filter(c => c.type != "video")));
+			resolve(parse(res.items.filter(c => c.type == "video")));
 		} catch (error) {
 			reject(error);
 		}

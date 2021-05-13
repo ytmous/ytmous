@@ -57,7 +57,7 @@ app.get("/vi/*", (req, res) => {
 			console.error(err);
 			try {
 				res.send(err.toString());
-			) catch (error) {
+			} catch (error) {
 				console.error(error);
 			}
 		});

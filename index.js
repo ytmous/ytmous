@@ -70,7 +70,7 @@ app.get("/stream/:id", (req, res) => {
 });
 
 // Proxy to i.ytimg.com
-app.get("/vi/*", (req, res) => {
+app.get("/vi*", (req, res) => {
 	get({
 		hostname: "i.ytimg.com",
 		path: req.url.split("?")[0],

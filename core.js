@@ -7,7 +7,7 @@ module.exports.search = str => {
 			resolve(res.items.filter(c => c.type == "video" && !c.type.isUpcoming).map(v => {
 				return {
 					title: v.title,
-					thumbnail: v.bestThumbnail.url,
+					thumbnail: v.bestThumbnail.url.slice(19),
 					id: v.id,
 					url: v.url,
 					author: v.author,

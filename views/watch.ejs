@@ -9,10 +9,10 @@
   <meta property="og:title" content="<%= info.videoDetails.title %> - ytmous">
   <meta property="og:type" content="video">
   <meta property="twitter:player" content="/watch/<%= id %>">
-  <meta name="twitter:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url %>">
+  <meta name="twitter:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url.slice(19); %>">
   <meta property="og:description" content="<%= info.videoDetails.description %>">
   <meta property="og:site_name" content="ytmous | Watch Anonymously!">
-  <meta property="og:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url %>">
+  <meta property="og:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url.slice(19); %>">
   <meta name="theme-color" content="#ff8181">
   <link rel="shortcut icon" href="/logo.png">
   <meta name="twitter:card" content="summary_large_image">
@@ -77,7 +77,7 @@
         <div class="card-header">
           <small class="text-muted"><%= video.author.name %></small>
         </div>
-        <a href="/watch/<%= video.id %>"><img src="<%= video.thumbnails[video.thumbnails.length-1].url %>" class="card-img-top" alt="<%= video.title %>"></a>
+        <a href="/watch/<%= video.id %>"><img src="<%= video.thumbnails[video.thumbnails.length-1].url.slice(19); %>" class="card-img-top" alt="<%= video.title %>"></a>
         <div class="card-body">
           <h5 class="card-title"><%= video.title %></h5>
         </div>

@@ -1,4 +1,5 @@
 const ytdl = require("ytdl-core");
+const { get } = require("https");
 const express = require("express");
 const ejs = require("ejs");
 const app = express();
@@ -40,6 +41,33 @@ app.get("/stream/:id", (req, res) => {
 	stream.on('error', (err) => {
 		console.error(err);
 		response.send(err.toString());
+	});
+});
+
+app.get("/vi/*", (req, res) => {
+	get({
+		hostname: "i.ytimg.com",
+		path: req.url,
+		headers: {
+			"user-agent": req.headers["user-agent"] || "ytmous - ytimg"
+		}
+	}, stream => {
+		stream.pipe(res);
+		stream.on("error", (err) => {
+			console.error(err);
+			try {
+				res.send(err.toString());
+			) catch (error) {
+				console.error(error);
+			}
+		});
+	}).on('error', (err) => {
+		console.error(err);
+		try {
+			res.send(err.toString());
+		} catch (error) {
+			console.error(error);
+		}
 	});
 });
 

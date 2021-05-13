@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title><%= info.videoDetails.title %></title>
-  <meta name="description" content="<%= info.videoDetails.description %>">
+  <meta name="description" content="<%= info.videoDetails.description || "" %>">
   <meta property="og:title" content="<%= info.videoDetails.title %> - ytmous">
   <meta property="og:type" content="video">
   <meta property="og:video" content="/stream/<%= id %>">
@@ -14,7 +14,7 @@
   <meta property="og:video:type" content="text/html">
   <meta property="twitter:player" content="/stream/<%= id %>">
   <meta name="twitter:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url.slice(19); %>">
-  <meta property="og:description" content="<%= info.videoDetails.description %>">
+  <meta property="og:description" content="<%= info.videoDetails.description || "" %>">
   <meta property="og:site_name" content="ytmous | Watch Anonymously!">
   <meta property="og:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url.slice(19); %>">
   <meta name="theme-color" content="#ff8181">
@@ -67,7 +67,7 @@
     </div>
     <div class="card-body">
       <h5><%= info.videoDetails.title %></h5>
-      <p><%- info.videoDetails.description.replace(/\n/g, "<br>") %></p>
+      <p><%- (info.videoDetails.description || "").replace(/\n/g, "<br>") %></p>
     </div>
     <div class="card-footer">
       <small class="text-muted"><%= info.videoDetails.uploadDate %></small>

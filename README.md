@@ -29,6 +29,9 @@ Or
 PORT=8080 npm start
 ```
 
+## NOTE
+In Browser based **Chromium**, Seeking Video may not work properly. It's recommended to use **Firefox** for Streaming Video.
+
 ## Community
 - [Discord](https://dsc.gg/yonle)
 - [Telegram](https://t.me/yonlecoder)

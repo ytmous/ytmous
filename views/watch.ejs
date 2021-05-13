@@ -8,7 +8,8 @@
   <meta name="description" content="<%= info.videoDetails.description %>">
   <meta property="og:title" content="<%= info.videoDetails.title %> - ytmous">
   <meta property="og:type" content="video">
-  <meta property="twitter:player" content="/watch/<%= id %>">
+  <meta property="og:video" content="/w/<%= id %>">
+  <meta property="twitter:player" content="/w/<%= id %>">
   <meta name="twitter:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url.slice(19); %>">
   <meta property="og:description" content="<%= info.videoDetails.description %>">
   <meta property="og:site_name" content="ytmous | Watch Anonymously!">
@@ -50,7 +51,7 @@
             </ul>
           </li>
         </ul>
-        <form action="/search">
+        <form action="/s">
           <input name="q" class="form-control" type="text" placeholder="Search" aria-label="Search">
         </form>
       </div>
@@ -77,7 +78,7 @@
         <div class="card-header">
           <small class="text-muted"><%= video.author.name %></small>
         </div>
-        <a href="/watch/<%= video.id %>"><img src="<%= video.thumbnails[video.thumbnails.length-1].url.slice(19); %>" class="card-img-top" alt="<%= video.title %>"></a>
+        <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails[video.thumbnails.length-1].url.slice(19); %>" class="card-img-top" alt="<%= video.title %>"></a>
         <div class="card-body">
           <h5 class="card-title"><%= video.title %></h5>
         </div>

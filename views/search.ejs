@@ -47,7 +47,7 @@
             </ul>
           </li>
         </ul>
-        <form action="/search">
+        <form action="/s">
           <input name="q" class="form-control" type="text" placeholder="Search" aria-label="Search" value="<%= query %>">
         </form>
       </div>
@@ -55,11 +55,11 @@
   </nav>
   <br>
   <div class="row row-cols-1 row-cols-md-3 g-4">
-     <% res.forEach(video => { %>
+   <% res.forEach(video => { %>
      <div class="col">
        <div class="card h-100">
          <div class="card-header"><%= video.author.name %></div>
-         <a href="/watch/<%= video.id %>"><img src="<%= video.thumbnail %>" class="card-img-top" alt="<%= video.title %>"></a>
+         <a href="/w/<%= video.id %>"><img src="<%= video.thumbnail %>" class="card-img-top" alt="<%= video.title %>"></a>
          <div class="card-body">
            <h5 class="card-title"><%= video.title %></h5>
            <p class="card-text"><%= video.description %></p>
@@ -69,7 +69,7 @@
          </div>
        </div>
      </div>
-     <% }); %>
+   <% }); %>
   </div>
 </body>
 

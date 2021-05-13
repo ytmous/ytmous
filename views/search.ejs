@@ -55,20 +55,50 @@
   </nav>
   <br>
   <div class="row row-cols-1 row-cols-md-3 g-4">
-   <% res.forEach(video => { %>
-     <div class="col">
-       <div class="card h-100">
-         <div class="card-header"><%= video.author.name %></div>
-         <a href="/w/<%= video.id %>"><img src="<%= video.thumbnail %>" class="card-img-top" alt="<%= video.title %>"></a>
-         <div class="card-body">
-           <h5 class="card-title"><%= video.title %></h5>
-           <p class="card-text"><%= video.description %></p>
-         </div>
-         <div class="card-footer">
-           <small class="text-muted"><%= video.uploadedAt %></small>
+   <% res.items.forEach(video => { %>
+     <% if (video.type === 'video') { %>
+       <div class="col">
+         <div class="card h-100">
+           <div class="card-header"><a href="/u/<%= video.author.id %>"><%= video.author.name %></a></div>
+           <a href="/w/<%= video.id %>"><img src="<%= video.bestThumbnail.url.slice(19) %>" class="card-img-top" alt="<%= video.title %>"></a>
+           <div class="card-body">
+             <h5 class="card-title"><%= video.title %></h5>
+             <p class="card-text"><%= video.description %></p>
+           </div>
+           <div class="card-footer">
+             <small class="text-muted"><%= video.uploadedAt %></small>
+           </div>
          </div>
        </div>
-     </div>
+     <% } else if (video.type === 'playlist') { %>
+       <div class="col">
+         <div class="card h-100">
+           <div class="card-header">Playlist (<%= video.length %> Video)</div>
+           <a href="/p/<%= video.playlistID %>"><img style="opacity: 0.5" src="<%= video.firstVideo.bestThumbnail.url.slice(19) %>" class="card-img-top" alt="<%= video.title %>"></a>
+           <div class="card-body">
+             <h5 class="card-title"><%= video.title %></h5>
+             <p class="card-subtitle"><a href="/u/<%= video.owner.id %>"><%= video.owner.name %></a></p>
+           </div>
+           <div class="card-footer">
+             <small class="text-muted"><%= video.publishedAt %></small>
+           </div>
+         </div>
+       </div>
+     <% } else if (video.type === 'channel') { %>
+       <div class="col">
+         <div class="card h-100">
+           <div class="card-header">Channel</div>
+             <a href="/c/<%= video.channelID %>"><img src="<%= video.bestAvatar.url.slice(21) %>" class="card-img-top" alt="<%= video.title %>"></a>
+               <div class="card-body">
+                 <h5 class="card-title"><%= video.name %></h5>
+                 <p class="card-title"><%= video.description || video.descriptionShort %></p>
+               </div>
+               <div class="card-footer">
+                 <small class="text-muted"><%= video.subscribers %></small>
+               </div>
+         </div>
+      </div>
+     <% } %>
    <% }); %>
   </div>
 </body>

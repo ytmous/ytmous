@@ -1,9 +1,10 @@
 const ytdl = require("ytdl-core");
+const ytsr = require("ytsr");
+const ytpl = require("ytpl");
 const { get } = require("https");
 const express = require("express");
 const ejs = require("ejs");
 const app = express();
-const { search, playlist, channel } = require("./core.js");
 
 app.use(express.static(__dirname + "/public"));
 
@@ -18,7 +19,7 @@ app.get("/s", async (req, res) => {
 	if (!query) return res.redirect("/");
 	try {
 		res.render("search.ejs", {
-			res: await search(query),
+			res: await ytsr(query),
 			query: query
 		});
 	} catch (error) {
@@ -33,6 +34,7 @@ app.get("/s", async (req, res) => {
 
 // Watch Page
 app.get("/w/:id", async (req, res) => {
+	if (!req.params.id) return res.redirect("/");
 	try {
 		res.render("watch.ejs", {
 			id: req.params.id,
@@ -45,15 +47,29 @@ app.get("/w/:id", async (req, res) => {
 });
 
 // Playlist page
-app.get("/p", (res, rej) => {
-	// Coming soon. So we just redirect to main page
-	res.redirect("/");
+app.get("/p/:id", async (req, res) => {
+	if (!req.params.id) return res.redirect("/");
+	try {
+		res.render("playlist.ejs", {
+			playlist: await ytpl(req.params.id)
+		});
+	} catch (error) {
+		console.error(error);
+		res.redirect("/");
+	}
 });
 
 // Channel page
-app.get("/c", (res, rej) => {
-	// Coming soon. So we just redirect to main page
-	res.redirect("/");
+app.get("/c/:id", async (req, res) => {
+	if (!req.params.id) return res.redirect("/");
+	try {
+		res.render("channel.ejs", {
+			channel: await ytpl(req.params.id)
+		});
+	} catch (error) {
+		console.error(error);
+		res.redirect("/");
+	}
 });
 
 // CDN

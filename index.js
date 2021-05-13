@@ -16,10 +16,19 @@ app.get("/", (req, res) => {
 app.get("/s", async (req, res) => {
 	let query = req.query.q;
 	if (!query) return res.redirect("/");
-	res.render("search.ejs", {
-		res: await search(query),
-		query: query
-	});
+	try {
+		res.render("search.ejs", {
+			res: await search(query),
+			query: query
+		});
+	} catch (error) {
+		console.error(error);
+		try {
+			res.send(error)
+		} catch (error) {
+			console.error(error);
+		}
+	}
 });
 
 // Watch Page

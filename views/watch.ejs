@@ -63,7 +63,7 @@
     </div>
     <div class="card-body">
       <h5><%= info.videoDetails.title %></h5>
-      <p><%= info.videoDetails.description %></p>
+      <p><%- info.videoDetails.description.replace(/\n/g, "<br>"); %></p>
     </div>
     <div class="card-footer">
       <small class="text-muted"><%= info.videoDetails.uploadDate %></small>

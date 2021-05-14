@@ -63,11 +63,11 @@
            <a href="/w/<%= video.id %>"><img src="<%= video.bestThumbnail.url.slice(19) %>" class="card-img-top" alt="<%= video.title %>"></a>
            <div class="card-body">
              <h5 class="card-title"><%= video.title %></h5>
-             <p class="card-subtitle"><%= video.duration %></p>
+             <p class="card-subtitle"><%= video.uploadedAt %></p>
              <p class="card-text"><%= video.description %></p>
            </div>
            <div class="card-footer">
-             <small class="text-muted"><%= video.uploadedAt %></small>
+             <small class="text-muted"><%= video.duration %></small>
            </div>
          </div>
        </div>

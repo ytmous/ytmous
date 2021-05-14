@@ -59,11 +59,11 @@
      <% if (video.type === 'video') { %>
        <div class="col">
          <div class="card h-100">
-           <div class="card-header"><%= video.duration %></div>
+           <div class="card-header"><a href="/u/<%= video.author.id %>"><%= video.author.name %></a></div>
            <a href="/w/<%= video.id %>"><img src="<%= video.bestThumbnail.url.slice(19) %>" class="card-img-top" alt="<%= video.title %>"></a>
            <div class="card-body">
              <h5 class="card-title"><%= video.title %></h5>
-             <p class="card-subtitle"><a href="/u/<%= video.author.id %>"><%= video.author.name %></a></p>
+             <p class="card-subtitle"><%= video.duration %></p>
              <p class="card-text"><%= video.description %></p>
            </div>
            <div class="card-footer">

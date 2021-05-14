@@ -1,6 +1,6 @@
 {
   "name": "ytmous",
-  "version": "1.0.0",
+  "version": "latest",
   "main": "index.js",
   "license": "DBAD-v1.1",
   "dependencies": {

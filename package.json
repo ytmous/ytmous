@@ -6,9 +6,9 @@
   "dependencies": {
     "ejs": "^3.1.6",
     "express": "^4.17.1",
-    "ytdl-core": "^4.7.0",
-    "ytpl": "^2.2.1",
-    "ytsr": "^3.5.0"
+    "ytdl-core": "^4.x",
+    "ytpl": "^2.x",
+    "ytsr": "^3.x"
   },
   "description": "A anonymous Youtube that does not spy on you.",
   "repository": {

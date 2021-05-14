@@ -63,7 +63,7 @@
   <div class="card">
     <video autoplay controls src="/stream/<%= id %>" width="100%"></video>
     <div class="card-header">
-      <small class="text-muted"><%= info.videoDetails.author.name %></small>
+      <small class="text-muted"><a href="/u/<%= info.videoDetails.author.id %>"><%= info.videoDetails.author.name %></a></small>
     </div>
     <div class="card-body">
       <h5><%= info.videoDetails.title %></h5>
@@ -79,7 +79,7 @@
     <div class="col">
       <div class="card h-100">
         <div class="card-header">
-          <small class="text-muted"><%= video.author.name %></small>
+          <small class="text-muted"><a href="/u/<%= video.author.id %>"><%= video.author.name %></a></small>
         </div>
         <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails[video.thumbnails.length-1].url.slice(19); %>" class="card-img-top" alt="<%= video.title %>"></a>
         <div class="card-body">

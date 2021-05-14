@@ -78,7 +78,7 @@
            <a href="/p/<%= video.playlistID %>"><img style="opacity: 0.5" src="<%= video.firstVideo.bestThumbnail.url.slice(19) %>" class="card-img-top" alt="<%= video.title %>"></a>
            <div class="card-body">
              <h5 class="card-title"><%= video.title %></h5>
-             <p class="card-subtitle"><a href="/u/<%= video.owner.id %>"><%= video.owner.name %></a></p>
+             <% if (video.owner) { %> <p class="card-subtitle"><a href="/u/<%= video.owner.id %>"><%= video.owner.name %></a></p> <% } %>
            </div>
            <div class="card-footer">
              <small class="text-muted"><%= video.publishedAt %></small>

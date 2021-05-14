@@ -82,7 +82,8 @@ app.get("/s/:id", (req, res) => {
 
 	stream.on('error', (err) => {
 		console.error(err);
-		response.send(err.toString());
+		res.status = 500;
+		res.send(err.toString());
 	});
 });
 

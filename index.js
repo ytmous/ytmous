@@ -73,7 +73,7 @@ app.get("/c/:id", async (req, res) => {
 });
 
 // CDN
-app.get("/stream/:id", (req, res) => {
+app.get("/s/:id", (req, res) => {
 	let stream = ytdl("https://www.youtube.com/watch?v=" + req.params.id, { filter: "videoandaudio", quality: "highest" });
 	stream.on('info', () => {
 		stream.pipe(res);

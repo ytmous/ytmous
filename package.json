@@ -8,7 +8,8 @@
     "express": "^4.17.1",
     "ytdl-core": "^4.x",
     "ytpl": "^2.x",
-    "ytsr": "^3.x"
+    "ytsr": "^3.x",
+    "miniget": "latest"
   },
   "description": "A anonymous Youtube that does not spy on you.",
   "repository": {

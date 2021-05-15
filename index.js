@@ -92,7 +92,7 @@ app.get("/s/:id", (req, res) => {
 app.get("/vi*", (req, res) => {
 	get({
 		hostname: "i.ytimg.com",
-		path: req.url.split("?")[0],
+		path: req.url.split("?")[0].replace("hqdefault", "maxresdefault"),
 		headers: {
 			"user-agent": req.headers["user-agent"] || "ytmous - ytimg"
 		}

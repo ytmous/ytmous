@@ -13,18 +13,21 @@
   <meta property="og:video" content="/stream/<%= id %>">
   <meta property="og:video:type" content="text/html">
   <meta property="twitter:player" content="/stream/<%= id %>">
-  <meta name="twitter:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url.slice(19); %>">
+  <meta name="twitter:image" content="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>">
   <meta property="og:description" content="<%= info.videoDetails.description || "" %>">
   <meta property="og:site_name" content="ytmous | Watch Anonymously!">
-  <meta property="og:image" content="<%= info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url.slice(19); %>">
+  <meta property="og:image" content="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>">
   <meta name="theme-color" content="#ff8181">
   <link rel="shortcut icon" href="/logo.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="author" content="ytmous | Watch Anonymously!">
   <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/font.css">
+  <link rel="stylesheet" href="/css/plyr.css">
   <script src="/js/jquery-3.2.1.slim.min.js"></script>
   <script src="/js/popper.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/plyr.polyfilled.js"></script>
 </head>
 
 <body>
@@ -61,7 +64,7 @@
     </div>
   </nav>
   <div class="card">
-    <video autoplay controls src="/s/<%= id %>" width="100%"></video>
+    <video id="player" autoplay playsinline poster="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>" controls src="/s/<%= id %>" width="100%"></video>
     <div class="card-header">
       <small class="text-muted"><a href="/c/<%= info.videoDetails.author.id %>"><%= info.videoDetails.author.name %></a></small>
     </div>
@@ -81,7 +84,7 @@
         <div class="card-header">
           <small class="text-muted"><a href="/c/<%= video.author.id %>"><%= video.author.name %></a></small>
         </div>
-        <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails[video.thumbnails.length-1].url.slice(19); %>" class="card-img-top" alt="<%= video.title %>"></a>
+        <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails.pop().url.slice(19); %>" class="card-img-top" alt="<%= video.title %>"></a>
         <div class="card-body">
           <h5 class="card-title"><%= video.title %></h5>
         </div>
@@ -92,6 +95,29 @@
     </div>
     <% }); %>
   </div>
+  <script>
+   document.addEventListener('DOMContentLoaded', () => {
+     const player = Plyr.setup('video', {
+       controls: [
+         'play-large', 'play', 'progress', 'current-time', 'duration',
+         'mute', 'volume', 'settings', //'pip',
+         'airplay', 'download', 'fullscreen'
+       ],
+       settings: ['captions', 'quality', 'speed'],
+       title: '<%= info.videoDetails.title %>,',
+       iconUrl: '/plyr.svg'
+     });
+   });
+  </script>
+  <style>
+	* {
+		--plyr-color-main: #ff8181;
+	}
+
+	a {
+		color: #ff8181;
+	}
+  </style>
 </body>
 
 </html>

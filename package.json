@@ -2,7 +2,7 @@
   "name": "ytmous",
   "version": "2.0.0",
   "main": "index.js",
-  "license": "DBAD-v1.1",
+  "license": "CC0-v1.0",
   "dependencies": {
     "ejs": "^3.1.6",
     "express": "^4.17.1",

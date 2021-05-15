@@ -76,8 +76,8 @@ app.get("/c/:id", async (req, res) => {
 app.get("/s/:id", (req, res) => {
 	let stream = ytdl("https://www.youtube.com/watch?v=" + req.params.id, { filter: "videoandaudio", quality: "highest" });
 	stream.on('info', info => {
-		if (info.formats[0].contentLength) res.setHeader("content-length", info.formats[0].contentLength);
-		res.setHeader("content-type", info.formats[0].mimeType);
+		if (info.videoFormat.contentLength) res.setHeader("content-length", info.formats[0].contentLength);
+		res.setHeader("content-type", info.videoFormat.mimeType);
 		stream.pipe(res);
 	});
 

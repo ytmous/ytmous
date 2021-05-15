@@ -125,7 +125,7 @@ app.get("/live/:id/:path", async (req, res) => {
 
 // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
 app.get("/vi*", (req, res) => {
-	let stream = get(`https://i.ytimg.com/${req.url.split("?")[0]}`,
+	let stream = get(`https://i.ytimg.com/${req.url.split("?")[0]}`, {
 		headers: {
 			"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
 		}
@@ -139,7 +139,7 @@ app.get("/vi*", (req, res) => {
 
 // Proxy to yt3.ggpht.com, Where User avatar is being stored on that host.
 app.get("/ytc/*", (req, res) => {
-	let stream = get(`https://yt3.ggpht.com/${req.url}`,
+	let stream = get(`https://yt3.ggpht.com/${req.url}`, {
 		headers: {
 			"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
 		}

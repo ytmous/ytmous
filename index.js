@@ -93,36 +93,6 @@ app.get("/s/:id", (req, res) => {
 	});
 });
 
-// Live Video Handler
-// In this endpoint, We're gonna handle all hls required request. Ya you know why.
-app.get("/live/:id/:path", async (req, res) => {
-	let info = await ytdl.getInfo(req.params.id, { filter: "videoandaudio", quality: "highest" });
-	if (!info.videoDetails.isLiveContent) {
-		return res.redirect(`/s/${req.params.id}`);
-	} else {
-		if (!live.has(req.params.id)) generateLiveURL(info);
-		let stream = get(`${live.get(req.params.id)}/${req.params.path}`, {
-			headers: {
-				"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
-			}
-		});
-		
-		stream.on('error', err => {
-			// Regenerate new URL Endpoint once it's known as expired Endpoint
-			if (err.statusCode && err.statusCode == 403) {
-				generateLiveURL(info);
-				return res.redirect(req.url);
-			}
-			console.log(err);
-			res.send(err.toString());
-		});
-		stream.on('response', response => {
-			res.setHeader("content-type", response.headers["content-type"]);
-			stream.pipe(res);
-		});
-	}
-});
-
 // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
 app.get("/vi*", (req, res) => {
 	let stream = get(`https://i.ytimg.com/${req.url.split("?")[0]}`, {

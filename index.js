@@ -42,7 +42,7 @@ app.get("/w/:id", async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.redirect('/');
+		res.send(error.toString());
 	}
 });
 
@@ -55,7 +55,7 @@ app.get("/p/:id", async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.redirect("/");
+		res.send(error.toString());
 	}
 });
 
@@ -68,7 +68,7 @@ app.get("/c/:id", async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.redirect("/");
+		res.send(error.toString());
 	}
 });
 

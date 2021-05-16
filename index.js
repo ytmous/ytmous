@@ -77,10 +77,6 @@ app.get("/c/:id", async (req, res) => {
 app.get("/s/:id", (req, res) => {
 	let stream = ytdl(req.params.id, { filter: "videoandaudio", quality: "highest", dlChunkSize: 1024 * 64 });
 	stream.on('info', info => {
-		if (info.videoDetails.isLiveContent) {
-			stream.end();
-			return res.redirect(`/live/${req.params.id}/index.m3u8`);
-		}
 		if (info.formats[0].contentLength) res.setHeader("content-length", info.formats[0].contentLength);
 		res.setHeader("content-type", info.formats[0].mimeType);
 		stream.pipe(res);

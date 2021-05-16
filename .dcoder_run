@@ -1,0 +1,8 @@
+# Run auto update.
+git reset --hard
+git clean -fd
+git pull origin master
+
+# Then do installation
+npm install
+npm start

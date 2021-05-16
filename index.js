@@ -6,9 +6,22 @@ const express = require("express");
 const ejs = require("ejs");
 const app = express();
 
+//        CONFIGURATION        //
+
+// Protocol (For livestream)
 // For Heroku / etc, We use https to keep everything anonymous.
 // Simply change this as "http" if you're running this code locally
-const protocol = "https";
+const protocol = process.env.PROTOCOL || "https";
+
+// Result Limit
+// By default, ytsr & ytpl result limit is 100.
+// For ytmous, The search result default is 80. 
+// Change it as many as you want. 0 for all result without limit.
+// The smaller, The faster.
+const limit = process.env.LIMIT || 80;
+
+//     EMD OF CONFIGURATION    //
+
 
 app.use(express.static(__dirname + "/public"));
 
@@ -24,7 +37,7 @@ app.get("/s", async (req, res) => {
 	if (!query) return res.redirect("/");
 	try {
 		res.render("search.ejs", {
-			res: await ytsr(query),
+			res: await ytsr(query, { limit }),
 			query: query
 		});
 	} catch (error) {
@@ -56,7 +69,7 @@ app.get("/p/:id", async (req, res) => {
 	if (!req.params.id) return res.redirect("/");
 	try {
 		res.render("playlist.ejs", {
-			playlist: await ytpl(req.params.id)
+			playlist: await ytpl(req.params.id, { limit })
 		});
 	} catch (error) {
 		console.error(error);
@@ -69,7 +82,7 @@ app.get("/c/:id", async (req, res) => {
 	if (!req.params.id) return res.redirect("/");
 	try {
 		res.render("channel.ejs", {
-			channel: await ytpl(req.params.id)
+			channel: await ytpl(req.params.id, { limit })
 		});
 	} catch (error) {
 		console.error(error);

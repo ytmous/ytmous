@@ -1,4 +1,3 @@
-
 const ytdl = require("ytdl-core");
 const ytsr = require("ytsr");
 const ytpl = require("ytpl");
@@ -44,7 +43,7 @@ app.get("/w/:id", async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.send(error.toString());
+		res.status(500).send(error.toString());
 	}
 });
 
@@ -57,7 +56,7 @@ app.get("/p/:id", async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.send(error.toString());
+		res.status(500).send(error.toString());
 	}
 });
 
@@ -70,7 +69,7 @@ app.get("/c/:id", async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.send(error.toString());
+		res.status(500).send(error.toString());
 	}
 });
 
@@ -90,8 +89,7 @@ app.get("/s/:id", (req, res) => {
 
 	stream.on('error', (err) => {
 		console.error(err);
-		res.status = 500;
-		res.send(err.toString());
+		res.status(500).send(err.toString());
 	});
 });
 
@@ -110,8 +108,7 @@ app.get("/live/:id", (req, res) => {
 
 	stream.on('error', (err) => {
 		console.log(err);
-		res.status = 500;
-		res.send(err.toString());
+		res.status(500).send(err.toString());
 	});
 });
 
@@ -124,7 +121,7 @@ app.get("/vi*", (req, res) => {
 	})
 	stream.on('error', err => {
 		console.log(err);
-		res.send(err.toString());
+		res.status(500).send(err.toString());
 	});
 	stream.pipe(res);
 });
@@ -138,7 +135,7 @@ app.get("/ytc/*", (req, res) => {
 	})
 	stream.on('error', err => {
 		console.log(err);
-		res.send(err.toString());
+		res.status(500).send(err.toString());
 	});
 	stream.pipe(res);
 });

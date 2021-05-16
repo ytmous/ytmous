@@ -1,3 +1,4 @@
+
 const ytdl = require("ytdl-core");
 const ytsr = require("ytsr");
 const ytpl = require("ytpl");
@@ -77,6 +78,11 @@ app.get("/c/:id", async (req, res) => {
 app.get("/s/:id", (req, res) => {
 	let stream = ytdl(req.params.id, { filter: "videoandaudio", quality: "highest", dlChunkSize: 1024 * 64 });
 	stream.on('info', info => {
+		if (info.videoDetails.isLiveContent) {
+			stream.destroy();
+			res.setHeader("content-type", "application/vnd.apple.mpegurl");
+			return res.send(`#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:0\n\n#EXTINF:0,\n${req.protocol||"http"}://${req.headers["host"]}/live/${req.params.id}`);
+		}
 		if (info.formats[0].contentLength) res.setHeader("content-length", info.formats[0].contentLength);
 		res.setHeader("content-type", info.formats[0].mimeType);
 		stream.pipe(res);
@@ -84,6 +90,26 @@ app.get("/s/:id", (req, res) => {
 
 	stream.on('error', (err) => {
 		console.error(err);
+		res.status = 500;
+		res.send(err.toString());
+	});
+});
+
+// Live Segment
+// Fun Fact: m3u8stream is returning mpegts stream. It means, We can make our own m3u8 without longcode.
+app.get("/live/:id", (req, res) => {
+	let stream = ytdl(req.params.id, { filter: "videoandaudio", quality: "highest", dlChunkSize: 1024 * 64 });
+	stream.on('info', info => {
+		if (!info.videoDetails.isLiveContent) {
+			stream.destroy();
+			return res.redirect("/");
+		}
+		res.setHeader("content-type", info.formats[0].mimeType);
+		stream.pipe(res);
+	});
+
+	stream.on('error', (err) => {
+		console.log(err);
 		res.status = 500;
 		res.send(err.toString());
 	});

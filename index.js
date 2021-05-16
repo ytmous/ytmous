@@ -5,12 +5,16 @@ const get = require("miniget");
 const express = require("express");
 const ejs = require("ejs");
 const app = express();
-const live = new Map();
+
+// For Heroku / etc, We use https to keep everything anonymous.
+// Simply change this as "http" if you're running this code locally
+const protocol = "https";
 
 app.use(express.static(__dirname + "/public"));
 
 // Home page 
 app.get("/", (req, res) => {
+	console.log(req.protocol)
 	res.sendFile(__dirname + "/views/index.html");
 });
 
@@ -80,7 +84,7 @@ app.get("/s/:id", (req, res) => {
 		if (info.videoDetails.isLiveContent) {
 			stream.destroy();
 			res.setHeader("content-type", "application/vnd.apple.mpegurl");
-			return res.send(`#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:0\n\n#EXTINF:0,\n${req.protocol||"http"}://${req.headers["host"]}/live/${req.params.id}`);
+			return res.send(`#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:0\n\n#EXTINF:0,\n${req.protocol||protocol||"http"}://${req.headers["host"]}/live/${req.params.id}`);
 		}
 		if (info.formats[0].contentLength) res.setHeader("content-length", info.formats[0].contentLength);
 		res.setHeader("content-type", info.formats[0].mimeType);

@@ -27,7 +27,6 @@ app.use(express.static(__dirname + "/public"));
 
 // Home page 
 app.get("/", (req, res) => {
-	console.log(req.protocol)
 	res.sendFile(__dirname + "/views/index.html");
 });
 

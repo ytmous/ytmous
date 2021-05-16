@@ -84,7 +84,7 @@ app.get("/s/:id", (req, res) => {
 		if (info.videoDetails.isLiveContent) {
 			stream.destroy();
 			res.setHeader("content-type", "application/vnd.apple.mpegurl");
-			return res.send(`#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:0\n\n#EXTINF:0,\n${req.protocol||protocol||"http"}://${req.headers["host"]}/live/${req.params.id}`);
+			return res.send(`#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:0\n\n#EXTINF:0,\n${protocol||req.protocol||"http"}://${req.headers["host"]}/live/${req.params.id}`);
 		}
 		if (info.formats[0].contentLength) res.setHeader("content-length", info.formats[0].contentLength);
 		res.setHeader("content-type", info.formats[0].mimeType);

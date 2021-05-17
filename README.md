@@ -4,16 +4,17 @@
 </div>
 
 ## ❄Feature
-- 0% 📰Ads
-- 0% 💸Tracker
-- 0% 📃Logging
-- 📩Download Youtube Videos while you watch them
-- 🔮Using Bootstrap 5 with [plyr.js](https://plyr.io) as video player
+- 📰 0% Ads
+- 💸 0% Tracker
+- 📃 0% Logging
+- 📩 Download Youtube Videos while you watch them
+- 🔮 Using Bootstrap 5 with [plyr.js](https://plyr.io) as video player
 
-## Requirements
+## 🖥Requirements
 - Node v10+ (Node v14 Recommended)
 - Git installed
 - 500MB RAM (1 GB Recommended);
+- Fast network connection
 
 ## 🎁Installation
 ```bash
@@ -23,9 +24,10 @@ npm install
 ```
 
 ## 🖊Configuration
-This code is reading a config from Environment Variable that comes from your system.
+This code is reading a config from Environment Variable that comes from your system. Those config is optional. So you don't need to care about.
 - `LIMIT`: Search / Video result from playlist, channel, or search result limit. The smaller, The faster.
 - `PROTOCOL`: This variable is used for m3u8 stream. Default: `https` for deploying
+- `USER_AGENT`: This variable is where we fake our user agent to request youtube.
 
 ## 📡Starting Server
 ```bash

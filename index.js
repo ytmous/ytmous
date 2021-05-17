@@ -8,11 +8,6 @@ const app = express();
 
 //        CONFIGURATION        //
 
-// Protocol (For livestream)
-// For Heroku / etc, We use https to keep everything anonymous.
-// Simply change this as "http" if you're running this code locally
-const protocol = process.env.PROTOCOL || "https";
-
 // Result Limit
 // By default, ytsr & ytpl result limit is 100.
 // For ytmous, The search result default is 80. 

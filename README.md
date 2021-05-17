@@ -26,7 +26,6 @@ npm install
 ## 🖊Configuration
 This code is reading a config from Environment Variable that comes from your system. Those config is optional. So you don't need to care about.
 - `LIMIT`: Search / Video result from playlist, channel, or search result limit. The smaller, The faster.
-- `PROTOCOL`: This variable is used for m3u8 stream. Default: `https` for deploying
 - `USER_AGENT`: This variable is where we fake our user agent to request youtube.
 
 ## 📡Starting Server

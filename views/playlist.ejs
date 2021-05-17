@@ -68,6 +68,8 @@
     </div>
     <% }); %>
   </div>
+  <% if (page > 1) { %> <a class="btn position-absolute" style="left: 0; color: white; background-color: #ff8181;" href="/p/<%= playlist.id %>?p=<%= page-1 %>">Previous Page</a> <% } %>
+  <a class="btn position-absolute" style="right: 0; color: white; background-color: #ff8181;" href="/p/<%= playlist.id %>?p=<%= page+1 %>">Next Page</a>
   <style>
 	a {
 		color: #ff8181;

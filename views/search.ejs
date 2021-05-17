@@ -49,7 +49,7 @@
           </li>
         </ul>
         <form action="/s">
-          <input name="q" class="form-control" type="text" placeholder="Search" aria-label="Search" value="<%= query %>">
+          <input name="q" class="form-control" type="text" placeholder="Search" style="color: #ff8181;" aria-label="Search" value="<%= query %>">
         </form>
       </div>
     </div>
@@ -103,6 +103,8 @@
      <% } %>
    <% }); %>
   </div>
+  <% if (page > 1) { %> <a class="btn position-absolute" style="left: 0; color: white; background-color: #ff8181;" href="/s?q=<%= query %>&p=<%= page-1 %>">Previous Page</a> <% } %>
+  <a class="btn position-absolute" style="right: 0; color: white; background-color: #ff8181;" href="/s?q=<%= query %>&p=<%= page+1 %>">Next Page</a>
   <style>
 	a {
 		color: #ff8181;

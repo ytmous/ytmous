@@ -37,11 +37,13 @@ app.get("/", (req, res) => {
 // Search page
 app.get("/s", async (req, res) => {
 	let query = req.query.q;
+	let page = Number(req.query.p || 1);
 	if (!query) return res.redirect("/");
 	try {
 		res.render("search.ejs", {
-			res: await ytsr(query, { limit }),
-			query: query
+			res: await ytsr(query, { limit, pages: page }),
+			query: query,
+			page
 		});
 	} catch (error) {
 		console.error(error);
@@ -70,9 +72,11 @@ app.get("/w/:id", async (req, res) => {
 // Playlist page
 app.get("/p/:id", async (req, res) => {
 	if (!req.params.id) return res.redirect("/");
+	let page = Number(req.query.p || 1);
 	try {
 		res.render("playlist.ejs", {
-			playlist: await ytpl(req.params.id, { limit })
+			playlist: await ytpl(req.params.id, { limit, pages: page }),
+			page
 		});
 	} catch (error) {
 		console.error(error);
@@ -83,9 +87,11 @@ app.get("/p/:id", async (req, res) => {
 // Channel page
 app.get("/c/:id", async (req, res) => {
 	if (!req.params.id) return res.redirect("/");
+	let page = Number(req.query.p || 1);
 	try {
 		res.render("channel.ejs", {
-			channel: await ytpl(req.params.id, { limit })
+			channel: await ytpl(req.params.id, { limit, pages: page }),
+			page
 		});
 	} catch (error) {
 		console.error(error);

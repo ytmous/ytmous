@@ -42,9 +42,6 @@ PORT=3000 npm start
 ![search](https://github.com/Yonle/ytmous/blob/master/Screenshots/search.png?raw=true)
 ![watch](https://github.com/Yonle/ytmous/blob/master/Screenshots/watch.png?raw=true)
 
-## ❗NOTE
-In Browser based **Chromium**, Seeking Video may not work properly. It's recommended to use **Firefox** for Streaming Video.
-
 ## 📠Community
 - [Discord](https://discord.gg/9S3ZCDR)
 - [Telegram](https://t.me/yonlecoder)

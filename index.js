@@ -1,7 +1,8 @@
 const ytdl = require("ytdl-core");
 const ytsr = require("ytsr");
 const ytpl = require("ytpl");
-const get = require("miniget");
+const miniget = require("miniget");
+const { get } = require("https");
 const express = require("express");
 const ejs = require("ejs");
 const app = express();
@@ -94,24 +95,48 @@ app.get("/c/:id", async (req, res) => {
 	}
 });
 
-// CDN
-app.get("/s/:id", (req, res) => {
-	let stream = ytdl(req.params.id, { filter: "videoandaudio", quality: "highest", dlChunkSize: 1024 * 64 });
-	stream.on('info', info => {
-		if (info.formats[0].contentLength) res.setHeader("content-length", info.formats[0].contentLength);
-		res.setHeader("content-type", info.formats[0].mimeType);
-		stream.pipe(res);
-	});
+// Proxy Area
+// This is where we make everything became anonymous
 
-	stream.on('error', (err) => {
-		console.error(err);
-		res.status(500).send(err.toString());
-	});
+// Video Streaming
+app.get("/s/:id", async (req, res) => {
+	if (!req.params.id) return res.redirect("/");
+	try {
+		let info = await ytdl.getInfo(req.params.id, { filter: "videoandaudio", quality: "highest", dlChunkSize: 1024 * 64 });
+
+		if (!info.formats.length) {
+			return res.status(403).send("Video Not Available for this Server Region");
+		}
+
+		let headers = {
+			'user-agent': user_agent
+		}
+
+		// If user is seeking a video
+		if (req.headers.range) {
+			headers.range = req.headers.range;
+		}
+
+		get(info.formats[0].url, {
+			headers
+		}, resp => {
+			if (resp.headers['accept-range']) res.setHeader('accept-range', resp.headers['accept-range']);
+			if (resp.headers['content-length']) res.setHeader('content-length', resp.headers['content-length']);
+			if (resp.headers['content-type']) res.setHeader('content-type', resp.headers['content-type']);
+			if (resp.headers['content-range']) res.setHeader('content-range', resp.headers['content-range']);
+			resp.pipe(res.status(resp.statusCode));
+		}).on('error', err => {
+			res.status(500).send(error.toString());
+		});
+		
+	} catch (error) {
+		res.status(500).send(error.toString());
+	}
 });;
 
 // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
 app.get("/vi*", (req, res) => {
-	let stream = get(`https://i.ytimg.com/${req.url.split("?")[0]}`, {
+	let stream = miniget(`https://i.ytimg.com/${req.url.split("?")[0]}`, {
 		headers: {
 			"user-agent": user_agent
 		}
@@ -125,7 +150,7 @@ app.get("/vi*", (req, res) => {
 
 // Proxy to yt3.ggpht.com, Where User avatar is being stored on that host.
 app.get("/ytc/*", (req, res) => {
-	let stream = get(`https://yt3.ggpht.com/${req.url}`, {
+	let stream = miniget(`https://yt3.ggpht.com/${req.url}`, {
 		headers: {
 			"user-agent": user_agent
 		}

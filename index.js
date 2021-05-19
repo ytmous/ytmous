@@ -55,9 +55,13 @@ app.get("/s", async (req, res) => {
 app.get("/w/:id", async (req, res) => {
 	if (!req.params.id) return res.redirect("/");
 	try {
+		let info = await ytdl.getInfo(req.params.id);
+		if (!info.formats.filter(format => format.hasVideo && format.hasAudio).length) {
+			return res.status(500).send("This Video is not Available for this Server Region.");
+		}
+		
 		res.render("watch.ejs", {
-			id: req.params.id,
-			info: await ytdl.getInfo("https://www.youtube.com/watch?v=" + req.params.id)
+			id: req.params.id, info
 		});
 	} catch (error) {
 		console.error(error);
@@ -106,7 +110,7 @@ app.get("/s/:id", async (req, res) => {
 		info.formats = info.formats.filter(format => format.hasVideo && format.hasAudio);
 		
 		if (!info.formats.length) {
-			return res.status(403).send("Video Not Available for this Server Region");
+			return res.status(500).send("This Video is not Available for this Server Region.");
 		}
 
 		let headers = {

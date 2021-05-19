@@ -102,8 +102,9 @@ app.get("/c/:id", async (req, res) => {
 app.get("/s/:id", async (req, res) => {
 	if (!req.params.id) return res.redirect("/");
 	try {
-		let info = await ytdl.getInfo(req.params.id, { filter: "videoandaudio", quality: "highest", dlChunkSize: 1024 * 64 });
-
+		let info = await ytdl.getInfo(req.params.id);
+		info.formats = info.formats.filter(format => format.hasVideo && format.hasAudio);
+		
 		if (!info.formats.length) {
 			return res.status(403).send("Video Not Available for this Server Region");
 		}

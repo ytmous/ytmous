@@ -131,7 +131,7 @@ app.get("/s/:id", async (req, res) => {
 			if (resp.headers['content-range']) res.setHeader('content-range', resp.headers['content-range']);
 			resp.pipe(res.status(resp.statusCode));
 		}).on('error', err => {
-			res.status(500).send(error.toString());
+			res.status(500).send(err.toString());
 		});
 		
 	} catch (error) {

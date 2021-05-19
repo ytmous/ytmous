@@ -1,3 +1,4 @@
+const m3u8stream = require('m3u8stream');
 const ytdl = require("ytdl-core");
 const ytsr = require("ytsr");
 const ytpl = require("ytpl");
@@ -122,9 +123,13 @@ app.get("/s/:id", async (req, res) => {
 			headers.range = req.headers.range;
 		}
 
+		if (info.videoDetails.isLiveContent) {
+			return m3u8stream(info.formats[0].url).pipe(res);
+		}
+
 		get(info.formats[0].url, {
 			headers
-		}, resp => {
+		}, resp => {			
 			if (resp.headers['accept-range']) res.setHeader('accept-range', resp.headers['accept-range']);
 			if (resp.headers['content-length']) res.setHeader('content-length', resp.headers['content-length']);
 			if (resp.headers['content-type']) res.setHeader('content-type', resp.headers['content-type']);

@@ -58,7 +58,7 @@
      <% if (video.type === 'video') { %>
        <div class="col">
          <div class="card h-100">
-           <div class="card-header"><a href="/c/<%= video.author.id %>"><%= video.author.name %></a></div>
+           <div class="card-header"><a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></div>
            <a href="/w/<%= video.id %>"><img src="<%= video.bestThumbnail.url.slice(19) %>" class="card-img-top" alt="<%= video.title %>"></a>
            <div class="card-body">
              <h5 class="card-title"><%= video.title %></h5>

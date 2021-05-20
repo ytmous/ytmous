@@ -8,7 +8,7 @@
 - 💸 0% Tracker
 - 📃 0% Logging
 - 📩 Download Youtube Videos while you watch them
-- 🔮 Using Bootstrap 5 with [plyr.js](https://plyr.io) as video player
+- 🔮 Using Bootstrap 5 with [plyr](https://plyr.io) as video player.
 
 ## 🖥Requirements
 - Node v10+ (Node v14 Recommended)

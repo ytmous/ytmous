@@ -97,7 +97,7 @@
   </div>
   <script>
    document.addEventListener('DOMContentLoaded', () => {
-     const player = Plyr.setup('video', {
+     const player = new Plyr('video', {
        controls: [
          'play-large', 'play', 'progress', 'current-time', 'duration',
          'mute', 'volume', 'settings', //'pip',
@@ -106,7 +106,9 @@
        settings: ['captions', 'quality', 'speed'],
        title: '<%= info.videoDetails.title %>,',
        iconUrl: '/plyr.svg',
-       autopause: false
+       autoplay: true,
+       autopause: false,
+       debug: true
      });
    });
   </script>

@@ -142,7 +142,9 @@ app.get("/s/:id", async (req, res) => {
 		}
 
 		if (info.videoDetails.isLiveContent) {
-			return m3u8stream(info.formats[0].url).pipe(res);
+			return m3u8stream(info.formats[0].url).pipe(res).on('error', (err) => {
+				console.error(err)
+			});
 		}
 
 		get(info.formats[0].url, {

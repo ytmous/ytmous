@@ -44,6 +44,11 @@
        autopause: false,
        debug: true
      });
+
+     player.on('error', err => {
+     	console.error(err);
+     	alert(err.toString());
+     });
    });
   </script>
   <style>

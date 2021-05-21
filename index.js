@@ -141,7 +141,7 @@ app.get("/s/:id", async (req, res) => {
 			headers.range = req.headers.range;
 		}
 
-		if (info.videoDetails.isLiveContent) {
+		if (info.videoDetails.isLiveContent && info.formats[0].type == "video/ts") {
 			return m3u8stream(info.formats[0].url).on('error', (err) => {
 				res.status(500).send(err.toString());
 				console.error(err);

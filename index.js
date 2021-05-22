@@ -151,10 +151,12 @@ app.get("/s/:id", async (req, res) => {
 		get(info.formats[0].url, {
 			headers
 		}, resp => {			
-			if (resp.headers['accept-range']) res.setHeader('accept-range', resp.headers['accept-range']);
+			if (resp.headers['accept-ranges']) res.setHeader('accept-ranges', resp.headers['accept-ranges']);
 			if (resp.headers['content-length']) res.setHeader('content-length', resp.headers['content-length']);
 			if (resp.headers['content-type']) res.setHeader('content-type', resp.headers['content-type']);
 			if (resp.headers['content-range']) res.setHeader('content-range', resp.headers['content-range']);
+			if (resp.headers['connection']) res.setHeader('connection', resp.headers['connection']);
+			if (resp.headers['cache-control']) res.setHeader('cache-control', resp.headers['cache-control']);
 			resp.pipe(res.status(resp.statusCode));
 		}).on('error', err => {
 			res.status(500).send(err.toString());

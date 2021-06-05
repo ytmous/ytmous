@@ -23,7 +23,8 @@ const user_agent = process.env.USER_AGENT || "Mozilla/5.0 (Windows NT 10.0; Win6
 
 //     EMD OF CONFIGURATION    //
 
-
+app.set("views", __dirname + "/views");
+app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 
 // Home page 

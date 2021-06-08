@@ -166,7 +166,7 @@ app.get("/s/:id", async (req, res) => {
 	} catch (error) {
 		res.status(500).send(error.toString());
 	}
-});;
+});
 
 // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
 app.get("/vi*", (req, res) => {

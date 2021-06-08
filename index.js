@@ -3,7 +3,6 @@ const ytdl = require("ytdl-core");
 const ytsr = require("ytsr");
 const ytpl = require("ytpl");
 const miniget = require("miniget");
-const { get } = require("https");
 const express = require("express");
 const ejs = require("ejs");
 const app = express();
@@ -21,7 +20,7 @@ const limit = process.env.LIMIT || 50;
 // This is where we fake our request to youtube. 
 const user_agent = process.env.USER_AGENT || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36";
 
-//     EMD OF CONFIGURATION    //
+//     END OF CONFIGURATION    //
 
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
@@ -149,9 +148,9 @@ app.get("/s/:id", async (req, res) => {
 			}).pipe(res);
 		}
 
-		get(info.formats[0].url, {
+		miniget(info.formats[0].url, {
 			headers
-		}, resp => {			
+		}).on('response', resp => {			
 			if (resp.headers['accept-ranges']) res.setHeader('accept-ranges', resp.headers['accept-ranges']);
 			if (resp.headers['content-length']) res.setHeader('content-length', resp.headers['content-length']);
 			if (resp.headers['content-type']) res.setHeader('content-type', resp.headers['content-type']);
@@ -162,7 +161,6 @@ app.get("/s/:id", async (req, res) => {
 		}).on('error', err => {
 			res.status(500).send(err.toString());
 		});
-		
 	} catch (error) {
 		res.status(500).send(error.toString());
 	}
@@ -174,7 +172,7 @@ app.get("/vi*", (req, res) => {
 		headers: {
 			"user-agent": user_agent
 		}
-	})
+	});
 	stream.on('error', err => {
 		console.log(err);
 		res.status(500).send(err.toString());
@@ -188,7 +186,7 @@ app.get("/ytc/*", (req, res) => {
 		headers: {
 			"user-agent": user_agent
 		}
-	})
+	});
 	stream.on('error', err => {
 		console.log(err);
 		res.status(500).send(err.toString());

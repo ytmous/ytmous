@@ -45,7 +45,7 @@ app.get("/s", async (req, res) => {
 	} catch (error) {
 		console.error(error);
 		try {
-			res.send(error)
+			res.send(error);
 		} catch (error) {
 			console.error(error);
 		}

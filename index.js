@@ -148,7 +148,7 @@ app.get("/s/:id", async (req, res) => {
 			}).pipe(res);
 		}
 
-		miniget(info.formats[0].url, {
+		let stream = miniget(info.formats[0].url, {
 			headers
 		}).on('response', resp => {			
 			if (resp.headers['accept-ranges']) res.setHeader('accept-ranges', resp.headers['accept-ranges']);
@@ -157,7 +157,7 @@ app.get("/s/:id", async (req, res) => {
 			if (resp.headers['content-range']) res.setHeader('content-range', resp.headers['content-range']);
 			if (resp.headers['connection']) res.setHeader('connection', resp.headers['connection']);
 			if (resp.headers['cache-control']) res.setHeader('cache-control', resp.headers['cache-control']);
-			resp.pipe(res.status(resp.statusCode));
+			stream.pipe(res.status(resp.statusCode));
 		}).on('error', err => {
 			res.status(500).send(err.toString());
 		});

@@ -45,7 +45,10 @@ app.get("/s", async (req, res) => {
 	} catch (error) {
 		console.error(error);
 		try {
-			res.send(error);
+			res.status(500).render("error.ejs", {
+				title: "ytsr Error",
+				content: error
+			});
 		} catch (error) {
 			console.error(error);
 		}
@@ -58,7 +61,10 @@ app.get("/w/:id", async (req, res) => {
 	try {
 		let info = await ytdl.getInfo(req.params.id);
 		if (!info.formats.filter(format => format.hasVideo && format.hasAudio).length) {
-			return res.status(500).send("This Video is not Available for this Server Region.");
+			return res.status(500).render("error.ejs", {
+				title: "Region Lock",
+				content: "Sorry. This video is not available for this server country."
+			});
 		}
 		
 		res.render("watch.ejs", {
@@ -66,7 +72,10 @@ app.get("/w/:id", async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.status(500).send(error.toString());
+		res.status(500).render("error.ejs", {
+			title: "ytdl Error",
+			content: error
+		});
 	}
 });
 
@@ -99,7 +108,10 @@ app.get("/p/:id", async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.status(500).send(error.toString());
+		res.status(500).render("error.ejs", {
+			title: "ytpl Error",
+			content: error
+		});
 	}
 });
 
@@ -114,7 +126,10 @@ app.get("/c/:id", async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.status(500).send(error.toString());
+		res.status(500).render("error.ejs", {
+			title: "ytpl Error",
+			content: error
+		});
 	}
 });
 
@@ -192,6 +207,14 @@ app.get("/ytc/*", (req, res) => {
 		res.status(500).send(err.toString());
 	});
 	stream.pipe(res);
+});
+
+// 404 Handler
+app.use((req, res) => {
+	res.status(404).render("error.ejs", {
+		title: "404 Not found",
+		content: "A resource that you tried to get is not found or deleted."
+	});
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {

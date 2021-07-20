@@ -1,6 +1,3 @@
-# Notice
-This repository has been moved to [ytmous/ytmous](https://github.com/ytmous/ytmous). 
-
 <div align="center">
 	<img src="https://raw.githubusercontent.com/Yonle/ytmous/master/public/banner.png">
 	<p>A anonymous Youtube that does not spy on you.</p>

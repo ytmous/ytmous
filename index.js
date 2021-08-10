@@ -5,14 +5,7 @@ const ytpl = require("ytpl");
 const miniget = require("miniget");
 const express = require("express");
 const ejs = require("ejs");
-const { FFmpeg } = require("prism-media");
 const app = express();
-let args = [
-	"-i", "-",
-	"-loglevel", "0",
-	"-f", "mp4",
-	"-"
-];
 
 //        CONFIGURATION        //
 
@@ -168,7 +161,7 @@ app.get("/s/:id", async (req, res) => {
 			return m3u8stream(info.formats[0].url).on('error', (err) => {
 				res.status(500).send(err.toString());
 				console.error(err);
-			}).pipe(new FFmpeg({ args })).pipe(res);
+			}).pipe(res);
 		}
 		
 		let stream = miniget(info.formats[0].url, {

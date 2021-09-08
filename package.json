@@ -15,14 +15,14 @@
   "description": "A anonymous Youtube that does not spy on you.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Yonle/ytmous.git"
+    "url": "git+https://github.com/ytmous/ytmous.git"
   },
   "author": "Yonle",
   "private": false,
   "bugs": {
-    "url": "https://github.com/Yonle/ytmous/issues"
+    "url": "https://github.com/ytmous/ytmous/issues"
   },
-  "homepage": "https://github.com/Yonle/ytmous#readme",
+  "homepage": "https://github.com/ytmous/ytmous#readme",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

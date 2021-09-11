@@ -3,21 +3,15 @@
 	<p>A anonymous Youtube that does not spy on you.</p>
 </div>
 
-## ❄Feature
-- 📰 0% Ads
-- 💸 0% Tracker
-- 📃 0% Logging
-- 📩 Download Youtube Videos while you watch them
-- 🔮 Using Bootstrap 5 with [plyr](https://plyr.io) as video player.
-
 ## 📌Why ytmous
-- 😁 No ads and tracker
-- 🍉 Youtube won't able to see your Search Analytics
+- 🚀 It's Wicked Fast! Allowing you to watch video under 5 second!
+- 😁 No ads and tracker. Saving most of your data compared than youtube.
+- 🍉 Youtube won't able to see your Search Analytics. Hehe, Don't want getting stuck on bubble mode eh?
 - 🍡 Unblock a blocked video in your country
-- 😇 Both Server and Client is Open Source
+- 😇 Both Server and Client is Open Source.
 - 😎 You can download a video directly from watch page
 
-## 🖥Requirements
+## 🖥Servee Requirements
 - Node v10+ (Node v14 Recommended)
 - Git installed
 - 500MB RAM (1 GB or more is Recommended)

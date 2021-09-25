@@ -11,7 +11,7 @@
 - 😇 Both Server and Client is Open Source.
 - 😎 You can download a video directly from watch page
 
-## 🖥Servee Requirements
+## 🖥Server Requirements
 - Node v10+ (Node v14 Recommended)
 - Git installed
 - 500MB RAM (1 GB or more is Recommended)

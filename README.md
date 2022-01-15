@@ -1,3 +1,25 @@
+## Deprecation Notice
+```
+After 6 - 10 months of no updates, It's time to deprecate this project. Even though i see somebody open a issue during a day that does not has update, still i respond to them.
+
+I really had no idea of what am i doing after the past 6 months. Seriously, I'M LAZY AS HECK! You see, 3-5 Planned features that were planned since 6 MONTHS AGO IS NEVER IMPLEMENTED FOR THE PAST 6 MONTHS!
+
+Every hours i'm busy and selling some stuff in my shop. Which can also the reason why i can't maintain this repository longer. You can also say that i can't maintain this repo longer due to life issue. I'm busy, tho. Scrolling through Telegram, Twitter, and Mastodon everytime when i'm bored and had no idea of what to do.
+
+Believe me or no, The frontend code (Right in views folder) is mostly a copy paste result in Bootstrap example. Unbelieveable, Isn't it? This project also my random-bored project that i made when i had no idea of what am i doing in some hours.
+
+So yeah. I think this is the end, But not the end. Since the code is open, Somebody may fork it and improve this project with their own.
+
+Thanks for the 36 starts on github. I really appreciate it.
+
+That's it. See you next time, folks.
+
+Bye.
+
+- Yonle <yonle@duck.com>
+  Sat, 15 Jan 2022 06:32:25 GMT
+```
+
 <div align="center">
 	<img src="https://raw.githubusercontent.com/Yonle/ytmous/master/public/banner.png">
 	<p>A anonymous Youtube that does not spy on you.</p>
@@ -46,5 +68,4 @@ PORT=3000 npm start
 ![watch](https://raw.githubusercontent.com/Yonle/ytmous/master/Screenshots/watch.png)
 
 ## 📠Community
-- [Discord](https://discord.gg/9S3ZCDR)
 - [Telegram](https://t.me/yonlecoder)

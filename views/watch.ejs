@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/Toard.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="/css/Toard.css" />
+    <link rel="stylesheet" href="/css/style.css" />
     <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title><%= info.videoDetails.title %></title>
@@ -41,7 +41,8 @@
       <video poster="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>" controls autoplay src="/s/<%= id %>"></video>
       <!-- Channel Information -->
       <div class="chnInfl">
-        <img src="/yt3/<%= info.videoDetails.author.thumbnails.pop().url.slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;"> <span><b><%= info.videoDetails.author.name %></b></span>
+        <img src="/yt3/<%= info.videoDetails.author.thumbnails.pop().url.slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;">
+        <span><b><%= info.videoDetails.author.name %></b></span>
       </div>
       <!-- Video Information -->
       <div id="vidInfo">
@@ -56,7 +57,8 @@
       <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails.pop().url.slice(19); %>" /></a>
         <div class="rVideoInfo">
 	<a href="/w/<%= video.id %>"><h4><%= video.title %></h4></a>
-          <img src="/yt3/<%= video.author.thumbnails.pop().slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;"> <span><b><%= video.author.name %></b></span>
+          <% if (video.author.thumbnails.length) { %><img src="/yt3/<%= video.author.thumbnails.pop().slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;"> <% } %>
+          <span><b><%= video.author.name %></b></span>
           <span><%= video.author.name %></span>
         </div>
       </div>

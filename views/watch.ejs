@@ -32,7 +32,7 @@
     <a class="fixed border bottom right" href="#sbox">Search</a>
     <div id="sbox" class="border fixed bottom right popup">
       <form action="/s" method="GET">
-        <input class="border" type="text" placeholder="Search video...." />
+        <input name="q" class="border" type="text" placeholder="Search video...." />
       </form>
     </div>
     
@@ -53,9 +53,9 @@
     <div id="relatedVideos" class="absolute right">
       <% info.related_videos.forEach(video => { %>
       <div class="rVideo">
-        <img src="<%= video.thumbnails.pop().url.slice(19); %>" />
+      <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails.pop().url.slice(19); %>" /></a>
         <div class="rVideoInfo">
-          <h4><%= video.title %></h4>
+	<a href="/w/<%= video.id %>"><h4><%= video.title %></h4></a>
           <img src="/yt3/<%= video.related_videos[0].author.thumbnails.pop().slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;"> <span><b><%= video.author.name %></b></span>
           <span><%= video.author.name %></span>
         </div>

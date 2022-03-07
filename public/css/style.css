@@ -1,0 +1,63 @@
+body {
+  font-family: Sans-Serif;
+}
+
+video {
+  max-width: 72%;
+  height: auto;
+}
+
+/* img only shows up for thumbnail, and they’re completely small. */
+img {
+  width: 120px;
+}
+
+a {
+  color: black;
+}
+
+.rVideo {
+  display: flex;
+}
+
+.rVideoInfo {
+  display: block;
+  padding: 10px;
+}
+
+/* Channel Info */
+.chInf {
+  border: solid 1px;
+  border-radius: 2px;
+  max-width: 72%;
+  display: flex;
+}
+
+/* Mobile View */
+@media only screen and (max-width: 480px) {
+  body {
+    display: block;
+  }
+
+  #player {
+    position: absolute;
+    background: white;
+    top: 0;
+    left: 0;
+  }
+  
+  #vidInfo {
+    border: solid 1px;
+    border-radius: 2px;
+  }
+  
+  video {
+    max-width: 100%;
+  }
+  
+  #relatedVideos {
+    left: 0;
+    z-index: -1;
+    overflow-y: scroll;
+  }
+}

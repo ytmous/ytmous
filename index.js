@@ -85,6 +85,8 @@ app.get("/w/:id", async (req, res) => {
   }
 });
 
+/* These route is disabled for temporary time.
+
 // Embed Page
 app.get("/e/:id", async (req, res) => {
   if (!req.params.id) return res.redirect("/");
@@ -144,6 +146,8 @@ app.get("/c/:id", async (req, res) => {
     });
   }
 });
+
+*/
 
 // Proxy Area
 // This is where we make everything became anonymous

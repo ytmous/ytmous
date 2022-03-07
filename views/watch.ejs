@@ -56,7 +56,7 @@
       <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails.pop().url.slice(19); %>" /></a>
         <div class="rVideoInfo">
 	<a href="/w/<%= video.id %>"><h4><%= video.title %></h4></a>
-          <img src="/yt3/<%= video.related_videos[0].author.thumbnails.pop().slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;"> <span><b><%= video.author.name %></b></span>
+          <img src="/yt3/<%= video.author.thumbnails.pop().slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;"> <span><b><%= video.author.name %></b></span>
           <span><%= video.author.name %></span>
         </div>
       </div>

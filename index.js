@@ -228,7 +228,7 @@ app.get("/vi*", (req, res) => {
 
 // Proxy to yt3.ggpht.com, Where User avatar is being stored on that host.
 app.get("/yt3/*", (req, res) => {
-  let stream = miniget(`https://yt3.ggpht.com/${req.url}`, {
+  let stream = miniget(`https://yt3.ggpht.com/${req.url.slice(5)}`, {
     headers: {
       "user-agent": user_agent,
     },

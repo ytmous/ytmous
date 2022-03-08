@@ -23,7 +23,6 @@ a {
 #relatedVideos {
   z-index: -1;
   position: static;
-  float: right;
 }
 
 .rVideo {

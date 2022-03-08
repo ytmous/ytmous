@@ -86,11 +86,6 @@ a {
     height: auto;
   }
   
-  #vidInfo {
-    border: solid 1px;
-    border-radius: 2px;
-  }
-  
   video {
     width: 100%;
     max-width: 100%;

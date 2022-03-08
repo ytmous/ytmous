@@ -2,7 +2,7 @@ body {
   font-family: Sans-Serif;
 }
 
-video {
+video, #vidInfo {
   max-width: 60%;
   height: auto;
 }
@@ -60,13 +60,14 @@ a {
     display: block;
   }
 
-  #player {
+  #player, #vidInfo {
     position: static;
     background: white;
     padding: 0;
     top: 0;
     left: 0;
     width: 100%;
+    max-width: 100%;
   }
   
   .rVideo {

@@ -26,9 +26,7 @@
 
   </head>
   <body>
-    <span class="fixed border bottom left"
-      ><b>ytmous</b> - Anonymous Youtube Proxy</span
-    >
+    <span class="fixed border bottom left"><b>ytmous</b> - Anonymous Youtube Proxy</span>
     <a class="fixed border bottom right" href="#sbox">Search</a>
     <div id="sbox" class="border fixed bottom right popup">
       <form action="/s" method="GET">
@@ -56,7 +54,7 @@
       <div class="rVideo">
       <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails.pop().url.slice(19); %>" /></a>
         <div class="rVideoInfo">
-	<a href="/w/<%= video.id %>"><h4><%= video.title %></h4></a>
+	      <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <img src="/yt3/<%= video.author.thumbnails.pop().url.slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;">
           <span><%= video.author.name %></span>
         </div>

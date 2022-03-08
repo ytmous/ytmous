@@ -16,7 +16,12 @@ a {
   color: black;
 }
 
+#player {
+  z-index: -1;
+}
+
 #relatedVideos {
+  z-index: -1;
   position: static;
   float: right;
 }

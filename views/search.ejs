@@ -14,9 +14,10 @@
     <a class="fixed border bottom right" href="#sbox">Search</a>
     <div id="sbox" class="border fixed bottom right popup">
       <form action="/s" method="GET">
-        <input name="q" class="border" type="text" placeholder="Search video...." />
+        <input name="q" class="border" type="text" placeholder="Search video...." value="<%= query %>"/>
       </form>
     </div>
+    <div id="relatedVideos">
     <% res.items.forEach(video => { %>
      <% if (video.type !== "video") return; %>
       <div class="rVideo">
@@ -27,6 +28,7 @@
         </div>
       </div>
     <% }); %>
+    </div>
   <style>
     body {
       display: flex;

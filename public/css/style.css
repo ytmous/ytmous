@@ -3,26 +3,47 @@ body {
 }
 
 video {
-  max-width: 72%;
+  max-width: 60%;
   height: auto;
 }
 
 /* img only shows up for thumbnail, and they’re completely small. */
 img {
-  width: 120px;
+  max-width: 150px;
 }
 
 a {
   color: black;
 }
 
+#relatedVideos {
+  position: static;
+  float: right;
+}
+
 .rVideo {
   display: flex;
+  padding: 3px;
 }
 
 .rVideoInfo {
   display: block;
   padding: 10px;
+  z-index: 2;
+  width: 200px;
+}
+
+.rVideoInfo img {
+  position: absolute;
+  float: left;
+}
+
+.rVideoTime {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: white;
+  background: black;
 }
 
 /* Channel Info */
@@ -40,10 +61,25 @@ a {
   }
 
   #player {
-    position: absolute;
+    position: static;
     background: white;
+    padding: 0;
     top: 0;
     left: 0;
+    width: 100%;
+  }
+  
+  .rVideo {
+    padding: 5px;
+  }
+  
+  .rVideoInfo {
+    width: 170px;
+  }
+  
+  .img {
+    max-width: 200px;
+    height: auto;
   }
   
   #vidInfo {
@@ -54,11 +90,5 @@ a {
   video {
     width: 100%;
     max-width: 100%;
-  }
-  
-  #relatedVideos {
-    left: 0;
-    z-index: -1;
-    overflow-y: scroll;
   }
 }

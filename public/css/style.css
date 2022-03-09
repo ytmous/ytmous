@@ -33,20 +33,11 @@ a {
 .rVideoInfo {
   display: block;
   padding: 10px;
-  z-index: 2;
 }
 
 .rVideoInfo img {
   position: absolute;
   float: left;
-}
-
-.rVideoTime {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  color: white;
-  background: black;
 }
 
 /* Channel Info */

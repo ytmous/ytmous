@@ -1,10 +1,10 @@
 @font-face {
-  font-family: gordita;
-  src: url(/Gordita-Regular.ttf);
+  font-family: ubuntu-regular;
+  src: url(/Ubuntu-R.ttf);
 }
 
 body {
-  font-family: gordita;
+  font-family: ubuntu-regular;
 }
 
 video, #vidInfo {

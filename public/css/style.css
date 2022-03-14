@@ -8,7 +8,7 @@ body {
 }
 
 video, #vidInfo {
-  max-width: 60%;
+  width: 92%;
   height: auto;
 }
 
@@ -62,7 +62,7 @@ a {
   #player, #vidInfo {
     position: static;
     background: white;
-    padding: 0;
+    margin: 0;
     top: 0;
     left: 0;
     width: 100%;

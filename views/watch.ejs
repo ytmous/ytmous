@@ -38,7 +38,7 @@
     <div id="player" class="left absolute">
       <video poster="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>" controls autoplay src="/s/<%= id %>"></video>
       <!-- Channel Information -->
-      <div class="chnInfl">
+      <div class="chnInf">
         <img src="/yt3/<%= info.videoDetails.author.thumbnails.pop().url.slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;">
         <span><b><%= info.videoDetails.author.name %></b></span>
       </div>
@@ -55,8 +55,10 @@
       <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails.pop().url.slice(19); %>" /></a>
         <div class="rVideoInfo">
 	      <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
-          <img src="/yt3/<%= video.author.thumbnails.pop().url.slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;">
-          <span><%= video.author.name %></span>
+	      <div class="chnInf">
+            <img src="/yt3/<%= video.author.thumbnails.pop().url.slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;">
+            <span><%= video.author.name %></span>
+          </div>
         </div>
       </div>
       <% }); %>

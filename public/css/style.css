@@ -8,6 +8,7 @@ body {
 }
 
 video, #vidInfo {
+  max-width: 60%;
   width: 92%;
   height: auto;
 }

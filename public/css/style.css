@@ -7,9 +7,8 @@ body {
   font-family: ubuntu-regular;
 }
 
-video, #vidInfo {
-  max-width: 60%;
-  width: 92%;
+video {
+  width: 100%;
   height: auto;
 }
 
@@ -23,6 +22,7 @@ a {
 }
 
 #player {
+  width: 60%;
   z-index: -1;
 }
 
@@ -42,7 +42,6 @@ a {
 }
 
 .rVideoInfo img {
-  position: absolute;
   float: left;
 }
 
@@ -55,9 +54,10 @@ a {
 }
 
 /* Mobile View */
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 960px) {
   body {
     display: block;
+    margin: 0;
   }
 
   #player, #vidInfo {
@@ -69,9 +69,14 @@ a {
     width: 100%;
     max-width: 100%;
   }
+
+  #relaedVideos {
+    float: left;
+    position: relative;
+  }
   
-  .rVideo {
-    padding: 5px;
+  .rVideo, #chnInf, #vidInfo {
+    padding: 3.5px;
   }
   
   .rVideoInfo {

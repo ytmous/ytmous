@@ -73,6 +73,7 @@ a {
   #relaedVideos {
     float: left;
     position: relative;
+    padding: 3.5px;
   }
   
   .rVideo, #chnInf, #vidInfo {

@@ -110,7 +110,7 @@ app.get("/e/:id", async (req, res) => {
     res.status(500).send(error.toString());
   }
 });
-
+*/
 // Playlist page
 app.get("/p/:id", async (req, res) => {
   if (!req.params.id) return res.redirect("/");
@@ -146,8 +146,6 @@ app.get("/c/:id", async (req, res) => {
     });
   }
 });
-
-*/
 
 // Proxy Area
 // This is where we make everything became anonymous

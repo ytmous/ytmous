@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/Toard.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>ytmous</title>
+  </head>
+  <body>
+    <span class="fixed border bottom left"><b>ytmous</b> - Anonymous Youtube Proxy</span>
+    <a class="fixed border bottom right" href="#sbox">Search</a>
+    <div id="sbox" class="border fixed bottom right popup">
+      <form action="/s" method="GET">
+        <input name="q" class="border" type="text" placeholder="Search video...." value="<%= query %>"/>
+      </form>
+    </div>
+    <h2><%= playlist.title %></h2>
+    <div id="relatedVideos">
+    <% playlist.items.forEach(video => { %>
+     <% if (video.type !== "video") return; %>
+      <div class="rVideo">
+      <a href="/w/<%= video.id %>"><img src="<%= video.bestThumbnail.url.slice(19) %>" /></a>
+        <div class="rVideoInfo">
+	      <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
+          <span><img src="/yt3/<%= video.author.bestAvatar.url.slice(22) %>" style="border-radius: 50%; width: 20px; height: 20px;"> <%= video.author.name %></span>
+        </div>
+      </div>
+    <% }); %>
+    </div>
+    <% if (page > 1) { %> <a class="border left" href="/p/<%= playlist.id %>?p=<%= page-1 %>">Previous Page</a> <% } %>
+    <a class="border right" href="/p/<%= playlist.id %>?p=<%= page+1 %>">Next Page</a>
+  <style>
+    body {
+      display: block;
+    }
+  </style>
+  </body>
+</html>

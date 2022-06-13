@@ -70,14 +70,15 @@ a {
     max-width: 100%;
   }
 
-  #relaedVideos {
+  #relatedVideos {
     float: left;
     position: relative;
-    padding: 3.5px;
+    padding: 2px;
   }
   
   .rVideo, #chnInf, #vidInfo {
-    padding: 3.5px;
+    position: relative;
+    padding: 2.5px;
   }
   
   .rVideoInfo {

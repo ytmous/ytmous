@@ -18,7 +18,6 @@
     <h2><img width="30" src="<%= channel.author.bestAvatar.url.slice(21) %>"> <%= channel.author.name %></h2>
     <div id="relatedVideos">
     <% channel.items.forEach(video => { %>
-     <% if (video.type !== "video") return; %>
       <div class="rVideo">
       <a href="/w/<%= video.id %>"><img src="<%= video.bestThumbnail.url.slice(19) %>" /></a>
         <div class="rVideoInfo">

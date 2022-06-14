@@ -22,7 +22,7 @@
       <a href="/w/<%= video.id %>"><img src="<%= video.bestThumbnail.url.slice(19) %>" /></a>
         <div class="rVideoInfo">
 	      <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
-          <span><img src="/yt3/<%= video.author.bestAvatar.url.slice(22) %>" style="border-radius: 50%; width: 20px; height: 20px;"> <%= video.author.name %></span>
+          <span><img src="/yt3/<%= channel.author.bestAvatar.url.slice(22) %>" style="border-radius: 50%; width: 20px; height: 20px;"> <%= video.author.name %></span>
         </div>
       </div>
     <% }); %>

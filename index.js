@@ -220,7 +220,7 @@ app.get("/s/:id", async (req, res) => {
 
 // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
 app.get("/vi*", (req, res) => {
-  let stream = miniget(`https://i.ytimg.com/${req.url.split("?")[0]}`, {
+  let stream = miniget(`https://i.ytimg.com/${req.url.slice(1)}`, {
     headers: {
       "user-agent": user_agent,
     },
@@ -234,7 +234,8 @@ app.get("/vi*", (req, res) => {
 
 // Proxy to yt3.ggpht.com, Where User avatar is being stored on that host.
 app.get(["/yt3/*", "/ytc/*"], (req, res) => {
-  let stream = miniget(`https://yt3.ggpht.com/${req.url.slice(5)}`, {
+  if (req.url.startsWith("/yt3/")) req.url = req.url.slice(4);
+  let stream = miniget(`https://yt3.ggpht.com/${req.url.slice(1)}`, {
     headers: {
       "user-agent": user_agent,
     },

@@ -28,8 +28,8 @@
       </div>
     <% }); %>
     </div>
-    <% if (page > 1) { %> <a class="border left" href="/p/<%= playlist.id %>?p=<%= page-1 %>">Previous Page</a> <% } %>
-    <a class="border right" href="/p/<%= playlist.id %>?p=<%= page+1 %>">Next Page</a>
+    <% if (page > 1) { %> <a class="border left" href="/p/<%= channel.id %>?p=<%= page-1 %>">Previous Page</a> <% } %>
+    <a class="border right" href="/p/<%= channel.id %>?p=<%= page+1 %>">Next Page</a>
   <style>
     body {
       display: block;

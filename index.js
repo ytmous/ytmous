@@ -230,9 +230,11 @@ app.get("/vi*", (req, res) => {
     res.status(500).send(err.toString());
   });
 
-  res.setHeader("content-type", res.headers["content-type"]);
-  res.setHeader("content-length", res.headers["content-length"]);
-  stream.pipe(res);
+  stream.on('response', origin => {
+    res.setHeader("content-type", origin.headers["content-type"]);
+    res.setHeader("content-length", origin.headers["content-length"]);
+    stream.pipe(res);
+  });
 });
 
 // Proxy to yt3.ggpht.com, Where User avatar is being stored on that host.
@@ -248,9 +250,11 @@ app.get(["/yt3/*", "/ytc/*"], (req, res) => {
     res.status(500).send(err.toString());
   });
 
-  res.setHeader("content-type", res.headers["content-type"]);
-  res.setHeader("content-length", res.headers["content-length"])
-  stream.pipe(res);
+  stream.on('response', origin => {
+    res.setHeader("content-type", origin.headers["content-type"]);
+    res.setHeader("content-length", origin.headers["content-length"]);
+    stream.pipe(res);
+  });
 });
 
 // 404 Handler

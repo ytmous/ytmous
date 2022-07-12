@@ -86,32 +86,13 @@ app.get("/w/:id", async (req, res) => {
   }
 });
 
-/* These route is disabled for temporary time.
-
 // Embed Page
+// From now on, This endpoint will just redirect to stream page
 app.get("/e/:id", async (req, res) => {
   if (!req.params.id) return res.redirect("/");
-  try {
-    let info = await ytdl.getInfo(req.params.id);
-    if (
-      !info.formats.filter((format) => format.hasVideo && format.hasAudio)
-        .length
-    ) {
-      return res
-        .status(500)
-        .send("This Video is not Available for this Server Region.");
-    }
-
-    res.render("embed.ejs", {
-      id: req.params.id,
-      info,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error.toString());
-  }
+  res.redirect("/s/" + req.params.id);
 });
-*/
+
 // Playlist page
 app.get("/p/:id", async (req, res) => {
   if (!req.params.id) return res.redirect("/");

@@ -5,58 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/Toard.css" />
     <link rel="stylesheet" href="/css/style.css" />
-    <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title><%= info.videoDetails.title %></title>
-  <meta name="description" content="<%= info.videoDetails.description || "" %>">
-  <meta property="og:title" content="<%= info.videoDetails.title %> - ytmous">
-  <meta property="og:type" content="video">
-  <meta property="og:video" content="/stream/<%= id %>">
-  <meta property="og:video:type" content="video/mp4">
-  <meta property="og:video" content="/stream/<%= id %>">
-  <meta property="og:video:type" content="text/html">
-  <meta property="twitter:player" content="/stream/<%= id %>">
-  <meta name="twitter:image" content="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>">
-  <meta property="og:description" content="<%= info.videoDetails.description || "" %>">
-  <meta property="og:site_name" content="ytmous | Anonymous Youtube Proxy">
-  <meta property="og:image" content="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>">
-  <meta name="theme-color" content="#ff8181">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="author" content="ytmous | Anonymous Youtube Proxy">
-
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title><%= info.videoDetails.title %></title>
+    <meta name="description" content="<%= info.videoDetails.description || ""
+    %>">
+    <meta
+      property="og:title"
+      content="<%= info.videoDetails.title %> - ytmous"
+    />
+    <meta property="og:type" content="video" />
+    <meta property="og:video" content="/stream/<%= id %>" />
+    <meta property="og:video:type" content="video/mp4" />
+    <meta property="og:video" content="/stream/<%= id %>" />
+    <meta property="og:video:type" content="text/html" />
+    <meta property="twitter:player" content="/stream/<%= id %>" />
+    <meta
+      name="twitter:image"
+      content="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>"
+    />
+    <meta property="og:description" content="<%= info.videoDetails.description
+    || "" %>">
+    <meta property="og:site_name" content="ytmous | Anonymous Youtube Proxy" />
+    <meta
+      property="og:image"
+      content="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>"
+    />
+    <meta name="theme-color" content="#ff8181" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="author" content="ytmous | Anonymous Youtube Proxy" />
   </head>
   <body>
-    <span class="fixed border bottom left"><b>ytmous</b> - Anonymous Youtube Proxy</span>
+    <span class="fixed border bottom left"
+      ><b>ytmous</b> - Anonymous Youtube Proxy</span
+    >
     <a class="fixed border bottom right" href="#sbox">Search</a>
     <div id="sbox" class="border fixed bottom right popup">
       <form action="/s" method="GET">
-        <input name="q" class="border" type="text" placeholder="Search video...." />
+        <input
+          name="q"
+          class="border"
+          type="text"
+          placeholder="Search video...."
+        />
       </form>
     </div>
-    
+
     <!-- Video Player -->
     <div id="player" class="left absolute">
-      <video poster="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>" controls autoplay src="/s/<%= id %>"></video>
+      <video
+        poster="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>"
+        controls
+        autoplay
+        src="/s/<%= id %>"
+      ></video>
       <!-- Channel Information -->
       <div class="chnInf">
-        <span><img src="/yt3/<%= info.videoDetails.author.thumbnails.pop().url.slice(22) %>" style="border-radius: 50%; width: 15px; height: 15px;">
-        <b><%= info.videoDetails.author.name %></b></span>
+        <h4
+          ><img
+            src="/yt3/<%= info.videoDetails.author.thumbnails.pop().url.slice(22) %>"
+            style="border-radius: 50%; width: 15px; height: 15px"
+          />
+          <a href="/c/<%= info.videoDetails.author.id %>"
+            ><%= info.videoDetails.author.name %></a
+          ></h4
+        >
       </div>
       <!-- Video Information -->
       <div id="vidInfo">
         <h2><%= info.videoDetails.title %></h2>
-        <span><%- (info.videoDetails.description || "").replace(/\n/g, "<br>") %></span>
+        <span
+          ><%- (info.videoDetails.description || "").replace(/\n/g, "<br />")
+          %></span
+        >
       </div>
     </div>
     <!-- Related Video section -->
     <div id="relatedVideos" class="absolute right">
       <% info.related_videos.forEach(video => { %>
       <div class="rVideo">
-      <a href="/w/<%= video.id %>"><img src="<%= video.thumbnails.pop().url.slice(19); %>" /></a>
+        <a href="/w/<%= video.id %>"
+          ><img src="<%= video.thumbnails.pop().url.slice(19); %>"
+        /></a>
         <div class="rVideoInfo">
-	      <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
-	      <div class="chnInf">
-            <span><img src="/yt3/<%= video.author.thumbnails.pop().url.slice(22) %>" style="border-radius: 50%; width: 17px; height: 17px;"> <%= video.author.name %></span>
+          <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
+          <div class="chnInf">
+            <span
+              ><img
+                src="/yt3/<%= video.author.thumbnails.pop().url.slice(22) %>"
+                style="border-radius: 50%; width: 17px; height: 17px"
+              />
+              <a href="/c/<%= video.author.id %>"
+                ><%= video.author.name %></a
+              ></span
+            >
           </div>
         </div>
       </div>
@@ -66,9 +111,15 @@
       #relatedVideos {
         float: right;
       }
-      
-      .rVideoInfo { 
+
+      .rVideoInfo {
         max-width: 200px;
+      }
+
+      @media only screen and (max-width: 960px) {
+        #relatedVideos {
+          float: left;
+        }
       }
     </style>
   </body>

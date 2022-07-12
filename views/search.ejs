@@ -8,31 +8,58 @@
     <title>ytmous</title>
   </head>
   <body>
-    <span class="fixed border bottom left"><b>ytmous</b> - Anonymous Youtube Proxy</span>
+    <span class="fixed border bottom left"
+      ><b>ytmous</b> - Anonymous Youtube Proxy</span
+    >
     <a class="fixed border bottom right" href="#sbox">Search</a>
     <div id="sbox" class="border fixed bottom right popup">
       <form action="/s" method="GET">
-        <input name="q" class="border" type="text" placeholder="Search video...." value="<%= query %>"/>
+        <input
+          name="q"
+          class="border"
+          type="text"
+          placeholder="Search video...."
+          value="<%= query %>"
+        />
       </form>
     </div>
     <div id="relatedVideos">
-    <% res.items.forEach(video => { %>
-     <% if (video.type !== "video") return; %>
+      <% res.items.forEach(video => { %>
+      <% if (video.type === "video") { %>
       <div class="rVideo">
-      <a href="/w/<%= video.id %>"><img src="<%= video.bestThumbnail.url.slice(19) %>" /></a>
+        <a href="/w/<%= video.id %>"
+          ><img src="<%= video.bestThumbnail.url.slice(19) %>"
+        /></a>
         <div class="rVideoInfo">
-	      <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
-          <span><img src="/yt3/<%= video.author.bestAvatar.url.slice(22) %>" style="border-radius: 50%; width: 17px; height: 17px;"> <%= video.author.name %></span>
+          <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
+          <span
+            ><img
+              src="/yt3/<%= video.author.bestAvatar.url.slice(22) %>"
+              style="border-radius: 50%; width: 17px; height: 17px"
+            />
+            <a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span
+          >
         </div>
       </div>
-    <% }); %>
+      <% } else if (video.type === "playlist") { %>
+
+      <% } else if (video.type === "channel") { %>
+      
+      <% } %>
+      <% }); %>
     </div>
-    <% if (page > 1) { %> <a class="border left" href="/s?q=<%= query %>&p=<%= page-1 %>">Previous Page</a> <% } %>
-    <a class="border right" href="/s?q=<%= query %>&p=<%= page+1 %>">Next Page</a>
-  <style>
-    body {
-      display: block;
-    }
-  </style>
+    <% if (page > 1) { %>
+    <a class="border left" href="/s?q=<%= query %>&p=<%= page-1 %>"
+      >Previous Page</a
+    >
+    <% } %>
+    <a class="border right" href="/s?q=<%= query %>&p=<%= page+1 %>"
+      >Next Page</a
+    >
+    <style>
+      body {
+        display: block;
+      }
+    </style>
   </body>
 </html>

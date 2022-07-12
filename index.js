@@ -175,6 +175,7 @@ app.get("/s/:id", async (req, res) => {
 
     let headers = {
       "user-agent": user_agent,
+      "connection": "close"
     };
 
     // If user is seeking a video
@@ -183,6 +184,7 @@ app.get("/s/:id", async (req, res) => {
     }
 
     res.setHeader("content-type", "video/mp4");
+    res.setHeader("connection", "close");
     if (info.videoDetails.isLiveContent && info.formats[0].type == "video/ts") {
       return m3u8stream(info.formats[0].url)
         .on("error", (err) => {
@@ -204,8 +206,6 @@ app.get("/s/:id", async (req, res) => {
           res.setHeader("content-type", resp.headers["content-type"]);
         if (resp.headers["content-range"])
           res.setHeader("content-range", resp.headers["content-range"]);
-        if (resp.headers["connection"])
-          res.setHeader("connection", resp.headers["connection"]);
         if (resp.headers["cache-control"])
           res.setHeader("cache-control", resp.headers["cache-control"]);
         stream.pipe(res.status(resp.statusCode));

@@ -60,7 +60,10 @@ app.get("/s", async (req, res) => {
 
 // Watch Page
 app.get("/w/:id", async (req, res) => {
-  if (!req.params.id) return res.redirect("/");
+  if (!ytdl.validateID(req.params.id)) return res.status(400).render("error.ejs", {
+      title: "Invalid video ID",
+      content: "Your requested video is invalid. Check your URL and try again."
+    });;
   try {
     let info = await ytdl.getInfo(req.params.id);
     if (
@@ -95,7 +98,10 @@ app.get("/e/:id", async (req, res) => {
 
 // Playlist page
 app.get("/p/:id", async (req, res) => {
-  if (!req.params.id) return res.redirect("/");
+  if (!ytpl.validateID(req.params.id)) return res.status(400).render("error.ejs", {
+      title: "Invalid playlist ID",
+      content: "Your requested playlist is invalid. Check your URL and try again."
+    });
   let page = Number(req.query.p || 1);
   try {
     res.render("playlist.ejs", {
@@ -113,7 +119,10 @@ app.get("/p/:id", async (req, res) => {
 
 // Channel page
 app.get("/c/:id", async (req, res) => {
-  if (!req.params.id) return res.redirect("/");
+  if (!ytpl.validateID(req.params.id)) return res.status(400).render("error.ejs", {
+    title: "Invalid channel ID",
+    content: "Your requested channel is invalid. Check your URL and try again."
+  });
   let page = Number(req.query.p || 1);
   try {
     res.render("channel.ejs", {
@@ -134,7 +143,7 @@ app.get("/c/:id", async (req, res) => {
 
 // Video Streaming
 app.get("/s/:id", async (req, res) => {
-  if (!req.params.id) return res.redirect("/");
+  if (!ytdl.validateID(req.params.id)) return res.redirect("/");
   try {
     if (!cachedURL.has(req.params.id)) {
       let info = await ytdl.getInfo(req.params.id);
@@ -164,8 +173,6 @@ app.get("/s/:id", async (req, res) => {
       headers.range = req.headers.range;
     }
 
-    res.setHeader("content-type", "video/mp4");
-    res.setHeader("connection", "close");
     if (info.videoDetails.isLiveContent && info.formats[0].type == "video/ts") {
       return m3u8stream(info.formats[0].url)
         .on("error", (err) => {
@@ -189,9 +196,12 @@ app.get("/s/:id", async (req, res) => {
           res.setHeader("content-range", resp.headers["content-range"]);
         if (resp.headers["cache-control"])
           res.setHeader("cache-control", resp.headers["cache-control"]);
+        if (resp.headers["connection"])
+          res.setHeader("connection", resp.headers["connection"]);
         stream.pipe(res.status(resp.statusCode));
       })
       .on("error", (err) => {
+        console.error(err);
         res.status(500).send(err.toString());
       });
   } catch (error) {

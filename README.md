@@ -4,15 +4,16 @@
 </div>
 
 ### Search, Click, and watch
-ytmous is a lightweight, and Anonymous Youtube Proxy.
+ytmous is a lightweight, and Anonymous Youtube Proxy. Designed for
+device with limited resource.
 
-### Zero Trackers & Ads
-We give you a very simple Watching interface, without ANY of Trackers, or Ads included
+### There's no tracker and ads
+Only a simple webpage, ready for you to watch some videos in a second
 
-### Zero Javascript
-ytmous frontend has zero JavaScript. Only CSS3 power can do the job of Search button!
+### No JavaScript in frontend
+There's no JavaScript in frontend, ever. Most pages were rendered in server (backend).
 
-### 100% Open source
+### Completely open source
 ytmous is licensed under BSD 3 Clause and it's code is free to view. You can also host it in your own.
 
 ## Server Requirement

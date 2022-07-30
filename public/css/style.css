@@ -21,6 +21,10 @@ a {
   color: black;
 }
 
+#sbox:hover, #sbtn:hover + #sbox {
+  visibility: visible;
+}
+
 #player {
   width: 60%;
   z-index: -1;

@@ -165,7 +165,6 @@ app.get("/s/:id", async (req, res) => {
 
     let headers = {
       "user-agent": user_agent,
-      "connection": "close"
     };
 
     // If user is seeking a video

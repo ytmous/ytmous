@@ -9,7 +9,7 @@ body {
 
 video {
   width: 100%;
-  height: auto;
+  max-height: 75vh;
 }
 
 /* img only shows up for thumbnail, and they’re completely small. */

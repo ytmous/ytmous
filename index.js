@@ -185,19 +185,24 @@ app.get("/s/:id", async (req, res) => {
       headers,
     })
       .on("response", (resp) => {
-        if (resp.headers["accept-ranges"])
-          res.setHeader("accept-ranges", resp.headers["accept-ranges"]);
-        if (resp.headers["content-length"])
-          res.setHeader("content-length", resp.headers["content-length"]);
-        if (resp.headers["content-type"])
-          res.setHeader("content-type", resp.headers["content-type"]);
-        if (resp.headers["content-range"])
-          res.setHeader("content-range", resp.headers["content-range"]);
-        if (resp.headers["cache-control"])
-          res.setHeader("cache-control", resp.headers["cache-control"]);
-        if (resp.headers["connection"])
-          res.setHeader("connection", resp.headers["connection"]);
-        stream.pipe(res.status(resp.statusCode));
+        try {
+          res.status(resp.statusCode);
+          if (resp.headers["accept-ranges"])
+            res.setHeader("accept-ranges", resp.headers["accept-ranges"]);
+          if (resp.headers["content-length"])
+            res.setHeader("content-length", resp.headers["content-length"]);
+          if (resp.headers["content-type"])
+            res.setHeader("content-type", resp.headers["content-type"]);
+          if (resp.headers["content-range"])
+            res.setHeader("content-range", resp.headers["content-range"]);
+          if (resp.headers["cache-control"])
+            res.setHeader("cache-control", resp.headers["cache-control"]);
+          if (resp.headers["connection"])
+            res.setHeader("connection", resp.headers["connection"]);
+        } catch (err) {
+          console.error(err);
+        }
+        stream.pipe(res);
       })
       .on("error", (err) => {
         console.error(err);

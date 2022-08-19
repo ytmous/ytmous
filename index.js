@@ -60,16 +60,17 @@ app.get("/s", async (req, res) => {
 
 // Watch Page
 app.get("/w/:id", async (req, res) => {
-  if (!ytdl.validateID(req.params.id)) return res.status(400).render("error.ejs", {
+  if (!ytdl.validateID(req.params.id))
+    return res.status(400).render("error.ejs", {
       title: "Invalid video ID",
-      content: "Your requested video is invalid. Check your URL and try again."
-    });;
+      content: "Your requested video is invalid. Check your URL and try again.",
+    });
   try {
     let info = await ytdl.getInfo(req.params.id);
-    if (
-      !info.formats.filter((format) => format.hasVideo && format.hasAudio)
-        .length
-    ) {
+    info.formats = info.formats.filter(
+      (format) => format.hasVideo && format.hasAudio
+    );
+    if (!info.formats.length) {
       return res.status(500).render("error.ejs", {
         title: "Region Lock",
         content: "Sorry. This video is not available for this server country.",
@@ -98,9 +99,11 @@ app.get("/e/:id", async (req, res) => {
 
 // Playlist page
 app.get("/p/:id", async (req, res) => {
-  if (!ytpl.validateID(req.params.id)) return res.status(400).render("error.ejs", {
+  if (!ytpl.validateID(req.params.id))
+    return res.status(400).render("error.ejs", {
       title: "Invalid playlist ID",
-      content: "Your requested playlist is invalid. Check your URL and try again."
+      content:
+        "Your requested playlist is invalid. Check your URL and try again.",
     });
   let page = Number(req.query.p || 1);
   try {
@@ -119,10 +122,12 @@ app.get("/p/:id", async (req, res) => {
 
 // Channel page
 app.get("/c/:id", async (req, res) => {
-  if (!ytpl.validateID(req.params.id)) return res.status(400).render("error.ejs", {
-    title: "Invalid channel ID",
-    content: "Your requested channel is invalid. Check your URL and try again."
-  });
+  if (!ytpl.validateID(req.params.id))
+    return res.status(400).render("error.ejs", {
+      title: "Invalid channel ID",
+      content:
+        "Your requested channel is invalid. Check your URL and try again.",
+    });
   let page = Number(req.query.p || 1);
   try {
     res.render("channel.ejs", {
@@ -158,7 +163,16 @@ app.get("/s/:id", async (req, res) => {
       }
 
       cachedURL.set(req.params.id, info);
-      setTimeout(() => cachedURL.delete(req.params.id), Number(require("querystring").parse(info.formats[0].url)["https://" + (new URL(info.formats[0].url)).host + "/videoplayback?expire"]));
+      setTimeout(
+        () => cachedURL.delete(req.params.id),
+        Number(
+          require("querystring").parse(info.formats[0].url)[
+            "https://" +
+              new URL(info.formats[0].url).host +
+              "/videoplayback?expire"
+          ]
+        )
+      );
     }
 
     let info = cachedURL.get(req.params.id);
@@ -225,7 +239,7 @@ app.get("/vi*", (req, res) => {
     res.status(500).send(err.toString());
   });
 
-  stream.on('response', origin => {
+  stream.on("response", (origin) => {
     res.setHeader("content-type", origin.headers["content-type"]);
     res.setHeader("content-length", origin.headers["content-length"]);
     stream.pipe(res);
@@ -245,7 +259,7 @@ app.get(["/yt3/*", "/ytc/*"], (req, res) => {
     res.status(500).send(err.toString());
   });
 
-  stream.on('response', origin => {
+  stream.on("response", (origin) => {
     res.setHeader("content-type", origin.headers["content-type"]);
     res.setHeader("content-length", origin.headers["content-length"]);
     stream.pipe(res);

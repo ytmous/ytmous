@@ -8,7 +8,7 @@
     "express": "^4.17.1",
     "m3u8stream": "^0.8.4",
     "miniget": "^4.x",
-    "ytdl-core": "^4.x",
+    "ytdl-core": "4.10.0",
     "ytpl": "^2.x",
     "ytsr": "^3.x"
   },

@@ -12,7 +12,7 @@ video {
   top: 0;
   z-index: 3;
   width: 100%;
-  max-height: 75vh;
+  max-height: 60vh;
 }
 
 /* img only shows up for thumbnail, and they’re completely small. */

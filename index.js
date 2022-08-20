@@ -24,6 +24,8 @@ const user_agent =
 
 //     END OF CONFIGURATION    //
 
+let infos = {};
+
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -76,6 +78,7 @@ app.get("/w/:id", async (req, res) => {
       });
     }
 
+    infos[req.params.id] = info;
     res.render("watch.ejs", {
       id: req.params.id,
       info,
@@ -149,15 +152,20 @@ app.get("/c/:id", async (req, res) => {
 app.get("/s/:id", async (req, res) => {
   if (!ytdl.validateID(req.params.id)) return res.redirect("/");
   try {
-    let info = await ytdl.getInfo(req.params.id);
-    info.formats = info.formats.filter(
-      (format) => format.hasVideo && format.hasAudio
-    );
+    let info = infos[req.params.id];
+    if (!info) {
+      info = await ytdl.getInfo(req.params.id);
+      info.formats = info.formats.filter(
+        (format) => format.hasVideo && format.hasAudio
+      );
 
-    if (!info.formats.length) {
-      return res
-        .status(500)
-        .send("This Video is not Available for this Server Region.");
+      if (!info.formats.length) {
+        return res
+          .status(500)
+          .send("This Video is not Available for this Server Region.");
+      }
+
+      infos[req.params.id] = info;
     }
 
     let headers = {
@@ -178,33 +186,30 @@ app.get("/s/:id", async (req, res) => {
         .pipe(res);
     }
 
-    let stream = miniget(info.formats[0].url, {
-      headers,
-    })
-      .on("response", (resp) => {
-        try {
-          res.status(resp.statusCode);
-          if (resp.headers["accept-ranges"])
-            res.setHeader("accept-ranges", resp.headers["accept-ranges"]);
-          if (resp.headers["content-length"])
-            res.setHeader("content-length", resp.headers["content-length"]);
-          if (resp.headers["content-type"])
-            res.setHeader("content-type", resp.headers["content-type"]);
-          if (resp.headers["content-range"])
-            res.setHeader("content-range", resp.headers["content-range"]);
-          if (resp.headers["cache-control"])
-            res.setHeader("cache-control", resp.headers["cache-control"]);
-          if (resp.headers["connection"])
-            res.setHeader("connection", resp.headers["connection"]);
-        } catch (err) {
-          console.error(err);
-        }
-        stream.pipe(res);
-      })
-      .on("error", (err) => {
+      let h = headers.range.split(",")[0]
+        .split("-");
+
+      let range = { start: h[0].slice(6) };
+      let s = ytdl.downloadFromInfo(info, {
+        range,
+        dlChunkSize: process.env.DLCHUNKSIZE || 1024 * 1024
+      }).on('response', r => {
+        ["accept-ranges", "content-length", "content-type", "content-range"].forEach(hed => {
+          let head = r.headers[hed];
+          if (head) res.setHeader(hed, head)
+        });
+        s.pipe(res);
+      }).on('error', (err) => {
         console.error(err);
-        res.status(500).send(err.toString());
+        res.status(500).send(err.toString())
       });
+
+      res.on('error', err => {
+        console.error(err);
+        s.destroy();
+      });
+
+      res.on('close', _ => s.destroy());
   } catch (error) {
     res.status(500).send(error.toString());
   }

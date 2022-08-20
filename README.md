@@ -27,6 +27,7 @@ The code is reading the provided configuration from Environment Variable that co
 
 - `LIMIT`: Search / Video result from playlist, channel, or search result limit. The smaller, The faster.
 - `USER_AGENT`: This variable is where we fake our user agent to request youtube.
+- `DLCHUNKSIZE`: Download Chunk Size. Default is 1 MB (1024 * 1024)
 - `PORT`: Server port to listen to.
 
 ## Starting the server

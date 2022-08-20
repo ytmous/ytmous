@@ -15,7 +15,6 @@ const app = express();
 // Change it as many as you want. 0 for all result without limit.
 // The smaller, The faster.
 const limit = process.env.LIMIT || 50;
-const cachedURL = new Map();
 
 // User Agent
 // This is where we fake our request to youtube.
@@ -150,32 +149,16 @@ app.get("/c/:id", async (req, res) => {
 app.get("/s/:id", async (req, res) => {
   if (!ytdl.validateID(req.params.id)) return res.redirect("/");
   try {
-    if (!cachedURL.has(req.params.id)) {
-      let info = await ytdl.getInfo(req.params.id);
-      info.formats = info.formats.filter(
-        (format) => format.hasVideo && format.hasAudio
-      );
+    let info = await ytdl.getInfo(req.params.id);
+    info.formats = info.formats.filter(
+      (format) => format.hasVideo && format.hasAudio
+    );
 
-      if (!info.formats.length) {
-        return res
-          .status(500)
-          .send("This Video is not Available for this Server Region.");
-      }
-
-      cachedURL.set(req.params.id, info);
-      setTimeout(
-        () => cachedURL.delete(req.params.id),
-        Number(
-          require("querystring").parse(info.formats[0].url)[
-            "https://" +
-              new URL(info.formats[0].url).host +
-              "/videoplayback?expire"
-          ]
-        )
-      );
+    if (!info.formats.length) {
+      return res
+        .status(500)
+        .send("This Video is not Available for this Server Region.");
     }
-
-    let info = cachedURL.get(req.params.id);
 
     let headers = {
       "user-agent": user_agent,

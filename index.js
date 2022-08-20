@@ -186,8 +186,7 @@ app.get("/s/:id", async (req, res) => {
         .pipe(res);
     }
 
-      let h = headers.range.split(",")[0]
-        .split("-");
+      let h = headers.range ? headers.range.split(",")[0].split("-") : ["bytes=0"];
 
       let range = { start: h[0].slice(6) };
       let s = ytdl.downloadFromInfo(info, {

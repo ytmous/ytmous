@@ -191,7 +191,7 @@ app.get("/s/:id", async (req, res) => {
       let range = { start: h[0].slice(6) };
       let s = ytdl.downloadFromInfo(info, {
         range,
-        dlChunkSize: process.env.DLCHUNKSIZE || 1024 * 1024
+        dlChunkSize: process.env.DLCHUNKSIZE || 1024 * 1024 * 10
       }).on('response', r => {
         ["accept-ranges", "content-length", "content-type", "content-range"].forEach(hed => {
           let head = r.headers[hed];

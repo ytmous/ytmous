@@ -19,8 +19,7 @@ const limit = process.env.LIMIT || 50;
 // User Agent
 // This is where we fake our request to youtube.
 const user_agent =
-  process.env.USER_AGENT ||
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36";
+  process.env.USER_AGENT || "googlebot";
 
 //     END OF CONFIGURATION    //
 
@@ -68,9 +67,8 @@ app.get("/w/:id", async (req, res) => {
     });
   try {
     let info = await ytdl.getInfo(req.params.id);
-    info.formats = info.formats.filter(
-      (format) => format.hasVideo && format.hasAudio
-    );
+    console.log(info);
+
     if (!info.formats.length) {
       return res.status(500).render("error.ejs", {
         title: "Region Lock",
@@ -81,7 +79,7 @@ app.get("/w/:id", async (req, res) => {
     infos[req.params.id] = info;
     res.render("watch.ejs", {
       id: req.params.id,
-      info,
+      info, q: req.query
     });
   } catch (error) {
     console.error(error);
@@ -155,18 +153,19 @@ app.get("/s/:id", async (req, res) => {
     let info = infos[req.params.id];
     if (!info) {
       info = await ytdl.getInfo(req.params.id);
-      info.formats = info.formats.filter(
-        (format) => format.hasVideo && format.hasAudio
-      );
-
-      if (!info.formats.length) {
-        return res
-          .status(500)
-          .send("This Video is not Available for this Server Region.");
-      }
-
       infos[req.params.id] = info;
     }
+
+    info.formats = info.formats.filter(
+      (format) => req.query.itag ? req.query.itag == format.itag : (format.hasVideo && format.hasAudio)
+    );
+
+    if (!info.formats.length) {
+      return res
+        .status(500)
+        .send("This stream is unavailable.");
+    }
+
 
     let headers = {
       "user-agent": user_agent,
@@ -180,7 +179,7 @@ app.get("/s/:id", async (req, res) => {
     if (info.videoDetails.isLiveContent && info.formats[0].type == "video/ts") {
       return m3u8stream(info.formats[0].url)
         .on("error", (err) => {
-          res.status(500).send(err.toString());
+          res.status(500).end(err.toString());
           console.error(err);
         })
         .pipe(res);
@@ -188,29 +187,51 @@ app.get("/s/:id", async (req, res) => {
 
       let h = headers.range ? headers.range.split(",")[0].split("-") : ["bytes=0"];
 
-      let range = { start: h[0].slice(6) };
-      let s = ytdl.downloadFromInfo(info, {
-        range,
-        dlChunkSize: process.env.DLCHUNKSIZE || 1024 * 1024 * 10
-      }).on('response', r => {
-        ["accept-ranges", "content-length", "content-type", "content-range"].forEach(hed => {
-          let head = r.headers[hed];
-          if (head) res.setHeader(hed, head)
-        });
-        s.pipe(res);
-      }).on('error', (err) => {
-        console.error(err);
-        res.status(500).send(err.toString())
-      });
+      let headersSetted = false;
+      let streamLength = 0;
+      let sentSize = 0;
+      function getChunk(beginRange) {
+        let endRange = Number(beginRange) + Number(process.env.DLCHUNKSIZE || (1024 * 1024));
+        if (streamLength && endRange > streamLength) endRange = streamLength;
+        headers.range = `bytes=${beginRange}-${endRange}`
+        let s = miniget(info.formats[0].url, headers)
+          .on('response', r => {
+            if (headersSetted) return;
+
+            streamLength = r.headers["content-length"];
+            ["accept-ranges", "content-length", "content-type", "cache-control"].forEach(hed => {
+              let head = r.headers[hed];
+              if (!head) res.setHeader(hed, head)
+              headersSetted = true;
+            })
+          })
+
+          .on('error', (err) => {
+            console.error(err);
+            res.status(500).end(err.toString())
+          })
+
+          .on('data', c => {
+            if (req.connection.destroyed || req.connection.ended || req.connection.closed) return s.destroy();
+            res.write(c);
+            sentSize += c.length;
+          })
+
+          .on('end', _ => {
+            if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
+            if (sentSize >= streamLength)
+              return res.end();
+            getChunk(endRange + 1);
+          });
+      }
+
+      getChunk(h[0].slice(6));
 
       res.on('error', err => {
         console.error(err);
-        s.destroy();
       });
-
-      res.on('close', _ => s.destroy());
   } catch (error) {
-    res.status(500).send(error.toString());
+    res.status(500).end(error.toString());
   }
 });
 
@@ -223,7 +244,7 @@ app.get("/vi*", (req, res) => {
   });
   stream.on("error", (err) => {
     console.log(err);
-    res.status(500).send(err.toString());
+    res.status(500).end(err.toString());
   });
 
   stream.on("response", (origin) => {
@@ -243,7 +264,7 @@ app.get(["/yt3/*", "/ytc/*"], (req, res) => {
   });
   stream.on("error", (err) => {
     console.log(err);
-    res.status(500).send(err.toString());
+    res.status(500).end(err.toString());
   });
 
   stream.on("response", (origin) => {
@@ -260,6 +281,8 @@ app.use((req, res) => {
     content: "A resource that you tried to get is not found or deleted.",
   });
 });
+
+app.on('error', console.error);
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log("Your app is now listening on port", listener.address().port);

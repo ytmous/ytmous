@@ -23,6 +23,19 @@
         />
       </form>
     </div>
+    <% if (!res.items.length) { %>
+    <% if (page > 1) { %>
+    <div style="padding: 25px">
+      <h2>No more results</h2>
+      <span>There's no more results for <%= `"${query}"` %>.</span>
+    </div>
+    <% } else { %>
+    <div style="padding: 25px">
+      <h2>No result</h2>
+      <span>No result was found for <%= `"${query}"` %>.<br><br>Tap <span class="border">Next Page</span> button to see whenever there's a result for your search again.</span>
+    </div>
+    <% } %>
+    <% } %>
     <div id="relatedVideos">
       <% res.items.forEach(video => { %>
       <% if (video.type === "video") { %>
@@ -53,9 +66,11 @@
       >Previous Page</a
     >
     <% } %>
+    <% if (!(page > 1) || res.items.length) { %>
     <a class="fixed border right" style="bottom: 5vh" href="/s?q=<%= query %>&p=<%= page+1 %>"
       >Next Page</a
     >
+    <% } %>
     <style>
       body {
         display: block;

@@ -25,6 +25,17 @@ const user_agent =
 
 let infos = {};
 
+function getSize(url, opt) {
+  return new Promise((resolv, reject) => {
+    let req = miniget(url, opt)
+      .on("response", res => {
+         req.destroy();
+         resolv(res.headers["content-length"]);
+       })
+      .on("error", reject);
+  });
+}
+
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -188,18 +199,19 @@ app.get("/s/:id", async (req, res) => {
       let h = headers.range ? headers.range.split(",")[0].split("-") : ["bytes=0"];
 
       let headersSetted = false;
-      let streamLength = 0;
+      let streamLength = await getSize(info.formats[0].url, { headers: { "user-agent": headers["user-agent"] }});
       let sentSize = 0;
+
+      res.setHeader("content-length", streamLength);
       function getChunk(beginRange) {
         let endRange = Number(beginRange) + Number(process.env.DLCHUNKSIZE || (1024 * 1024));
         if (streamLength && endRange > streamLength) endRange = streamLength;
         headers.range = `bytes=${beginRange}-${endRange}`
-        let s = miniget(info.formats[0].url, headers)
+        let s = miniget(info.formats[0].url, { headers })
           .on('response', r => {
             if (headersSetted) return;
 
-            streamLength = r.headers["content-length"];
-            ["accept-ranges", "content-length", "content-type", "cache-control"].forEach(hed => {
+            ["accept-ranges", "content-type", "cache-control"].forEach(hed => {
               let head = r.headers[hed];
               if (!head) res.setHeader(hed, head)
               headersSetted = true;
@@ -218,11 +230,15 @@ app.get("/s/:id", async (req, res) => {
           })
 
           .on('end', _ => {
+            console.log("Ended");
             if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
-            if (sentSize >= streamLength)
+            if (sentSize >= streamLength) {
+              console.log("Finished.", sentSize, streamLength);
               return res.end();
+            }
+
             getChunk(endRange + 1);
-          });
+          })
       }
 
       getChunk(h[0].slice(6));

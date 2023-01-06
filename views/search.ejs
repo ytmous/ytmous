@@ -68,7 +68,7 @@
       </div>
       <% } else if (video.type === "channel") { %>
       <div class="rVideo">
-        <a href="/c/<%= video.channelID %>"><img src="/yt3/<%= video.bestAvatar.url.split("/").slice(3).join("/") %>" style="border-radius: 50%;"></a>
+        <a href="/c/<%= video.channelID %>"><img src="/yt3/<%= video.bestAvatar.url.split("/").slice(3).join("/") %>"></a>
         <div class="rVideoInfo">
           <h2><a href="/c/<%= video.channelID %>"><%= video.name %></a></h2>
           <span><%= video.description || video.descriptionShort %></span><br>

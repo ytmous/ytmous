@@ -15,6 +15,8 @@ There's no JavaScript in frontend, ever. Most pages were rendered in server (bac
 ### Completely open source
 ytmous is licensed under BSD 3 Clause and it's code is free. You can also host your own ytmous.
 
+**DISCLAIMER:** ytmous could fetch, stream or download videos from YouTube, even copyrighted ones. Please respect all copyright laws.
+
 ## Screenshots
 ![ytmous_homepage.png](https://raw.githubusercontent.com/Yonle/ytmous/nightly/screenshots/ytmous_homepage.png)
 ![ytmous_mobile_search.png](https://raw.githubusercontent.com/Yonle/ytmous/nightly/screenshots/ytmous_mobile_search.png)

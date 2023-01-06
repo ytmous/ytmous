@@ -191,7 +191,7 @@ app.get("/s/:id", async (req, res) => {
     if (info.formats[0].isHLS || info.formats[0].isDashMPD) {
       return m3u8stream(info.formats[0].url, {
         chunkReadahead: +info.live_chunk_readahead,
-        requestOptions: { headers: { "user-agent": headers["user-agent"] },
+        requestOptions: { headers: { "user-agent": headers["user-agent"] } },
         parser: info.formats[0].isDashMPD ? 'dash-mpd' : 'm3u8',
         id: info.formats[0].itag
       })

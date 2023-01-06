@@ -78,7 +78,6 @@ app.get("/w/:id", async (req, res) => {
     });
   try {
     let info = await ytdl.getInfo(req.params.id);
-    console.log(info);
 
     if (!info.formats.length) {
       return res.status(500).render("error.ejs", {
@@ -185,6 +184,8 @@ app.get("/s/:id", async (req, res) => {
     // If user is seeking a video
     if (req.headers.range) {
       headers.range = req.headers.range;
+    } else {
+      headers.range = "bytes=0-"
     }
 
     if (info.videoDetails.isLiveContent && info.formats[0].type == "video/ts") {
@@ -199,28 +200,40 @@ app.get("/s/:id", async (req, res) => {
       let h = headers.range ? headers.range.split(",")[0].split("-") : ["bytes=0"];
 
       let headersSetted = false;
-      let streamLength = await getSize(info.formats[0].url, { headers: { "user-agent": headers["user-agent"] }});
-      let sentSize = 0;
+      if (!info.streamSize) info.streamSize = await getSize(info.formats[0].url, { headers: { "user-agent": headers["user-agent"] }});
 
-      res.setHeader("content-length", streamLength);
+      let streamSize = info.streamSize - (h[0].slice(6));
+      let isSeeking = false;
+
+      if (streamSize != info.streamSize) isSeeking = true;
+      let sentSize = 0;
+      let lastConnErr = 0;
+
+      res.status(isSeeking ? 206 : 200).setHeader("content-length", streamSize);
       function getChunk(beginRange) {
         let endRange = Number(beginRange) + Number(process.env.DLCHUNKSIZE || (1024 * 1024));
-        if (streamLength && endRange > streamLength) endRange = streamLength;
+        if (streamSize && endRange > streamSize) endRange = streamSize;
         headers.range = `bytes=${beginRange}-${endRange}`
         let s = miniget(info.formats[0].url, { headers })
           .on('response', r => {
             if (headersSetted) return;
 
+            if (isSeeking && r.headers["content-range"]) res.setHeader("content-range", r.headers["content-range"]);
             ["accept-ranges", "content-type", "cache-control"].forEach(hed => {
               let head = r.headers[hed];
               if (!head) res.setHeader(hed, head)
               headersSetted = true;
-            })
+            });
+
+            lastConnErr = 0;
           })
 
           .on('error', (err) => {
             console.error(err);
-            res.status(500).end(err.toString())
+            if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
+            if (lastConnErr > 3 || sentSize >= streamSize) return res.end();
+            getChunk(endRange + 1);
+            lastConnErr++;
           })
 
           .on('data', c => {
@@ -230,10 +243,8 @@ app.get("/s/:id", async (req, res) => {
           })
 
           .on('end', _ => {
-            console.log("Ended");
             if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
-            if (sentSize >= streamLength) {
-              console.log("Finished.", sentSize, streamLength);
+            if (sentSize >= streamSize) {
               return res.end();
             }
 

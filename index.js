@@ -212,7 +212,7 @@ app.get("/s/:id", async (req, res) => {
       res.status(isSeeking ? 206 : 200).setHeader("content-length", streamSize);
       function getChunk(beginRange) {
         let endRange = Number(beginRange) + Number(process.env.DLCHUNKSIZE || (1024 * 1024));
-        if (streamSize && endRange > streamSize) endRange = streamSize;
+        if (endRange > streamSize || endRange > info.streamSize) endRange = info.streamSize;
         headers.range = `bytes=${beginRange}-${endRange}`
         let s = miniget(info.formats[0].url, { headers })
           .on('response', r => {

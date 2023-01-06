@@ -57,7 +57,7 @@
       </div>
       <% } else if (video.type === "playlist") { %>
       <div class="rVideo">
-        <a href="/p/<%= video.playlistID %>"><img src="<%= video.firstVideo.bestThumbnail.url.slice(19) %>" style="opacity: 0.5;"></a>
+        <a href="/p/<%= video.playlistID %>"><img src="<%= video.firstVideo.bestThumbnail.url.slice(19) %>"></a>
         <div class="rVideoInfo">
           <h4><a href="/p/<%= video.playlistID %>"><%= video.title %></a></h4>
           <% if (video.owner) { %>

@@ -1,10 +1,10 @@
 # To do list
 As the new Frontend misses some several features, The following list:
 
-- ~~More Search Result....~~ partially done.
+- ~~More Search Result....~~ Done.
 - ~~Comment support~~ Not implemented in [ytdl](https://npmjs.com/ytdl-core)
 - Like & Dislike Count
-- Playlist & Channel support
+- ~~Playlist & Channel support~~ Done. still need add several details (such as description)
 - Quality chooser....
 - HLS support....
-- RAW Link Caching to prevent multiple request to youtube....
+- ~~RAW Link Caching to prevent multiple request to youtube....~~ Done.

@@ -4,8 +4,7 @@
 </div>
 
 ### Search, Click, and watch
-ytmous is a lightweight, and Anonymous Youtube Proxy. Designed for
-device with limited resource.
+ytmous is a lightweight, and Anonymous Youtube Proxy. Designed for device with limited resource.
 
 ### There's no tracker and ads
 Only a simple webpage, ready for you to watch some videos in a second
@@ -14,12 +13,19 @@ Only a simple webpage, ready for you to watch some videos in a second
 There's no JavaScript in frontend, ever. Most pages were rendered in server (backend).
 
 ### Completely open source
-ytmous is licensed under BSD 3 Clause and it's code is free to view. You can also host it in your own.
+ytmous is licensed under BSD 3 Clause and it's code is free. You can also host your own ytmous.
+
+## Screenshots
+![ytmous_homepage.png](https://raw.githubusercontent.com/Yonle/ytmous/nightly/screenshots/ytmous_homepage.png)
+![ytmous_mobile_search.png](https://raw.githubusercontent.com/Yonle/ytmous/nightly/screenshots/ytmous_mobile_search.png)
+![ytmous_mobile_channel.png](https://raw.githubusercontent.com/Yonle/ytmous/nightly/screenshots/ytmous_mobile_channel.png)
+![ytmous_mobile_playlists.png](https://raw.githubusercontent.com/Yonle/ytmous/nightly/screenshots/ytmous_mobile_playlists.png)
+![ytmous_mobile_watch.png](https://raw.githubusercontent.com/Yonle/ytmous/nightly/screenshots/ytmous_mobile_watch.png)
+![ytmous_desktop_watch.png](https://raw.githubusercontent.com/Yonle/ytmous/nightly/screenshots/ytmous_desktop_watch.png)
 
 ## Server Requirement
 - Node v10+ (Node v14 Recommended)
 - Git installed
-- 500MB RAM (1 GB or more is Recommended)
 - Fast server network connection
 
 ## Configuration
@@ -41,3 +47,4 @@ or
 ```
 PORT=3000 npm start
 ```
+

@@ -36,11 +36,11 @@
       <% }); %>
     </div>
     <% if (page > 1) { %>
-    <a class="border left" href="/p/<%= playlist.id %>?p=<%= page-1 %>"
+    <a class="fixed border left" style="bottom: 5vh" href="/p/<%= playlist.id %>?p=<%= page-1 %>"
       >Previous Page</a
     >
     <% } %>
-    <a class="border right" href="/p/<%= playlist.id %>?p=<%= page+1 %>"
+    <a class="fixed border right" style="bottom: 5vh" href="/p/<%= playlist.id %>?p=<%= page+1 %>"
       >Next Page</a
     >
     <style>

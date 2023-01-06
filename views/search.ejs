@@ -60,11 +60,21 @@
         <a href="/p/<%= video.playlistID %>"><img src="<%= video.firstVideo.bestThumbnail.url.slice(19) %>" style="opacity: 0.5;"></a>
         <div class="rVideoInfo">
           <h4><a href="/p/<%= video.playlistID %>"><%= video.title %></a></h4>
+          <% if (video.owner) { %>
+          <span><%= video.owner.name %></span><br>
+          <% } %>
           <small>Playlist: <b><%= video.length %> videos.</b></small>
         </div>
       </div>
       <% } else if (video.type === "channel") { %>
-      
+      <div class="rVideo">
+        <a href="/c/<%= video.channelID %>"><img src="/yt3/<%= video.bestAvatar.url.split("/").slice(3).join("/") %>" style="border-radius: 50%;"></a>
+        <div class="rVideoInfo">
+          <h2><a href="/c/<%= video.channelID %>"><%= video.name %></a></h2>
+          <span><%= video.description || video.descriptionShort %></span><br>
+          <small><b><%= video.subscribers %></b> subscribers</small>
+        </div>
+      </div>      
       <% } %>
       <% }); %>
     </div>

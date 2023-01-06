@@ -25,14 +25,14 @@
     <meta property="twitter:player" content="/stream/<%= id %>" />
     <meta
       name="twitter:image"
-      content="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>"
+      content="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname %>"
     />
     <meta property="og:description" content="<%= info.videoDetails.description
     || "" %>">
     <meta property="og:site_name" content="ytmous | Anonymous Youtube Proxy" />
     <meta
       property="og:image"
-      content="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>"
+      content="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname %>"
     />
     <meta name="theme-color" content="#ff8181" />
     <meta name="twitter:card" content="summary_large_image" />

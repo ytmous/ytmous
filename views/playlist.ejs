@@ -30,7 +30,7 @@
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
-          <span><%= video.author.name %></span>
+          <span><a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span>
         </div>
       </div>
       <% }); %>

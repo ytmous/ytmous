@@ -188,8 +188,13 @@ app.get("/s/:id", async (req, res) => {
       headers.range = "bytes=0-"
     }
 
-    if (info.videoDetails.isLiveContent && info.formats[0].type == "video/ts") {
-      return m3u8stream(info.formats[0].url)
+    if (info.formats[0].isHLS || info.formats[0].isDashMPD) {
+      return m3u8stream(info.formats[0].url, {
+        chunkReadahead: +info.live_chunk_readahead,
+        requestOptions: { headers: { "user-agent": headers["user-agent"] },
+        parser: info.formats[0].isDashMPD ? 'dash-mpd' : 'm3u8',
+        id: info.formats[0].itag
+      })
         .on("error", (err) => {
           res.status(500).end(err.toString());
           console.error(err);
@@ -210,6 +215,8 @@ app.get("/s/:id", async (req, res) => {
       let lastConnErr = 0;
 
       res.status(isSeeking ? 206 : 200).setHeader("content-length", streamSize);
+
+      if (!streamSize) return res.end();
       function getChunk(beginRange) {
         let endRange = Number(beginRange) + Number(process.env.DLCHUNKSIZE || (1024 * 1024));
         if (endRange > streamSize || endRange > info.streamSize) endRange = info.streamSize;

@@ -41,13 +41,13 @@
       <% if (video.type === "video") { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img src="<%= video.bestThumbnail.url.slice(19) %>"
+          ><img src="<%= (new URL(video.bestThumbnail.url)).pathname %>"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <span
             ><img
-              src="/yt3/<%= video.author.bestAvatar.url.slice(22) %>"
+              src="/yt3<%= (new URL(video.author.bestAvatar.url)).pathname %>"
               style="border-radius: 50%; width: 17px; height: 17px"
             />
             <a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span
@@ -57,24 +57,24 @@
       </div>
       <% } else if (video.type === "playlist") { %>
       <div class="rVideo">
-        <a href="/p/<%= video.playlistID %>"><img src="<%= video.firstVideo.bestThumbnail.url.slice(19) %>"></a>
+        <a href="/p/<%= video.playlistID %>"><img src="<%= (new URL(video.firstVideo.bestThumbnail.url)).pathname %>"/></a>
         <div class="rVideoInfo">
           <h4><a href="/p/<%= video.playlistID %>"><%= video.title %></a></h4>
           <% if (video.owner) { %>
-          <span><%= video.owner.name %></span><br>
+          <span><a href="/c/<%= video.owner.channelID %>"><%= video.owner.name %></a></span><br>
           <% } %>
-          <small>Playlist: <b><%= video.length %> videos.</b></small>
+          <small>Playlist: <b><%= video.length %></b> videos.</small>
         </div>
       </div>
       <% } else if (video.type === "channel") { %>
-      <div class="rVideo">
-        <a href="/c/<%= video.channelID %>"><img src="/yt3/<%= video.bestAvatar.url.split("/").slice(3).join("/") %>"></a>
+      <div class="rVideo" style="margin-top: 2px;">
+        <a href="/c/<%= video.channelID %>"><img src="/yt3<%= (new URL(video.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
         <div class="rVideoInfo">
           <h2><a href="/c/<%= video.channelID %>"><%= video.name %></a></h2>
           <span><%= video.description || video.descriptionShort %></span><br>
           <small><b><%= video.subscribers %></b></small>
         </div>
-      </div>      
+      </div>
       <% } %>
       <% }); %>
     </div>

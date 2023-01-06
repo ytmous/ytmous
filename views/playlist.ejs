@@ -22,15 +22,24 @@
         />
       </form>
     </div>
+
+    <img src="<%= (new URL(playlist.bestThumbnail.url)).pathname %>" id="thumbnail"/>
+    <div style="padding: 14px;">
+      <small><%= playlist.estimatedItemCount %> videos</small>
+      <h2><%= playlist.title %></h2>
+      <span><img src="/yt3<%= (new URL(playlist.author.bestAvatar.url)).pathname %>" style="border-radius: 50%; width: 17px; height: 17px" /><a href="/c/<%= playlist.author.channelID %>"><%= playlist.author.name %></a></span><br>
+      <small><%= playlist.lastUpdated %></small><br>
+      <pre><%= playlist.description %></pre>
+    </div>
     <div id="relatedVideos">
       <% playlist.items.forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img src="<%= video.bestThumbnail.url.slice(19) %>"
+          ><img src="<%= (new URL(video.bestThumbnail.url)).pathname %>"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
-          <span><a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span>
+          <span><a href="/c/<%= video.author.channelID %>"> <%= video.author.name %></a></span>
         </div>
       </div>
       <% }); %>

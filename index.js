@@ -238,7 +238,7 @@ app.get("/s/:id", async (req, res) => {
           .on('error', (err) => {
             console.error(err);
             if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
-            if (lastConnErr > 3 || sentSize >= streamSize) return res.end();
+            if (lastConnErr > 3 || sentSize >= streamSize || sentSuze >= info.streamSize) return res.end();
             getChunk(endRange + 1);
             lastConnErr++;
           })

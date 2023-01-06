@@ -9,8 +9,8 @@
     "m3u8stream": "^0.8.4",
     "miniget": "^4.x",
     "ytdl-core": "4.11.2",
-    "ytpl": "^2.x",
-    "ytsr": "^3.x"
+    "ytpl": "^2.3.0",
+    "ytsr": "^3.8.0"
   },
   "description": "A anonymous Youtube that does not spy on you.",
   "repository": {

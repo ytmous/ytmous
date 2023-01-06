@@ -57,7 +57,7 @@
     <!-- Video Player -->
     <div id="player" class="left absolute">
       <video
-        poster="<%= info.videoDetails.thumbnails.pop().url.slice(19); %>"
+        poster="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname; %>"
         controls
         autoplay
         src="/s/<%= id %>"
@@ -66,7 +66,7 @@
       <div class="chnInf">
         <h4
           ><img
-            src="/yt3/<%= info.videoDetails.author.thumbnails.pop().url.slice(22) %>"
+            src="/yt3<%= (new URL(info.videoDetails.author.thumbnails.pop().url)).pathname %>"
             style="border-radius: 50%; width: 15px; height: 15px"
           />
           <a href="/c/<%= info.videoDetails.author.id %>"
@@ -88,14 +88,14 @@
       <% info.related_videos.forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img src="<%= video.thumbnails.pop().url.slice(19); %>"
+          ><img src="<%= (new URL(video.thumbnails.pop().url)).pathname; %>"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <div class="chnInf">
             <span
               ><img
-                src="/yt3/<%= video.author.thumbnails.pop().url.slice(22) %>"
+                src="/yt3/<%= (new URL(video.author.thumbnails.pop().url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               />
               <a href="/c/<%= video.author.id %>"

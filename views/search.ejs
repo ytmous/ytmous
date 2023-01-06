@@ -60,7 +60,7 @@
         <a href="/p/<%= video.playlistID %>"><img src="<%= video.firstVideo.bestThumbnail.url.slice(19) %>" style="opacity: 0.5;"></a>
         <div class="rVideoInfo">
           <h4><a href="/p/<%= video.playlistID %>"><%= video.title %></a></h4>
-          <span>Playlist: <b><%= video.length %> videos.</b></span>
+          <small>Playlist: <b><%= video.length %> videos.</b></small>
         </div>
       </div>
       <% } else if (video.type === "channel") { %>

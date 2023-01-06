@@ -221,7 +221,7 @@ app.get("/s/:id", async (req, res) => {
             if (isSeeking && r.headers["content-range"]) res.setHeader("content-range", r.headers["content-range"]);
             ["accept-ranges", "content-type", "cache-control"].forEach(hed => {
               let head = r.headers[hed];
-              if (!head) res.setHeader(hed, head)
+              if (head) res.setHeader(hed, head)
               headersSetted = true;
             });
 

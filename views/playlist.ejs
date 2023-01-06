@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/Toard.css" />
     <link rel="stylesheet" href="/css/style.css" />
-    <title>ytmous</title>
+    <title><%= playlist.title %></title>
   </head>
   <body>
     <span class="fixed border bottom left"
@@ -22,7 +22,6 @@
         />
       </form>
     </div>
-    <h2><%= playlist.title %></h2>
     <div id="relatedVideos">
       <% playlist.items.forEach(video => { %>
       <div class="rVideo">

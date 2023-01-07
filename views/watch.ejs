@@ -80,7 +80,16 @@
         <span
           ><%- (info.videoDetails.description || "").replace(/\n/g, "<br />")
           %></span
-        >
+        ><br><br>
+        <small>Likes: <b><%= info.videoDetails.likes || 0 %></b></small><br>
+        <small>Dislikes: <b><%= info.videoDetails.dislikes || 0 %></b></small><br>
+        <small>Viewers: <b><%= info.videoDetails.viewCount %></b></small><br>
+        <small>Category: <b><%= info.videoDetails.category %></b></small><br>
+        <small>Uploaded at <b><%= info.videoDetails.uploadDate %></b></small><br>
+        <small>Published at <b><%= info.videoDetails.publishDate %></b></small><br>
+        <small>Private video: <b><%= info.videoDetails.isPrivate ? "yes" : "no" %></b></small><br>
+        <small>Age restricted: <b><%= info.videoDetails.age_restricted ? "yes" : "no" %></b></small><br>
+        <small>Crawlable: <b><%= info.videoDetails.isCrawlable ? "yes" : "no" %></b></small><br>
       </div>
     </div>
     <!-- Related Video section -->

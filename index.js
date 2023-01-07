@@ -87,6 +87,7 @@ app.get("/w/:id", async (req, res) => {
     }
 
     infos[req.params.id] = info;
+
     res.render("watch.ejs", {
       id: req.params.id,
       info, q: req.query

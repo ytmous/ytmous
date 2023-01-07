@@ -40,7 +40,7 @@
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <span><a href="/c/<%= video.author.channelID %>"> <%= video.author.name %></a></span><br>
-          <small>Duration: <b><%= video.duration %></b></small>
+          <small>Duration: <b><%= video.isLive ? "LIVE" : video.duration %></b></small>
         </div>
       </div>
       <% }); %>

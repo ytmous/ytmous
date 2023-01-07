@@ -24,7 +24,6 @@
     </div>
 
     <!-- <img lazy src="<%= (new URL(channel.bestThumbnail.url)).pathname %>" id="thumbnail"/> -->
-
     <div id="relatedVideos">
       <div class="rVideo">
         <a href="/c/<%= channel.author.channelID %>"><img lazy src="/yt3<%= (new URL(channel.author.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
@@ -50,7 +49,7 @@
             />
             <%= video.author.name %></span
           ><br>
-          <small>Duration: <b><%= video.duration %></b></small>
+          <small>Duration: <b><%= video.isLive ? "LIVE" : video.duration %></b></small>
         </div>
       </div>
       <% }); %>

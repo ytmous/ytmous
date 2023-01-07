@@ -65,7 +65,7 @@
       <!-- Channel Information -->
       <div class="chnInf">
         <h4
-          ><img
+          ><img lazy
             src="/yt3<%= (new URL(info.videoDetails.author.thumbnails.pop().url)).pathname %>"
             style="border-radius: 50%; width: 15px; height: 15px"
           />
@@ -88,13 +88,13 @@
       <% info.related_videos.forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img src="<%= (new URL(video.thumbnails.pop().url)).pathname; %>"
+          ><img lazy src="<%= (new URL(video.thumbnails.pop().url)).pathname; %>"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <div class="chnInf">
             <span
-              ><img
+              ><img lazy
                 src="/yt3/<%= (new URL(video.author.thumbnails.pop().url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               />

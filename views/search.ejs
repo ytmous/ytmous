@@ -41,12 +41,12 @@
       <% if (video.type === "video") { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img src="<%= (new URL(video.bestThumbnail.url)).pathname %>"
+          ><img lazy src="<%= (new URL(video.bestThumbnail.url)).pathname %>"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <span
-            ><img
+            ><img lazy
               src="/yt3<%= (new URL(video.author.bestAvatar.url)).pathname %>"
               style="border-radius: 50%; width: 17px; height: 17px"
             />
@@ -57,7 +57,7 @@
       </div>
       <% } else if (video.type === "playlist") { %>
       <div class="rVideo">
-        <a href="/p/<%= video.playlistID %>"><img src="<%= (new URL(video.firstVideo.bestThumbnail.url)).pathname %>"/></a>
+        <a href="/p/<%= video.playlistID %>"><img lazy src="<%= (new URL(video.firstVideo.bestThumbnail.url)).pathname %>"/></a>
         <div class="rVideoInfo">
           <h4><a href="/p/<%= video.playlistID %>"><%= video.title %></a></h4>
           <% if (video.owner) { %>
@@ -68,7 +68,7 @@
       </div>
       <% } else if (video.type === "channel") { %>
       <div class="rVideo" style="margin-top: 2px;">
-        <a href="/c/<%= video.channelID %>"><img src="/yt3<%= (new URL(video.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
+        <a href="/c/<%= video.channelID %>"><img lazy src="/yt3<%= (new URL(video.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
         <div class="rVideoInfo">
           <h2><a href="/c/<%= video.channelID %>"><%= video.name %></a></h2>
           <span><%= video.description || video.descriptionShort %></span><br>

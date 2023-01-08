@@ -58,6 +58,15 @@ a {
   float: left;
 }
 
+.shelf {
+  display: block;
+  padding: 3px;
+}
+
+.shelfTitle {
+  border-bottom: 1px solid black;
+}
+
 /* Channel Info */
 .chInf {
   border: solid 1px;

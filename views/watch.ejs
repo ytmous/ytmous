@@ -72,7 +72,7 @@
           />
           <a href="/c/<%= info.videoDetails.author.id %>"
             ><%= info.videoDetails.author.name %></a
-          ><small style="color: gray;"> - <%= info.videoDetails.author.subscriber_count %> subscribers.</small></h4
+          ><small style="color: gray;"> • <%= info.videoDetails.author.subscriber_count %> subscribers.</small></h4
         >
       </div>
       <!-- Video Information -->
@@ -103,15 +103,16 @@
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <div class="chnInf">
-            <span
-              ><img lazy
+            <span>
+              <img lazy
                 src="/yt3/<%= (new URL(video.author.thumbnails.pop().url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               />
-              <a href="/c/<%= video.author.id %>"
-                ><%= video.author.name %></a
-              ></span
-            >
+              <a href="/c/<%= video.author.id %>">
+                <%= video.author.name %>
+              </a>
+            </span><br>
+            <small><%= video.short_view_count_text %> viewers • <%= video.published %></small>
           </div>
         </div>
       </div>

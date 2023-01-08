@@ -40,6 +40,16 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 
+// Trigger to limit caching
+app.use(["/w/*", "/s/*"], (req, res, next) => {
+  let IDs = Object.keys(infos);
+  if (IDs.length > (process.env.VIDINFO_LIMIT || 20)) {
+    delete infos[IDs.shift()];
+  }
+
+  next();
+});
+
 // Home page
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");

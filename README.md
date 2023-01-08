@@ -34,6 +34,7 @@ ytmous is licensed under BSD 3 Clause and it's code is free. You can also host y
 The code is reading the provided configuration from Environment Variable that comes from your system. These variable is **optional**.
 
 - `LIMIT`: Search / Video result from playlist, channel, or search result limit. The smaller, The faster.
+- `VIDINFO_LIMIT`: Video information caching limit, Mostly used for streaming after watch page has been loaded. Default is `20`.
 - `USER_AGENT`: This variable is where we fake our user agent to request youtube.
 - `DLCHUNKSIZE`: Download Chunk Size. Default is 1 MB (1024 * 1024)
 - `PORT`: Server port to listen to.

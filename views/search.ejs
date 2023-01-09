@@ -79,8 +79,9 @@
       <div class="shelf border" style="margin-top: 2px;">
         <h4 class="shelfTitle"><%= video.title %></h4>
         <% video.items.forEach(video => { %>
-        <% if (video.type === "video") { %>
+        <% if (video.type === "video" || video.type === "short") { %>
         <div class="rVideo">
+          <% if (video.type === "short") video.author = video.channel %>
           <a href="/w/<%= video.id %>"
             ><img lazy src="<%= (new URL(video.bestThumbnail.url)).pathname %>"
           /></a>

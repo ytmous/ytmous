@@ -169,7 +169,8 @@
       let changeTime = true;
       audio.addEventListener("playing", () => {
         if (!changeTime) return;
-        audio.currentTime = video.currentTime
+        audio.playbackRate = video.playbackRate;
+        audio.currentTime = video.currentTime;
         changeTime = false;
       });
 

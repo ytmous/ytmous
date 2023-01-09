@@ -96,7 +96,7 @@ app.get("/w/:id", async (req, res) => {
       });
     }
 
-    infos[req.params.id] = info;
+    //infos[req.params.id] = info;
 
     res.render("watch.ejs", {
       id: req.params.id,
@@ -216,12 +216,15 @@ app.get("/s/:id", async (req, res) => {
       let h = headers.range ? headers.range.split(",")[0].split("-") : ["bytes=0"];
 
       let headersSetted = false;
-      if (!info.streamSize) info.streamSize = await getSize(formats[0].url, { headers: { "user-agent": headers["user-agent"] }});
+      if (!info.streamSize) info.streamSize = {};
+      if (!info.streamSize[formats[0].itag]) {
+        info.streamSize[formats[0].itag] = await getSize(formats[0].url, { headers: { "user-agent": headers["user-agent"] }});
+      }
 
-      let streamSize = info.streamSize - (h[0].slice(6));
+      let streamSize = info.streamSize[formats[0].itag] - (h[0].slice(6));
       let isSeeking = false;
 
-      if (streamSize != info.streamSize) isSeeking = true;
+      if (streamSize != info.streamSize[formats[0].itag]) isSeeking = true;
       let sentSize = 0;
       let lastConnErr = 0;
 
@@ -233,11 +236,10 @@ app.get("/s/:id", async (req, res) => {
         beginRange = parseInt(beginRange);
 
         let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || (1024 * 1024));
-        if ((endRange > streamSize) || (endRange > info.streamSize)) endRange = info.streamSize;
-
-        if (beginRange > streamSize || beginRange > info.streamSize) return getChunk(0);
+        if ((endRange > streamSize) || (endRange > info.streamSize[formats[0].itag])) endRange = info.streamSize[formats[0].itag];
 
         headers.range = `bytes=${beginRange}-${endRange}`
+
         let s = miniget(formats[0].url, { headers })
           .on('response', r => {
             if (headersSetted) return;
@@ -255,7 +257,7 @@ app.get("/s/:id", async (req, res) => {
           .on('error', (err) => {
             console.error(err);
             if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
-            if (lastConnErr > 3 || sentSize >= streamSize || sentSize >= info.streamSize) return res.end();
+            if (lastConnErr > 3 || sentSize >= streamSize || sentSize >= info.streamSize[formats[0].itag]) return res.end();
             getChunk(endRange + 1);
             lastConnErr++;
           })

@@ -168,6 +168,7 @@
 
       audio.addEventListener("loadeddata", () => {
         audio.currentTime = lastTime || video.currentTime;
+        lastTime = null;
       });
     } catch (e) { alert(e.toString()) }
     </script>

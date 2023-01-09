@@ -58,11 +58,11 @@
     <!-- Video Player -->
     <div id="player" class="left absolute">
       <video
-        poster="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname; %>"
+        poster="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname %>"
         controls
-        autoplay
-        src="/s/<%= id %>"
-      ></video>
+        autoplay>
+        <source src="/s/<%= id %>">
+      </video>
       <!-- Channel Information -->
       <div class="chnInf">
         <h4
@@ -77,6 +77,14 @@
       </div>
       <!-- Video Information -->
       <div id="vidInfo">
+        <!-- Quality Selection -->
+        <a href="#qs" id="qsb" class="border right">Quality Selection</a>
+        <div class="border popup fixed bottom" id="qs">
+          <a href="#" class="border top right">Close</a>
+          <% info.formats.filter(i => i.hasVideo && !i.isDashMPD).forEach(i => { %>
+          <a class="border" href="#" onclick="<%= `cq(${i.itag}, ${info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag})` %>"><b><%= i.qualityLabel %></b> <%= i.mimeType %></a><br>
+          <% }); %>
+        </div>
         <h2><%= info.videoDetails.title %></h2>
         <span
           ><%- (info.videoDetails.description || "").replace(/\n/g, "<br />")
@@ -118,6 +126,46 @@
       </div>
       <% }); %>
     </div>
+
+    <script>
+    try {
+      document.getElementById("qsb").style.visibility = "visible";
+      let audio = new Audio();
+      let video = document.querySelector("video");
+
+      let lastTime = null;
+
+      function cq(vid, aid) {
+        video.src = "/s/<%= id %>?itag=" + vid;
+        audio.src = "/s/<%= id %>?itag=" + aid;
+
+        lastTime = video.currentTime;
+        video.load();
+        audio.load();
+
+        video.mediaGroup = "<%= id %>";
+        video.mediaGroup = "<%= id %>";
+      }
+
+      ["seeking", "seeked", "playing", "buffered"].forEach(ename => {
+        video.addEventListener(ename, () => {
+          if (ename === "playing" && audio.paused) audio.play();
+          audio.currentTime = lastTime || video.currentTime;
+          lastTime = null;
+        });
+      });
+
+      video.addEventListener("waiting", () => audio.pause());
+
+      ["pause", "play"].forEach(ename => {
+        video.addEventListener(ename, () => {
+          audio.currentTime = lastTime || video.currentTime;
+          lastTime = null;
+          audio[ename]();
+        });
+      });
+    } catch (e) { alert(e.toString()) }
+    </script>
     <style>
       #relatedVideos {
         float: right;

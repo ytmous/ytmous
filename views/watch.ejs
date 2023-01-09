@@ -146,7 +146,7 @@
         audio.mediaGroup = "<%= id %>";
       }
 
-      ["seeking", "seeked", "playing"].forEach(ename => {
+      ["seeked", "playing"].forEach(ename => {
         video.addEventListener(ename, () => {
           if (ename === "playing" && audio.paused) audio.play();
           audio.currentTime = video.currentTime;          

@@ -133,8 +133,6 @@
       let audio = new Audio();
       let video = document.querySelector("video");
 
-      let lastTime = null;
-
       function cq(vid, aid) {
         video.src = "/s/<%= id %>?itag=" + vid;
         audio.src = "/s/<%= id %>?itag=" + aid;
@@ -145,14 +143,13 @@
 
         video.currentTime = lastTime;
         video.mediaGroup = "<%= id %>";
-        video.mediaGroup = "<%= id %>";
+        audio.mediaGroup = "<%= id %>";
       }
 
       ["seeking", "seeked", "playing"].forEach(ename => {
         video.addEventListener(ename, () => {
           if (ename === "playing" && audio.paused) audio.play();
-          audio.currentTime = lastTime || video.currentTime;
-          lastTime = null;
+          audio.currentTime = video.currentTime;          
         });
       });
 
@@ -160,15 +157,13 @@
       
       ["pause", "play"].forEach(ename => {
         video.addEventListener(ename, () => {
-          audio.currentTime = lastTime || video.currentTime;
-          lastTime = null;
+          audio.currentTime = video.currentTime;
           audio[ename]();
         });
       });
 
       audio.addEventListener("loadeddata", () => {
-        audio.currentTime = lastTime || video.currentTime;
-        lastTime = null;
+        audio.currentTime = video.currentTime;
       });
     } catch (e) { alert(e.toString()) }
     </script>

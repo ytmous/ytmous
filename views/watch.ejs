@@ -154,6 +154,10 @@
       });
 
       video.addEventListener("waiting", () => audio.pause());
+      video.addEventListener("ratechange", () => {
+        audio.playbackRate = video.playbackRate;
+        audio.currentTime = video.currentTime;
+      });
       
       ["pause", "play"].forEach(ename => {
         video.addEventListener(ename, () => {
@@ -162,8 +166,15 @@
         });
       });
 
-      audio.addEventListener("loadeddata", () => {
-        audio.currentTime = video.currentTime;
+      let changeTime = true;
+      audio.addEventListener("playing", () => {
+        if (!changeTime) return;
+        audio.currentTime = video.currentTime
+        changeTime = false;
+      });
+
+      audio.addEventListener("pause", () => {
+        changeTime = true;
       });
     } catch (e) { alert(e.toString()) }
     </script>

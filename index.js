@@ -177,11 +177,11 @@ app.get("/s/:id", async (req, res) => {
       infos[req.params.id] = info;
     }
 
-    info.formats = info.formats.filter(
+    let formats = info.formats.filter(
       (format) => req.query.itag ? req.query.itag == format.itag : (format.hasVideo && format.hasAudio)
     );
 
-    if (!info.formats.length) {
+    if (!formats.length) {
       return res
         .status(500)
         .send("This stream is unavailable.");
@@ -199,12 +199,12 @@ app.get("/s/:id", async (req, res) => {
       headers.range = "bytes=0-"
     }
 
-    if (info.formats[0].isHLS || info.formats[0].isDashMPD) {
-      return m3u8stream(info.formats[0].url, {
+    if (formats[0].isHLS || formats[0].isDashMPD) {
+      return m3u8stream(formats[0].url, {
         chunkReadahead: +info.live_chunk_readahead,
         requestOptions: { headers: { "user-agent": headers["user-agent"] } },
-        parser: info.formats[0].isDashMPD ? 'dash-mpd' : 'm3u8',
-        id: info.formats[0].itag
+        parser: formats[0].isDashMPD ? 'dash-mpd' : 'm3u8',
+        id: formats[0].itag
       })
         .on("error", (err) => {
           res.status(500).end(err.toString());
@@ -216,7 +216,7 @@ app.get("/s/:id", async (req, res) => {
       let h = headers.range ? headers.range.split(",")[0].split("-") : ["bytes=0"];
 
       let headersSetted = false;
-      if (!info.streamSize) info.streamSize = await getSize(info.formats[0].url, { headers: { "user-agent": headers["user-agent"] }});
+      if (!info.streamSize) info.streamSize = await getSize(formats[0].url, { headers: { "user-agent": headers["user-agent"] }});
 
       let streamSize = info.streamSize - (h[0].slice(6));
       let isSeeking = false;
@@ -230,9 +230,9 @@ app.get("/s/:id", async (req, res) => {
       if (!streamSize) return res.end();
       function getChunk(beginRange) {
         let endRange = Number(beginRange) + Number(process.env.DLCHUNKSIZE || (1024 * 1024));
-        if (endRange > streamSize || endRange > info.streamSize) endRange = info.streamSize;
+        if ((endRange > streamSize) || (endRange > info.streamSize)) endRange = info.streamSize;
         headers.range = `bytes=${beginRange}-${endRange}`
-        let s = miniget(info.formats[0].url, { headers })
+        let s = miniget(formats[0].url, { headers })
           .on('response', r => {
             if (headersSetted) return;
 

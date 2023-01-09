@@ -230,11 +230,12 @@ app.get("/s/:id", async (req, res) => {
       if (!streamSize) return res.end();
 
       function getChunk(beginRange) {
-        beginRange = parseInt(beginRange)
+        beginRange = parseInt(beginRange);
+
         let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || (1024 * 1024));
         if ((endRange > streamSize) || (endRange > info.streamSize)) endRange = info.streamSize;
 
-        if (beginRange > streamSize || beginRange > info.streamSize) return;
+        if (beginRange > streamSize || beginRange > info.streamSize) return getChunk(0);
 
         headers.range = `bytes=${beginRange}-${endRange}`
         let s = miniget(formats[0].url, { headers })

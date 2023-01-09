@@ -82,7 +82,7 @@
         <div class="border popup fixed bottom" id="qs">
           <a href="#" class="border top right">Close</a>
           <% info.formats.filter(i => !i.hasAudio && !i.isDashMPD).forEach(i => { %>
-          <a class="border" href="#" onclick="<%= `cq(${i.itag}, ${info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag})` %>"><b><%= i.qualityLabel %></b> <%= i.mimeType %></a><br>
+          <a href="#" onclick="<%= `cq(${i.itag}, ${info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag})` %>"><b><%= i.qualityLabel %></b> <%= i.mimeType %></a><br>
           <% }); %>
         </div>
         <h2><%= info.videoDetails.title %></h2>

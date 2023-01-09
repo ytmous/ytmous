@@ -76,6 +76,10 @@ a {
 }
 
 /* Quality Selection */
+#qsb {
+  visibility: hidden;
+}
+
 #qs {
   overflow-y: auto;
   max-height: 50vh;

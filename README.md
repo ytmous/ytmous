@@ -9,8 +9,8 @@ ytmous is a lightweight, and Anonymous Youtube Proxy. Designed for device with l
 ### There's no tracker and ads
 Only a simple webpage, ready for you to watch some videos in a second
 
-### No JavaScript in frontend
-There's no JavaScript in frontend, ever. Most pages were rendered in server (backend).
+### Less JavaScript in frontend
+There's only 1 script that doing it's job for quality selection. While most pages were rendered in server (backend), You can still use ytmous without JavaScript enabled.
 
 ### Completely open source
 ytmous is licensed under BSD 3 Clause and it's code is free. You can also host your own ytmous.

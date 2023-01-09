@@ -81,7 +81,7 @@
         <a href="#qs" id="qsb" class="border right">Quality Selection</a>
         <div class="border popup fixed bottom" id="qs">
           <a href="#" class="border top right">Close</a>
-          <% info.formats.filter(i => i.hasVideo && !i.isDashMPD).forEach(i => { %>
+          <% info.formats.filter(i => !i.hasAudio && !i.isDashMPD).forEach(i => { %>
           <a class="border" href="#" onclick="<%= `cq(${i.itag}, ${info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag})` %>"><b><%= i.qualityLabel %></b> <%= i.mimeType %></a><br>
           <% }); %>
         </div>
@@ -143,11 +143,12 @@
         video.load();
         audio.load();
 
+        video.currentTime = lastTime;
         video.mediaGroup = "<%= id %>";
         video.mediaGroup = "<%= id %>";
       }
 
-      ["seeking", "seeked", "playing", "buffered"].forEach(ename => {
+      ["seeking", "seeked", "playing"].forEach(ename => {
         video.addEventListener(ename, () => {
           if (ename === "playing" && audio.paused) audio.play();
           audio.currentTime = lastTime || video.currentTime;
@@ -156,13 +157,17 @@
       });
 
       video.addEventListener("waiting", () => audio.pause());
-
+      
       ["pause", "play"].forEach(ename => {
         video.addEventListener(ename, () => {
           audio.currentTime = lastTime || video.currentTime;
           lastTime = null;
           audio[ename]();
         });
+      });
+
+      audio.addEventListener("loadeddata", () => {
+        audio.currentTime = lastTime || video.currentTime;
       });
     } catch (e) { alert(e.toString()) }
     </script>

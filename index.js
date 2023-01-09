@@ -58,7 +58,7 @@ app.get("/", (req, res) => {
 // Search page
 app.get("/s", async (req, res) => {
   let query = req.query.q;
-  let page = Number(req.query.p || 1);
+  let page = parseInt(req.query.p || 1);
   if (!query) return res.redirect("/");
   try {
     res.render("search.ejs", {
@@ -126,7 +126,7 @@ app.get("/p/:id", async (req, res) => {
       content:
         "Your requested playlist is invalid. Check your URL and try again.",
     });
-  let page = Number(req.query.p || 1);
+  let page = parseInt(req.query.p || 1);
   try {
     res.render("playlist.ejs", {
       playlist: await ytpl(req.params.id, { limit, pages: page }),
@@ -149,7 +149,7 @@ app.get("/c/:id", async (req, res) => {
       content:
         "Your requested channel is invalid. Check your URL and try again.",
     });
-  let page = Number(req.query.p || 1);
+  let page = parseInt(req.query.p || 1);
   try {
     res.render("channel.ejs", {
       channel: await ytpl(req.params.id, { limit, pages: page }),
@@ -228,9 +228,14 @@ app.get("/s/:id", async (req, res) => {
       res.status(isSeeking ? 206 : 200).setHeader("content-length", streamSize);
 
       if (!streamSize) return res.end();
+
       function getChunk(beginRange) {
-        let endRange = Number(beginRange) + Number(process.env.DLCHUNKSIZE || (1024 * 1024));
+        beginRange = parseInt(beginRange)
+        let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || (1024 * 1024));
         if ((endRange > streamSize) || (endRange > info.streamSize)) endRange = info.streamSize;
+
+        if (beginRange > streamSize || beginRange > info.streamSize) return;
+
         headers.range = `bytes=${beginRange}-${endRange}`
         let s = miniget(formats[0].url, { headers })
           .on('response', r => {

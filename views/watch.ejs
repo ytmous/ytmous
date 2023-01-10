@@ -136,7 +136,7 @@
       let lastTime = null;
 
       function cq(vid, aid) {
-        lastTime = video.currentTime;
+        if (!lastTime) lastTime = video.currentTime;
 
         video.src = "/s/<%= id %>?itag=" + vid;
         audio.src = "/s/<%= id %>?itag=" + aid;

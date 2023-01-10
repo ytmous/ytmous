@@ -136,17 +136,20 @@
       let lastTime = null;
       let changeTime = true;
 
+      video.mediaGroup = "<%= id %>";
+      audio.mediaGroup = "<%= id %>";
+
       function cq(vid, aid) {
         if (!lastTime) lastTime = video.currentTime;
 
-        video.src = "/s/<%= id %>?itag=" + vid;
-        audio.src = "/s/<%= id %>?itag=" + aid;
+        if (video.src !== ("/s/<%= id %>?itag=" + vid)) {
+          video.src = "/s/<%= id %>?itag=" + vid;
+          video.load();
 
-        video.load();
-        audio.load();
-
-        video.mediaGroup = "<%= id %>";
-        audio.mediaGroup = "<%= id %>";
+        if (audio.src !== ("/s/<%= id %>?itag=" + aid)) {
+          audio.src = "/s/<%= id %>?itag=" + aid;
+          audio.load();
+        }
       }
 
       video.addEventListener("playing", () => {

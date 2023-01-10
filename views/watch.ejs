@@ -145,6 +145,7 @@
         if (video.src !== ("/s/<%= id %>?itag=" + vid)) {
           video.src = "/s/<%= id %>?itag=" + vid;
           video.load();
+        }
 
         if (audio.src !== ("/s/<%= id %>?itag=" + aid)) {
           audio.src = "/s/<%= id %>?itag=" + aid;

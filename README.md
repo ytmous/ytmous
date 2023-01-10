@@ -39,6 +39,12 @@ The code is reading the provided configuration from Environment Variable that co
 - `DLCHUNKSIZE`: Download Chunk Size. Default is 1 MB (1024 * 1024)
 - `PORT`: Server port to listen to.
 
+## Customize frontend
+You can customize your frontend by creating `local` directory to replace files from `views` or `public` directory.
+
+- `local/views/` for backend rendering (`views`)
+- `local/public/` for static page (`public`)
+
 ## Starting the server
 If this is your first time running this server, You may need to install it's dependencies first by executing `npm install`. 
 

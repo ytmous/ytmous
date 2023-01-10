@@ -36,8 +36,10 @@ function getSize(url, opt) {
   });
 }
 
-app.set("views", __dirname + "/views");
+app.set("views", [__dirname + "/local/views", __dirname + "/views"]);
 app.set("view engine", "ejs");
+
+app.use(express.static(__dirname + "/local/public"));
 app.use(express.static(__dirname + "/public"));
 
 // Trigger to limit caching

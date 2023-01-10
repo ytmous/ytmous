@@ -222,11 +222,12 @@ if (!process.env.NO_API_ENDPOINTS) {
       infos[req.params.id] = info;
 
       let json = JSON.stringify({
+        ...info.videoDetails,
+        related_videos: info.related_videos,
         streams: info.formats.map(i => {
           i.url = "/s/" + req.params.id + "?itag=" + i.itag;
           return i;
-        }),
-        ...info.videoDetails
+        })
       });
 
       json = json.replace(RegExp("https://i.ytimg.com/", "g"), "/");

@@ -58,7 +58,7 @@ or
 PORT=3000 npm start
 ```
 
-## API
+## API endpoints
 You can use ytmous API endpoints for your applications. The following endpoints are supported:
 
 ### `/api/search`

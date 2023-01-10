@@ -134,6 +134,7 @@
       let video = document.querySelector("video");
 
       let lastTime = null;
+      let changeTime = true;
 
       function cq(vid, aid) {
         if (!lastTime) lastTime = video.currentTime;
@@ -148,14 +149,11 @@
         audio.mediaGroup = "<%= id %>";
       }
 
-      ["seeked", "playing"].forEach(ename => {
-        video.addEventListener(ename, () => {
-          if (ename === "playing" && audio.paused) audio.play();
-          audio.currentTime = video.currentTime;
-        });
+      video.addEventListener("playing", () => {
+        changeTime = true;
+        audio.play();
       });
 
-      video.addEventListener("waiting", () => audio.pause());
       video.addEventListener("ratechange", () => {
         audio.playbackRate = video.playbackRate;
         audio.currentTime = video.currentTime;
@@ -168,23 +166,16 @@
         lastTime = null;
       });
       
-      ["pause", "play"].forEach(ename => {
-        video.addEventListener(ename, () => {
-          audio.currentTime = video.currentTime;
-          audio[ename]();
-        });
+      video.addEventListener("pause", () => {
+        changeTime = true;
+        audio.pause();
       });
 
-      let changeTime = true;
       audio.addEventListener("playing", () => {
         if (!changeTime) return;
         audio.playbackRate = video.playbackRate;
         audio.currentTime = video.currentTime;
         changeTime = false;
-      });
-
-      audio.addEventListener("pause", () => {
-        changeTime = true;
       });
     } catch (e) { alert(e.toString()) }
     </script>

@@ -78,7 +78,7 @@ Endpoint to list videos from playlist / channel.
 - `playlistID` **(Required)**
   String of Playlist or Channel ID.
 
-## `/api/getVideoInfo/[videoID]`
+### `/api/getVideoInfo/[videoID]`
 Endpoint to give information of an YouTube video.
 
 #### Parameters

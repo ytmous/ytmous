@@ -166,6 +166,85 @@ app.get("/c/:id", async (req, res) => {
   }
 });
 
+// API Endpoints
+if (!process.env.NO_API_ENDPOINTS) {
+  app.get("/api/", (req, res) => {
+    res.json([
+      "/api/search", "/api/getPlaylistInfo", "/api/getVideoInfo"
+    ]);
+  });
+
+  app.get("/api/search", async (req, res) => {
+    try {
+      let result = await ytsr(req.query.q, { limit, pages: (req.query.page || 1) });
+      delete result.continuation;
+
+      let json = JSON.stringify(result).replace(RegExp("https://i.ytimg.com/", "g"), "/");
+      json = json.replace(RegExp("https://yt3.ggpht.com", "g"), "/yt3");
+
+      // Just make it simple. As long it works.
+      res.json(JSON.parse(json));
+    } catch (e) {
+      res.status(500).end(JSON.stringify({
+        error: {
+          description: e.toString(),
+          code: 2
+        }
+      }));
+    }
+  });
+
+  app.get("/api/getPlaylistInfo/:id", async (req, res) => {
+    if (!ytpl.validateID(req.params.id)) return res.status(400).end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
+    try {
+      let result = await ytpl(req.params.id, { limit, pages: (req.query.page || 1) })
+      delete result.continuation;
+
+      let json = JSON.stringify(result).replace(RegExp("https://i.ytimg.com/", "g"), "/");
+      json = json.replace(RegExp("https://yt3.ggpht.com", "g"), "/yt3");
+
+      // Just make it simple. As long it works.
+      res.json(JSON.parse(json));
+    } catch (e) {
+      res.status(500).end(JSON.stringify({
+        error: {
+          description: e.toString(),
+          code: 2
+        }
+      }));
+    }
+  });
+
+  app.get("/api/getVideoInfo/:id", async (req, res) => {
+    if (!ytdl.validateID(req.params.id)) return res.status(400).end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
+    try {
+      let info = await ytdl.getInfo(req.params.id);
+      infos[req.params.id] = info;
+
+      let json = JSON.stringify({
+        streams: info.formats.map(i => {
+          i.url = "/s/" + req.params.id + "?itag=" + i.itag;
+          return i;
+        }),
+        ...info.videoDetails
+      });
+
+      json = json.replace(RegExp("https://i.ytimg.com/", "g"), "/");
+      json = json.replace(RegExp("https://yt3.ggpht.com", "g"), "/yt3");
+
+      // Just make it simple. As long it works.
+      res.json(JSON.parse(json));
+    } catch (e) {
+      return res.status(500).end(JSON.stringify({
+        error: {
+          description: e.toString(),
+          code: 2
+        }
+      }));
+    }
+  });
+}
+
 // Proxy Area
 // This is where we make everything became anonymous
 
@@ -291,8 +370,8 @@ app.get("/s/:id", async (req, res) => {
 });
 
 // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
-app.get("/vi*", (req, res) => {
-  let stream = miniget(`https://i.ytimg.com/${req.url.slice(1)}`, {
+app.get(["/vi*", "/sb/*"], (req, res) => {
+  let stream = miniget("https://i.ytimg.com" + req.url, {
     headers: {
       "user-agent": user_agent,
     },
@@ -312,7 +391,7 @@ app.get("/vi*", (req, res) => {
 // Proxy to yt3.ggpht.com, Where User avatar is being stored on that host.
 app.get(["/yt3/*", "/ytc/*"], (req, res) => {
   if (req.url.startsWith("/yt3/")) req.url = req.url.slice(4);
-  let stream = miniget(`https://yt3.ggpht.com/${req.url.slice(1)}`, {
+  let stream = miniget("https://yt3.ggpht.com" + req.url, {
     headers: {
       "user-agent": user_agent,
     },

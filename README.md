@@ -37,9 +37,10 @@ The code is reading the provided configuration from Environment Variable that co
 - `VIDINFO_LIMIT`: Video information caching limit, Mostly used for streaming after watch page has been loaded. Default is `20`.
 - `USER_AGENT`: This variable is where we fake our user agent to request youtube.
 - `DLCHUNKSIZE`: Download Chunk Size. Default is 1 MB (1024 * 1024)
+- `NO_API_ENDPOINTS`: Disable API endpoints. By default, API Endpoints is enabled.
 - `PORT`: Server port to listen to.
 
-## Customize frontend
+## Customizing frontend
 You can customize your frontend by creating `local` directory to replace files from `views` or `public` directory.
 
 - `local/views/` for backend rendering (`views`)
@@ -57,3 +58,29 @@ or
 PORT=3000 npm start
 ```
 
+## API
+You can use ytmous API endpoints for your applications. The following endpoints are supported:
+
+### `/api/search`
+Endpoint to search videos.
+
+#### Queries
+- `q` (String) **(Required)**
+  String to search with.
+
+- `page` (Number)
+  Next page listing.
+
+### `/api/getPlaylistInfo/[playlistID]`
+Endpoint to list videos from playlist / channel.
+
+#### Parameters
+- `playlistID` **(Required)**
+  String of Playlist or Channel ID.
+
+## `/api/getVideoInfo/[videoID]`
+Endpoint to give information of an YouTube video.
+
+#### Parameters
+- `videoID` **(Required)**
+  String of YouTube video ID

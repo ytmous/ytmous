@@ -152,6 +152,8 @@
           audio.src = "/s/<%= id %>?itag=" + aid;
           audio.load();
         }
+
+        document.getElementById("qs").open = false;
       }
 
       video.addEventListener("playing", () => {

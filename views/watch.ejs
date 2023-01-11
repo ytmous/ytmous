@@ -182,7 +182,7 @@
         lastTime = null;
       });
 
-      ["pause", "seeked"].forEach(e => {
+      ["pause", "seeked", "waiting"].forEach(e => {
         video.addEventListener(e, () => {
           audio.pause();
         });

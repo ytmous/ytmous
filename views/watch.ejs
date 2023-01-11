@@ -143,12 +143,12 @@
       function cq(vid, aid) {
         if (!lastTime) lastTime = video.currentTime;
 
-        if (video.error || video.src !== ("/s/<%= id %>?itag=" + vid)) {
+        if (video.error || video.currentSrc !== ("/s/<%= id %>?itag=" + vid)) {
           video.src = "/s/<%= id %>?itag=" + vid;
           video.load();
         }
 
-        if (audio.error || audio.src !== ("/s/<%= id %>?itag=" + aid)) {
+        if (audio.error || audio.currentSrc !== ("/s/<%= id %>?itag=" + aid)) {
           audio.src = "/s/<%= id %>?itag=" + aid;
           audio.load();
         }
@@ -173,8 +173,10 @@
         lastTime = null;
       });
 
-      video.addEventListener("pause", () => {
-        audio.pause();
+      ["pause", "seeked"].forEach(e => {
+        video.addEventListener(e, () => {
+          audio.pause();
+        });
       });
 
       audio.addEventListener("pause", () => {

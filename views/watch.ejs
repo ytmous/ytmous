@@ -18,11 +18,10 @@
       content="<%= info.videoDetails.title %> - ytmous"
     />
     <meta property="og:type" content="video" />
-    <meta property="og:video" content="/stream/<%= id %>" />
+    <meta property="og:video" content="/s/<%= id %>" />
     <meta property="og:video:type" content="video/mp4" />
-    <meta property="og:video" content="/stream/<%= id %>" />
-    <meta property="og:video:type" content="text/html" />
-    <meta property="twitter:player" content="/stream/<%= id %>" />
+    <meta property="og:video:url" content="/s/<%= id %>" />
+    <meta property="twitter:player" content="/s/<%= id %>" />
     <meta
       name="twitter:image"
       content="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname %>"
@@ -187,8 +186,6 @@
           audio.pause()
         );
       });
-
-      audio.addEventListener("pause", () => changeTime = true);
 
       audio.addEventListener("playing", () => {
         if (!changeTime) return changeTime = true;

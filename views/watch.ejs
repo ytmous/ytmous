@@ -188,6 +188,7 @@
         );
       });
 
+      audio.addEventListener("pause", () => changeTime = true);
 
       audio.addEventListener("playing", () => {
         if (!changeTime) return changeTime = true;

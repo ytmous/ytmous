@@ -76,8 +76,8 @@
         </div>
       </div>
       <% } else if (video.type === "shelf") { %>
-      <div class="shelf border" style="margin-top: 2px;">
-        <h4 class="shelfTitle"><%= video.title %></h4>
+      <details class="shelf border" style="margin-top: 2px;">
+        <summary class="shelfTitle"><%= video.title %></summary>
         <% video.items.forEach(video => { %>
         <% if (video.type === "video" || video.type === "short") { %>
         <div class="rVideo">
@@ -96,7 +96,7 @@
             ><br>
             <small><%= video.uploadedAt %> • Duration: <b><%= video.isLive ? "LIVE" : video.duration %></b></small>
           </div>
-        </div>
+        </details>
         <% } else if (video.type === "playlist") { %>
         <div class="rVideo">
           <a href="/p/<%= video.playlistID %>"><img lazy src="<%= (new URL(video.firstVideo.bestThumbnail.url)).pathname %>"/></a>

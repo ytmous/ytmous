@@ -64,6 +64,7 @@ a {
 }
 
 .shelfTitle {
+  font-weight: bold;
   border-bottom: 1px solid black;
 }
 
@@ -75,15 +76,9 @@ a {
   display: flex;
 }
 
-/* Quality Selection */
-#qsb {
-  visibility: hidden;
-}
-
 #qs {
+  visibility: hidden;
   overflow-y: auto;
-  max-height: 50vh;
-  z-index: 5;
 }
 
 /* Mobile View */

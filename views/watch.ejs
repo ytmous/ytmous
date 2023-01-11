@@ -78,13 +78,14 @@
       <!-- Video Information -->
       <div id="vidInfo">
         <!-- Quality Selection -->
-        <a href="#qs" id="qsb" class="border right">Quality Selection</a>
-        <div class="border popup fixed bottom" id="qs">
-          <a href="#" class="border top right">Close</a>
+        <details class="border right" id="qs">
+          <summary>Quality Selection</summary>
+          <ul>
           <% info.formats.filter(i => !i.hasAudio && !i.isDashMPD).forEach(i => { %>
-          <a href="#" onclick="<%= `cq(${i.itag}, ${info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag})` %>"><b><%= i.qualityLabel %></b> <%= i.mimeType %></a><br>
+            <li><a href="#" onclick="<%= `cq(${i.itag}, ${info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag})` %>"><b><%= i.qualityLabel %></b> <%= i.mimeType %></a></li>
           <% }); %>
-        </div>
+          </ul>
+        </details>
         <h2><%= info.videoDetails.title %></h2>
         <span
           ><%- (info.videoDetails.description || "").replace(/\n/g, "<br />")
@@ -129,7 +130,7 @@
 
     <script>
     try {
-      document.getElementById("qsb").style.visibility = "visible";
+      document.getElementById("qs").style.visibility = "visible";
       let audio = new Audio();
       let video = document.querySelector("video");
 

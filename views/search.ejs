@@ -76,7 +76,7 @@
         </div>
       </div>
       <% } else if (video.type === "shelf") { %>
-      <details class="shelf border" style="margin-top: 2px;">
+      <details class="shelf border" style="margin-top: 2px;" open>
         <summary class="shelfTitle"><%= video.title %></summary>
         <% video.items.forEach(video => { %>
         <% if (video.type === "video" || video.type === "short") { %>

@@ -3,6 +3,10 @@
   src: url(/Ubuntu-R.ttf);
 }
 
+summary {
+  list-style: none;
+}
+
 body {
   font-family: helvetica;
 }

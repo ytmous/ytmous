@@ -173,11 +173,12 @@
         lastTime = null;
       });
 
-      ["pause", "waiting"].forEach(e => {      
-        video.addEventListener(e, () => {
-          changeTime = true;
-          audio.pause();
-        });
+      video.addEventListener("pause", () => {
+        audio.pause();
+      });
+
+      audio.addEventListener("pause", () => {
+        changeTime = true;
       });
 
       audio.addEventListener("playing", () => {

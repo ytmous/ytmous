@@ -60,7 +60,9 @@
       <video
         poster="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname %>"
         controls
-        autoplay>
+        autoplay
+        playsinline
+      >
         <source src="/s/<%= id %>">
       </video>
       <!-- Channel Information -->

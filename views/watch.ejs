@@ -184,6 +184,7 @@
 
       ["pause", "seeked", "waiting"].forEach(e => {
         video.addEventListener(e, () => {
+          changeTime = true;
           audio.pause();
         });
       });

@@ -96,7 +96,7 @@
             ><br>
             <small><%= video.uploadedAt %> • Duration: <b><%= video.isLive ? "LIVE" : video.duration %></b></small>
           </div>
-        </details>
+        </div>
         <% } else if (video.type === "playlist") { %>
         <div class="rVideo">
           <a href="/p/<%= video.playlistID %>"><img lazy src="<%= (new URL(video.firstVideo.bestThumbnail.url)).pathname %>"/></a>
@@ -119,7 +119,7 @@
         </div>
         <% } %>
         <% }); %>
-      </div>
+      </details>
       <% } %>
       <% }); %>
     </div>

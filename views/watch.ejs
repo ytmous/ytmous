@@ -158,6 +158,14 @@
         document.getElementById("qs").open = false;
       }
 
+      function seekAudio(d) {
+        if (typeof(audio.fastSeek) === "function") {
+          audio.fastSeek(d || video.currentTime);
+        } else {
+          audio.currentTime = d || video.currentTime;
+        }
+      }
+
       video.addEventListener("playing", () => {
         changeTime = true;
         audio.play();
@@ -165,13 +173,13 @@
 
       video.addEventListener("ratechange", () => {
         audio.playbackRate = video.playbackRate;
-        audio.currentTime = video.currentTime;
+        seekAudio();
       });
 
       video.addEventListener("loadeddata", () => {
         if (!lastTime) return;
         video.currentTime = lastTime;
-        audio.currentTime = lastTime;
+        audio.currentTime = seekAudio(lastTime);
         lastTime = null;
       });
 
@@ -188,7 +196,7 @@
       audio.addEventListener("playing", () => {
         if (!changeTime) return;
         audio.playbackRate = video.playbackRate;
-        audio.currentTime = video.currentTime;
+        seekAudio();
         changeTime = false;
       });
     } catch (e) { alert(e.toString()) }

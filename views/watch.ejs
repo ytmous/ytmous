@@ -159,10 +159,12 @@
 
       function seekAudio(d) {
         if (typeof(audio.fastSeek) === "function") {
-          audio.fastSeek(d || video.currentTime);
+          audio.fastSeek(lastTime || video.currentTime);
         } else {
-          audio.currentTime = d || video.currentTime;
+          audio.currentTime = lastTime || video.currentTime;
         }
+
+        lastTime = null;
       }
 
       video.addEventListener("playing", () => {
@@ -178,23 +180,17 @@
       video.addEventListener("loadeddata", () => {
         if (!lastTime) return;
         video.currentTime = lastTime;
-        audio.currentTime = seekAudio(lastTime);
-        lastTime = null;
       });
 
       ["pause", "seeked", "waiting"].forEach(e => {
-        video.addEventListener(e, () => {
-          changeTime = true;
-          audio.pause();
-        });
+        video.addEventListener(e, () =>
+          audio.pause()
+        );
       });
 
-      audio.addEventListener("pause", () => {
-        changeTime = true;
-      });
 
       audio.addEventListener("playing", () => {
-        if (!changeTime) return;
+        if (!changeTime) return changeTime = true;
         audio.playbackRate = video.playbackRate;
         seekAudio();
         changeTime = false;

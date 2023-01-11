@@ -83,6 +83,7 @@ a {
 #qs {
   overflow-y: auto;
   max-height: 50vh;
+  z-index: 5;
 }
 
 /* Mobile View */

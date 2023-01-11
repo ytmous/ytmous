@@ -142,12 +142,12 @@
       function cq(vid, aid) {
         if (!lastTime) lastTime = video.currentTime;
 
-        if (video.src !== ("/s/<%= id %>?itag=" + vid)) {
+        if (video.error || video.src !== ("/s/<%= id %>?itag=" + vid)) {
           video.src = "/s/<%= id %>?itag=" + vid;
           video.load();
         }
 
-        if (audio.src !== ("/s/<%= id %>?itag=" + aid)) {
+        if (audio.error || audio.src !== ("/s/<%= id %>?itag=" + aid)) {
           audio.src = "/s/<%= id %>?itag=" + aid;
           audio.load();
         }

@@ -64,7 +64,7 @@
         <source src="/s/<%= id %>">
         <% if (captions && captions.length) { %>
         <% captions.forEach(c => { %>
-        <track src="/c/<%= id %>?vssId=<%= c.vssId %>" srclang="<%= c.languangeCode %>" label="<%= c.name %>">
+        <track src="/c/<%= id %>?vssId=<%= c.vssId %>&fmt=vtt" srclang="<%= c.languangeCode %>" label="<%= c.name %>">
         <% }); %>
         <% } %>
       </video>

@@ -426,7 +426,7 @@ app.get("/cc/:id", async (req, res) => {
       }
     }));
 
-    miniget(caption.baseUrl + (req.query.fmt ? ("?fmt=" + req.query.fmt) : ""), {
+    miniget(caption.baseUrl + (req.query.fmt ? ("&fmt=" + req.query.fmt) : ""), {
       headers: {
         "user-agent": user_agent
       }

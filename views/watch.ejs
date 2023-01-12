@@ -145,7 +145,6 @@
 
         if (video.error || video.currentSrc !== ("/s/<%= id %>?itag=" + vid)) {
           video.src = "/s/<%= id %>?itag=" + vid;
-          video.load();
         }
 
         if (audio.error || audio.currentSrc !== ("/s/<%= id %>?itag=" + aid)) {
@@ -176,7 +175,7 @@
         seekAudio();
       });
 
-      video.addEventListener("loadeddata", () => {
+      video.addEventListener("loadedmetadata", () => {
         if (!lastTime) return;
         video.currentTime = lastTime;
       });

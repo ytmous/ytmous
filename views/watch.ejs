@@ -149,7 +149,10 @@
         if (!lastTime) lastTime = video.currentTime;
 
         if (video.error || !video.currentSrc.endsWith("/s/<%= id %>?itag=" + vid)) {
+          let lastTracks = video.textTracks;
           video.src = "/s/<%= id %>?itag=" + vid;
+          video.textTracks = lastTracks;
+
           video.load();
         }
 
@@ -193,7 +196,6 @@
           audio.pause()
         );
       });
-
 
       audio.addEventListener("playing", () => {
         if (!changeTime) return changeTime = true;

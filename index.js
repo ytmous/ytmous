@@ -418,7 +418,7 @@ app.get("/cc/:id", async (req, res) => {
       })
     )
 
-    let caption = getCaptions(req.params.id, req.query.vssId);
+    let caption = getCaptions(req.params.id, req.query.vssId)[0];
     if (!caption) return res.status(500).end(JSON.stringify({
       error: {
         description: "No subtitle found.",
@@ -430,6 +430,9 @@ app.get("/cc/:id", async (req, res) => {
       headers: {
         "user-agent": user_agent
       }
+    }).on("error", err => {
+      console.log(err);
+      res.status(500).end(err.toString());
     }).pipe(res);
   } catch (err) {
     return res.status(500).end(JSON.stringify({

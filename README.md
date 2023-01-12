@@ -1,19 +1,16 @@
 <div align="center">
   <h1>ytmous</h1>
-  <p>Anonymous youtube proxy</p>
+  <p>Anonymous Youtube Proxy</p>
 </div>
 
 ### Search, Click, and watch
-ytmous is a lightweight, and Anonymous Youtube Proxy. Designed for device with limited resource.
+ytmous is an lightweight, and Anonymous Youtube Proxy. Designed for device with limited resource.
 
 ### There's no tracker and ads
-Only a simple webpage, ready for you to watch some videos in a second
+Only with a simple UI, ready for you to watch some videos in a second
 
-### Less JavaScript in frontend
-There's only 1 script that doing it's job for quality selection. While most pages were rendered in server (backend), You can still use ytmous without JavaScript enabled.
-
-### Completely open source
-ytmous is licensed under BSD 3 Clause and it's code is free. You can also host your own ytmous.
+### Free and Open source
+ytmous is licensed under BSD 3 Clause and it's code is free. You can also host your own ytmous server. <b>It's easy!</b>
 
 **DISCLAIMER:** ytmous could fetch, stream or download videos from YouTube, even copyrighted ones. Please respect all copyright laws.
 
@@ -49,7 +46,7 @@ You can customize your frontend by creating `local` directory to replace files f
 ## Starting the server
 If this is your first time running this server, You may need to install it's dependencies first by executing `npm install`. 
 
-Therefore, you can start the server by executing:
+Then, you can start the server by executing:
 ```sh
 npm start
 ```

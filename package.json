@@ -1,18 +1,18 @@
 {
   "name": "ytmous",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "main": "index.js",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
-    "m3u8stream": "^0.8.4",
-    "miniget": "^4.x",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "m3u8stream": "^0.8.6",
+    "miniget": "^4.2.2",
     "ytdl-core": "4.11.2",
     "ytpl": "^2.3.0",
     "ytsr": "^3.8.0"
   },
-  "description": "A anonymous Youtube that does not spy on you.",
+  "description": "Anonymous Youtube Proxy",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ytmous/ytmous.git"

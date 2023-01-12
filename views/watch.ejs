@@ -145,6 +145,7 @@
 
         if (video.error || video.currentSrc !== ("/s/<%= id %>?itag=" + vid)) {
           video.src = "/s/<%= id %>?itag=" + vid;
+          video.load();
         }
 
         if (audio.error || audio.currentSrc !== ("/s/<%= id %>?itag=" + aid)) {
@@ -155,7 +156,7 @@
         document.getElementById("qs").open = false;
       }
 
-      function seekAudio(d) {
+      function seekAudio() {
         if (typeof(audio.fastSeek) === "function") {
           audio.fastSeek(lastTime || video.currentTime);
         } else {
@@ -182,7 +183,8 @@
 
       ["pause", "seeked", "waiting"].forEach(e => {
         video.addEventListener(e, () =>
-          audio.pause()
+          audio.pause();
+          seekAudio();
         );
       });
 

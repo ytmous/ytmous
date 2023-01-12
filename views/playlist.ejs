@@ -23,7 +23,7 @@
       </form>
     </div>
 
-    <img lazy src="<%= (new URL(playlist.bestThumbnail.url)).pathname %>" id="thumbnail"/>
+    <img lazy src="/vi/<%= playlist.items[0].id %>/hqdefault.jpg" id="thumbnail"/>
     <div style="padding: 14px;">
       <small><%= playlist.estimatedItemCount %> videos</small>
       <h2><%= playlist.title %></h2>
@@ -35,7 +35,7 @@
       <% playlist.items.forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img lazy src="<%= (new URL(video.bestThumbnail.url)).pathname %>"
+          ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>

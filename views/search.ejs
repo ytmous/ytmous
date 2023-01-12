@@ -38,10 +38,11 @@
     <% } %>
     <div id="relatedVideos">
       <% res.items.forEach(video => { %>
-      <% if (video.type === "video") { %>
+      <% if (video.type === "video" || video.type === "short") { %>
+      <% if (video.type === "short") { video.author = video.channel; video.id = video.videoID; video.uploadedAt = video.views } %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img lazy src="<%= (new URL(video.bestThumbnail.url)).pathname %>"
+          ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
@@ -57,7 +58,7 @@
       </div>
       <% } else if (video.type === "playlist") { %>
       <div class="rVideo">
-        <a href="/p/<%= video.playlistID %>"><img lazy src="<%= (new URL(video.firstVideo.bestThumbnail.url)).pathname %>"/></a>
+        <a href="/p/<%= video.playlistID %>"><img lazy src="/vi/<%= video.firstVideo.id %>/mqdefault.jpg"/></a>
         <div class="rVideoInfo">
           <h4><a href="/p/<%= video.playlistID %>"><%= video.title %></a></h4>
           <% if (video.owner) { %>
@@ -81,9 +82,9 @@
         <% video.items.forEach(video => { %>
         <% if (video.type === "video" || video.type === "short") { %>
         <div class="rVideo">
-          <% if (video.type === "short") video.author = video.channel %>
-          <a href="/w/<%= video.id %>"
-            ><img lazy src="<%= (new URL(video.bestThumbnail.url)).pathname %>"
+          <% if (video.type === "short") { video.author = video.channel; video.id = video.videoID; video.uploadedAt = video.views } %>
+          <a href="/w/<%= video.videoID %>"
+            ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
           /></a>
           <div class="rVideoInfo">
             <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
@@ -99,7 +100,7 @@
         </div>
         <% } else if (video.type === "playlist") { %>
         <div class="rVideo">
-          <a href="/p/<%= video.playlistID %>"><img lazy src="<%= (new URL(video.firstVideo.bestThumbnail.url)).pathname %>"/></a>
+          <a href="/p/<%= video.playlistID %>"><img lazy src="/vi/<%= video.firstVideo.id %>/mqdefault.jpg"/></a>
           <div class="rVideoInfo">
             <h4><a href="/p/<%= video.playlistID %>"><%= video.title %></a></h4>
             <% if (video.owner) { %>

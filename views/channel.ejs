@@ -38,7 +38,7 @@
       <% channel.items.forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img lazy src="<%= (new URL(video.bestThumbnail.url)).pathname %>"
+          ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>

@@ -40,6 +40,7 @@ a {
 #relatedVideos {
   z-index: -1;
   position: static;
+  margin-bottom: 25px;
 }
 
 #thumbnail {

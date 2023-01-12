@@ -24,14 +24,14 @@
     <meta property="twitter:player" content="/s/<%= id %>" />
     <meta
       name="twitter:image"
-      content="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname %>"
+      content="/vi/<%= id %>/hqdefault.jpg"
     />
     <meta property="og:description" content="<%= info.videoDetails.description
     || "" %>">
     <meta property="og:site_name" content="ytmous | Anonymous Youtube Proxy" />
     <meta
       property="og:image"
-      content="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname %>"
+      content="/vi/<%= id %>/hqdefault.jpg"
     />
     <meta name="theme-color" content="#ff8181" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -57,7 +57,7 @@
     <!-- Video Player -->
     <div id="player" class="left absolute">
       <video
-        poster="<%= (new URL(info.videoDetails.thumbnails.pop().url)).pathname %>"
+        poster="/vi/<%= id %>/hqdefault.jpg"
         controls
         autoplay
       >
@@ -107,7 +107,7 @@
       <% info.related_videos.forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img lazy src="<%= (new URL(video.thumbnails.pop().url)).pathname; %>"
+          ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>

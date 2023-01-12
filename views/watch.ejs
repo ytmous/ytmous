@@ -62,6 +62,11 @@
         autoplay
       >
         <source src="/s/<%= id %>">
+        <% if (captions && captions.length) { %>
+        <% captions.forEach(c => { %>
+        <track src="/c/<%= id %>?vssId=<%= c.vssId %>" srclang="<%= c.languangeCode %>" label="<%= c.name %>">
+        <% }); %>
+        <% } %>
       </video>
       <!-- Channel Information -->
       <div class="chnInf">
@@ -143,12 +148,12 @@
       function cq(vid, aid) {
         if (!lastTime) lastTime = video.currentTime;
 
-        if (video.error || video.currentSrc !== ("/s/<%= id %>?itag=" + vid)) {
+        if (video.error || !video.currentSrc.endsWith("/s/<%= id %>?itag=" + vid)) {
           video.src = "/s/<%= id %>?itag=" + vid;
           video.load();
         }
 
-        if (audio.error || audio.currentSrc !== ("/s/<%= id %>?itag=" + aid)) {
+        if (audio.error || !audio.currentSrc.endsWith("/s/<%= id %>?itag=" + aid)) {
           audio.src = "/s/<%= id %>?itag=" + aid;
           audio.load();
         }

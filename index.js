@@ -36,6 +36,18 @@ function getSize(url, opt) {
   });
 }
 
+function getCaptions(id, sub) {
+  try {
+    let captions = infos[id].player_response.captions.playerCaptionsTracklistRenderer.captionTracks
+    if (!captions || !captions.length) return [];
+    if (!sub) return captions;
+
+    return captions.filter(c => c.vssId === sub);
+  } catch {
+    return [];
+  }
+}
+
 app.set("views", [__dirname + "/local/views", __dirname + "/views"]);
 app.set("view engine", "ejs");
 
@@ -102,7 +114,13 @@ app.get("/w/:id", async (req, res) => {
 
     res.render("watch.ejs", {
       id: req.params.id,
-      info, q: req.query
+      info, q: req.query,
+      captions: getCaptions(req.params.id).map(i => {
+        return {
+          name: i.name.simpleText,
+          vssId: i.vssId
+        }
+      })
     });
   } catch (error) {
     console.error(error);
@@ -227,6 +245,14 @@ if (!process.env.NO_API_ENDPOINTS) {
         streams: info.formats.map(i => {
           i.url = "/s/" + req.params.id + "?itag=" + i.itag;
           return i;
+        }),
+        captions: getCaptions(req.params.id).map(i => {
+          return {
+            name: i.name.simpleText,
+            languangeCode: i.languangeCode,
+            vssId: i.vssId,
+            url: "/c/" + req.params.id + "?vssId=" + i.vssId
+          }
         })
       });
 
@@ -367,6 +393,49 @@ app.get("/s/:id", async (req, res) => {
       });
   } catch (error) {
     res.status(500).end(error.toString());
+  }
+});
+
+// Proxy to subtitles
+app.get("/c/:id", async (req, res) => {
+  if (!ytdl.validateID(req.params.id)) return res.status(400).end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
+
+  try {
+    if (!infos[req.params.id]) {
+      let info = await ytdl.getInfo(req.params.id);
+      infos[req.params.id] = info;
+    }
+
+    if (!req.query.vssId) return res.json(
+      getCaptions(req.params.id).map(i => {
+        return {
+          name: i.name.simpleText,
+          languangeCode: i.languangeCode,
+          vssId: i.vssId
+        }
+      })
+    )
+
+    let caption = getCaptions(req.params.id, req.query.vssId);
+    if (!caption) return res.status(500).end(JSON.stringify({
+      error: {
+        description: "No subtitle found.",
+        code: 3
+      }
+    }));
+
+    miniget(caption.baseUrl + (req.query.fmt ? ("?fmt=" + req.query.fmt) : ""), {
+      headers: {
+        "user-agent": user_agent
+      }
+    }).pipe(res);
+  } catch (err) {
+    return res.status(500).end(JSON.stringify({
+      error: {
+        description: e.toString(),
+        code: 2
+      }
+    }));
   }
 });
 

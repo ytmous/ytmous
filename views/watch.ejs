@@ -182,10 +182,10 @@
       });
 
       ["pause", "seeked", "waiting"].forEach(e => {
-        video.addEventListener(e, () =>
+        video.addEventListener(e, () => {
           audio.pause();
           seekAudio();
-        );
+        });
       });
 
       audio.addEventListener("playing", () => {

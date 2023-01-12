@@ -181,12 +181,14 @@
         video.currentTime = lastTime;
       });
 
-      ["pause", "seeked", "waiting"].forEach(e => {
-        video.addEventListener(e, () => {
-          audio.pause();
-          seekAudio();
-        });
+      video.addEventListener("seeked", seekAudio);
+
+      ["pause", "waiting"].forEach(e => {
+        video.addEventListener(e, () =>
+          audio.pause()
+        );
       });
+
 
       audio.addEventListener("playing", () => {
         if (!changeTime) return changeTime = true;

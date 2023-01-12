@@ -118,6 +118,7 @@ app.get("/w/:id", async (req, res) => {
       captions: getCaptions(req.params.id).map(i => {
         return {
           name: i.name.simpleText,
+          languangeCode: i.languangeCode,
           vssId: i.vssId
         }
       })
@@ -251,7 +252,7 @@ if (!process.env.NO_API_ENDPOINTS) {
             name: i.name.simpleText,
             languangeCode: i.languangeCode,
             vssId: i.vssId,
-            url: "/c/" + req.params.id + "?vssId=" + i.vssId
+            url: "/cc/" + req.params.id + "?vssId=" + i.vssId
           }
         })
       });
@@ -397,7 +398,7 @@ app.get("/s/:id", async (req, res) => {
 });
 
 // Proxy to subtitles
-app.get("/c/:id", async (req, res) => {
+app.get("/cc/:id", async (req, res) => {
   if (!ytdl.validateID(req.params.id)) return res.status(400).end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
 
   try {
@@ -411,7 +412,8 @@ app.get("/c/:id", async (req, res) => {
         return {
           name: i.name.simpleText,
           languangeCode: i.languangeCode,
-          vssId: i.vssId
+          vssId: i.vssId,
+          url: "/cc/" + req.params.id + "?vssId=" + i.vssId
         }
       })
     )

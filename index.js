@@ -238,7 +238,7 @@ if (!process.env.NO_API_ENDPOINTS) {
     if (!ytdl.validateID(req.params.id)) return res.status(400).end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
     try {
       let info = await ytdl.getInfo(req.params.id);
-      infos[req.params.id] = info;
+      infos[req.params.id] = JSON.parse(JSON.stringify(info));
 
       let json = JSON.stringify({
         ...info.videoDetails,
@@ -337,57 +337,73 @@ app.get("/s/:id", async (req, res) => {
       let sentSize = 0;
       let lastConnErr = 0;
 
-      res.status(isSeeking ? 206 : 200).setHeader("content-length", streamSize);
+      if (info.streamSize[formats[0].itag]) {
+        if (!streamSize) return res.status(416).end("416 Range Not Satisfiable");
+        res.status(isSeeking ? 206 : 200).setHeader("content-length", streamSize);
 
-      if (!streamSize) return res.end();
+        function getChunk(beginRange) {
+          beginRange = parseInt(beginRange);
 
-      function getChunk(beginRange) {
-        beginRange = parseInt(beginRange);
+          let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || (1024 * 1024));
+          if ((endRange > streamSize) || (endRange > info.streamSize[formats[0].itag])) endRange = info.streamSize[formats[0].itag];
 
-        let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || (1024 * 1024));
-        if ((endRange > streamSize) || (endRange > info.streamSize[formats[0].itag])) endRange = info.streamSize[formats[0].itag];
+          headers.range = `bytes=${beginRange}-${endRange}`
 
-        headers.range = `bytes=${beginRange}-${endRange}`
+          let s = miniget(formats[0].url, { headers })
+            .on('response', r => {
+              if (headersSetted) return;
 
+              if (isSeeking && r.headers["content-range"]) res.setHeader("content-range", r.headers["content-range"]);
+              ["accept-ranges", "content-type", "cache-control"].forEach(hed => {
+                let head = r.headers[hed];
+                if (head) res.setHeader(hed, head)
+                headersSetted = true;
+              });
+
+              lastConnErr = 0;
+            })
+
+            .on('error', (err) => {
+              console.error(err);
+              if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
+              if (lastConnErr > 3 || sentSize >= streamSize || sentSize >= info.streamSize[formats[0].itag]) return res.end();
+              getChunk(endRange + 1);
+              lastConnErr++;
+            })
+
+            .on('data', c => {
+              if (req.connection.destroyed || req.connection.ended || req.connection.closed) return s.destroy();
+              res.write(c);
+              sentSize += c.length;
+            })
+
+            .on('end', _ => {
+              if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
+              if (sentSize >= streamSize) {
+                return res.end();
+              }
+
+              getChunk(endRange + 1);
+            })
+        }
+
+        getChunk(h[0].slice(6));
+      } else {
         let s = miniget(formats[0].url, { headers })
+          .on('error', (err) => {
+            if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
+            res.end();
+          })
           .on('response', r => {
-            if (headersSetted) return;
-
-            if (isSeeking && r.headers["content-range"]) res.setHeader("content-range", r.headers["content-range"]);
-            ["accept-ranges", "content-type", "cache-control"].forEach(hed => {
+            res.status(r.statusCode);
+            ["accept-ranges", "content-type", "content-range", "content-length", "cache-control"].forEach(hed => {
               let head = r.headers[hed];
-              if (head) res.setHeader(hed, head)
-              headersSetted = true;
+              if (head) res.setHeader(hed, head);
             });
 
-            lastConnErr = 0;
-          })
-
-          .on('error', (err) => {
-            console.error(err);
-            if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
-            if (lastConnErr > 3 || sentSize >= streamSize || sentSize >= info.streamSize[formats[0].itag]) return res.end();
-            getChunk(endRange + 1);
-            lastConnErr++;
-          })
-
-          .on('data', c => {
-            if (req.connection.destroyed || req.connection.ended || req.connection.closed) return s.destroy();
-            res.write(c);
-            sentSize += c.length;
-          })
-
-          .on('end', _ => {
-            if (req.connection.destroyed || req.connection.ended || req.connection.closed) return;
-            if (sentSize >= streamSize) {
-              return res.end();
-            }
-
-            getChunk(endRange + 1);
-          })
+            s.pipe(res);
+          });
       }
-
-      getChunk(h[0].slice(6));
 
       res.on('error', err => {
         console.error(err);

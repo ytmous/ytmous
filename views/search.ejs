@@ -46,13 +46,16 @@
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
+          <% if (video.author) { %>
           <span
             ><img lazy
               src="/yt3<%= (new URL(video.author.bestAvatar.url)).pathname %>"
               style="border-radius: 50%; width: 17px; height: 17px"
             />
             <a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span
-          ><br>
+          >
+          <% } %>
+          <br>
           <small><%= video.uploadedAt %> • Duration: <b><%= video.isLive ? "LIVE" : video.duration %></b></small>
         </div>
       </div>
@@ -88,13 +91,16 @@
           /></a>
           <div class="rVideoInfo">
             <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
+            <% if (video.author) { %>
             <span
               ><img lazy
                 src="/yt3<%= (new URL(video.author.bestAvatar.url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               />
               <a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span
-            ><br>
+            >
+            <% } %>
+            <br>
             <small><%= video.uploadedAt %> • Duration: <b><%= video.isLive ? "LIVE" : video.duration %></b></small>
           </div>
         </div>

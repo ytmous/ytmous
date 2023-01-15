@@ -10,7 +10,7 @@
     "miniget": "^4.2.2",
     "ytdl-core": "4.11.2",
     "ytpl": "^2.3.0",
-    "ytsr": "github:Yonle/node-ytsr"
+    "ytsr": "https://github.com/Yonle/node-ytsr.git"
   },
   "description": "Anonymous Youtube Proxy",
   "repository": {

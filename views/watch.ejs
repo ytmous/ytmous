@@ -118,10 +118,12 @@
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <div class="chnInf">
             <span>
+              <% if (video.author.thumbnails.length) { %>
               <img lazy
                 src="/yt3/<%= (new URL(video.author.thumbnails.pop().url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               />
+              <% } %>
               <a href="/c/<%= video.author.id %>">
                 <%= video.author.name %>
               </a>

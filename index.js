@@ -54,7 +54,7 @@ function putInfoToCache(info) {
   let id = info.videoDetails.videoId;
   let timeout = info.player_response.streamingData.expiresInSeconds
 
-  infos[id] = info;
+  infos[id] = JSON.parse(JSON.stringify(info));
 
   if (infos.timeouts[id]) clearTimeout(infos.timeouts[id]);
   infos.timeouts[id] = setTimeout(() => {
@@ -252,7 +252,7 @@ if (!process.env.NO_API_ENDPOINTS) {
     if (!ytdl.validateID(req.params.id)) return res.status(400).end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
     try {
       let info = await ytdl.getInfo(req.params.id);
-      infos[req.params.id] = JSON.parse(JSON.stringify(info));
+      putInfoToCache(info);
 
       let json = JSON.stringify({
         ...info.videoDetails,

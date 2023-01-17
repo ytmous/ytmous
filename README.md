@@ -35,6 +35,7 @@ The code is reading the provided configuration from Environment Variable that co
 - `USER_AGENT`: This variable is where we fake our user agent to request youtube.
 - `DLCHUNKSIZE`: Download Chunk Size. Default is 1 MB (1024 * 1024)
 - `NO_API_ENDPOINTS`: Disable API endpoints. By default, API Endpoints is enabled.
+- `NO_CACHE`: Disable Youtube Video Information caching. By default, caching is enabled for improving streaming speed, But also avoiding ratelimits as possible
 - `PORT`: Server port to listen to.
 
 ## Customizing frontend

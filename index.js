@@ -51,6 +51,8 @@ function getCaptions(id, sub) {
 }
 
 function putInfoToCache(info) {
+  if (process.env.NO_CACHE) return;
+
   let id = info.videoDetails.videoId;
   let timeout = info.player_response.streamingData.expiresInSeconds
 

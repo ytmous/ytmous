@@ -23,7 +23,9 @@ const user_agent =
 
 //     END OF CONFIGURATION    //
 
-let infos = {};
+let infos = {
+  timeouts: {}
+};
 
 function getSize(url, opt) {
   return new Promise((resolv, reject) => {
@@ -46,6 +48,18 @@ function getCaptions(id, sub) {
   } catch {
     return [];
   }
+}
+
+function putInfoToCache(info) {
+  let id = info.videoDetails.videoId;
+  let timeout = info.player_response.streamingData.expiresInSeconds
+
+  infos[id] = info;
+
+  if (infos.timeouts[id]) clearTimeout(infos.timeouts[id]);
+  infos.timeouts[id] = setTimeout(() => {
+    delete infos[id];
+  }, parseInt(timeout));
 }
 
 app.set("views", [__dirname + "/local/views", __dirname + "/views"]);
@@ -110,7 +124,7 @@ app.get("/w/:id", async (req, res) => {
       });
     }
 
-    infos[req.params.id] = info;
+    putInfoToCache(info);
 
     res.render("watch.ejs", {
       id: req.params.id,
@@ -283,7 +297,7 @@ app.get("/s/:id", async (req, res) => {
     let info = infos[req.params.id];
     if (!info) {
       info = await ytdl.getInfo(req.params.id);
-      infos[req.params.id] = info;
+      putInfoToCache(info);
     }
 
     let formats = info.formats.filter(
@@ -420,7 +434,7 @@ app.get("/cc/:id", async (req, res) => {
   try {
     if (!infos[req.params.id]) {
       let info = await ytdl.getInfo(req.params.id);
-      infos[req.params.id] = info;
+      putInfoToCache(info);
     }
 
     if (!req.query.vssId) return res.json(

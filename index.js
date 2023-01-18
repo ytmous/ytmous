@@ -614,3 +614,14 @@ const listener = app.listen(process.env.PORT || 3000, () => {
 
 // Handle any unhandled promise rejection.
 process.on("unhandledRejection", console.error);
+
+let lastMemoryUsage = null;
+setInterval(() => {
+  const { rss, external } = process.memoryUsage();
+  let memoryUsage = (rss + external) / 1024 / 1024
+
+  if (Math.ceil(memoryUsage) == Math.ceil(lastMemoryUsage)) return;
+  console.log((new Date()).toLocaleTimeString(), 'Memory Usage:', memoryUsage.toFixed(2) + "M");
+
+  lastMemoryUsage = memoryUsage;
+}, 1000);

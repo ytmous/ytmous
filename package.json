@@ -1,6 +1,6 @@
 {
   "name": "ytmous",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "main": "index.js",
   "license": "BSD-3-Clause",
   "dependencies": {

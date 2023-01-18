@@ -120,7 +120,7 @@
             <span>
               <% if (video.author.thumbnails.length) { %>
               <img lazy
-                src="/yt3/<%= (new URL(video.author.thumbnails.pop().url)).pathname %>"
+                src="/yt3<%= (new URL(video.author.thumbnails.pop().url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               />
               <% } %>

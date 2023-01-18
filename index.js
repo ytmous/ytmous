@@ -15,6 +15,7 @@ const app = express();
 // Change it as many as you want. 0 for all result without limit.
 // The smaller, The faster.
 const limit = process.env.LIMIT || 50;
+const urlreg = /(https?:\/\/[^\s]+)/g;
 
 // User Agent
 // This is where we fake our request to youtube.
@@ -24,7 +25,8 @@ const user_agent =
 //     END OF CONFIGURATION    //
 
 let infos = {
-  timeouts: {}
+  timeouts: {},
+  HLSOrigin: {}
 };
 
 function getSize(url, opt) {
@@ -324,7 +326,47 @@ app.get("/s/:id", async (req, res) => {
       headers.range = "bytes=0-"
     }
 
-    if (formats[0].isHLS || formats[0].isDashMPD) {
+    if (formats[0].isHLS) {
+      let request = miniget(formats[0].url, {
+        headers: {
+         "user-agent": headers["user-agent"]
+        }
+      }).on('response', async (r) => {
+        ["content-type", "cache-control"].forEach(hed => {
+          let head = r.headers[hed];
+          if (head) res.setHeader(hed, head)
+        });
+
+        let body = await request.text();
+
+        // Get the URLs
+        let urls = body.match(urlreg);
+        if (!urls) return res.status(500).end(JSON.stringify({
+          error: {
+            description: "No URL for m3u8 chunks",
+            code: 2
+          }
+        }));
+
+        infos.HLSOrigin[req.params.id] = [];
+
+        urls.forEach(url => {
+          // We just need the initial host, But not the Segment path
+          let splitted = url.split("index.m3u8");
+
+          if (!infos.HLSOrigin[req.params.id].includes(splitted[0]))
+            infos.HLSOrigin[req.params.id].push(splitted[0]);
+
+          body = body.replace(splitted[0], `/hs/${req.params.id}/${infos.HLSOrigin[req.params.id].length-1}/`);
+        });
+
+        res.end(body);
+      });
+
+      return;
+    }
+
+    if (formats[0].isDashMPD) {
       return m3u8stream(formats[0].url, {
         chunkReadahead: +info.live_chunk_readahead,
         requestOptions: { headers: { "user-agent": headers["user-agent"] } },
@@ -476,11 +518,50 @@ app.get("/cc/:id", async (req, res) => {
   }
 });
 
+// Proxy for HLS chunks
+app.get("/hs/:id/:on/*", (req, res) => {
+  let origin = infos.HLSOrigin[req.params.id];
+  if (!origin || !origin[req.params.on]) return res.status(400).end(JSON.stringify({
+    error: {
+      description: "No origin chunk url for " + req.params.id,
+      code: 3
+    }
+  }));
+
+  if (!req.params[0]) return res.status(400).end(JSON.stringify({
+    error: {
+      description: "No fullpath provided",
+      code: 1
+    }
+  }));
+
+  let stream = miniget(origin[req.params.on] + req.url.split("/").slice(4).join("/"), {
+    headers: {
+      "user-agent": user_agent,
+      "range": req.headers.range || "bytes=0-"
+    }
+  });
+
+  stream.on("error", (err) => {
+    console.log(err);
+    res.status(500).end(err.toString());
+  });
+
+  stream.on("response", (origin) => {
+    ["accept-ranges", "content-range", "content-type", "cache-control"].forEach(hed => {
+      let head = origin.headers[hed];
+      if (head) res.setHeader(hed, head);
+    });
+    stream.pipe(res);
+  });
+});
+
 // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
 app.get(["/vi*", "/sb/*"], (req, res) => {
   let stream = miniget("https://i.ytimg.com" + req.url, {
     headers: {
       "user-agent": user_agent,
+      "range": req.headers.range || "bytes=0-"
     },
   });
   stream.on("error", (err) => {
@@ -501,8 +582,10 @@ app.get(["/yt3/*", "/ytc/*"], (req, res) => {
   let stream = miniget("https://yt3.ggpht.com" + req.url, {
     headers: {
       "user-agent": user_agent,
+      "range": req.headers.range || "bytes=0-"
     },
   });
+
   stream.on("error", (err) => {
     console.log(err);
     res.status(500).end(err.toString());

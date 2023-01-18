@@ -48,10 +48,12 @@
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <% if (video.author) { %>
           <span
-            ><img lazy
+            >
+            <% if (video.author.bestAvatar) { %>
+            <img lazy
               src="/yt3<%= (new URL(video.author.bestAvatar.url)).pathname %>"
               style="border-radius: 50%; width: 17px; height: 17px"
-            />
+            /><% } %>
             <a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span
           >
           <% } %>
@@ -93,10 +95,12 @@
             <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
             <% if (video.author) { %>
             <span
-              ><img lazy
+              >
+              <% if (video.author.bestAvatar) { %>
+              <img lazy
                 src="/yt3<%= (new URL(video.author.bestAvatar.url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
-              />
+              /><% } %>
               <a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span
             >
             <% } %>

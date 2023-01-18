@@ -6,5 +6,5 @@ As the new Frontend misses some several features, The following list:
 - ~~Like & Dislike Count~~ Done.
 - ~~Playlist & Channel support~~ Done. still need add several details (such as description)
 - ~~Quality chooser....~~ Done.
-- HLS support....
+- ~~HLS support....~~ Done
 - ~~RAW Link Caching to prevent multiple request to youtube....~~ Done.

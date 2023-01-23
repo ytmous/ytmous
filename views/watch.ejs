@@ -207,6 +207,13 @@
         seekAudio();
         changeTime = false;
       });
+
+      setInterval(() => {
+        if (Math.ceil(audio.currentTime) === Math.ceil(video.currentTime)) return;
+        console.log(`sync: Audio synced from ${audio.currentTime} to ${video.currentTime}`);
+        audio.playbackRate = video.playbackRate;
+        seekAudio();
+      }, 1000);
     } catch (e) { alert(e.toString()) }
     </script>
     <style>

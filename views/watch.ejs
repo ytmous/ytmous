@@ -169,12 +169,7 @@
       }
 
       function seekAudio() {
-        if (typeof(audio.fastSeek) === "function") {
-          audio.fastSeek(lastTime || video.currentTime);
-        } else {
-          audio.currentTime = lastTime || video.currentTime;
-        }
-
+        audio.currentTime = lastTime || video.currentTime;
         lastTime = null;
       }
 

@@ -55,7 +55,7 @@
     </div>
 
     <!-- Video Player -->
-    <div id="player" class="left absolute">
+    <div id="player" class="left">
       <video
         poster="/vi/<%= id %>/hqdefault.jpg"
         controls
@@ -110,7 +110,7 @@
       </div>
     </div>
     <!-- Related Video section -->
-    <div id="relatedVideos" class="absolute right">
+    <div id="relatedVideos" class="right">
       <% info.related_videos.forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
@@ -219,14 +219,6 @@
       .rVideoInfo {
         max-width: 200px;
       }
-
-      /* @media only screen and (max-width: 960px) {
-        #relatedVideos {
-          float: left;
-          position: relative;
-          padding: 2px;
-        }
-      } */
     </style>
   </body>
 </html>

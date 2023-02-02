@@ -56,7 +56,7 @@
 
     <!-- Comments -->
     <div class="fixed border left" style="bottom: 30px; z-index: 4; max-width: 70%;">
-      <% if (comments) { %>
+      <% if (comments || !comments.total) { %>
       <a class="border" href="#comments">Comments <%= "(" + (comments.total || "0") + ")" %></a>
       <marquee>
       <% comments.comments.forEach(c => { %>

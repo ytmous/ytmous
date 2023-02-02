@@ -821,10 +821,5 @@ setInterval(() => {
     memoryUsage.toFixed(2) + "M"
   );
 
-  if (memoryUsage > process.env.MAX_SPACE_SIZE) {
-    console.warn("Reached memory limit. Exitting");
-    process.exit(0);
-  }
-
   lastMemoryUsage = memoryUsage;
 }, 1000);

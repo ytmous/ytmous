@@ -13,11 +13,7 @@ function run() {
   console.log((new Date()).toLocaleString(), "Limiting memory to", limit, "MB");
 
   let node = spawn("node", ["--max_old_space_size=" + limit, "server.js"], { 
-    stdio: "inherit",
-    env: {
-      MAX_SPACE_SIZE: limit,
-      ...process.env
-    }
+    stdio: "inherit"
   });
 
   node.on('exit', (c) => {

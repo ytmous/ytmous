@@ -236,7 +236,7 @@ app.get("/cm/:id", async (req, res) => {
 
     if (req.query.continuation) opt.continuation = req.query.continuation;
 
-    this.comments = await getComments(thie.opt);
+    this.comments = await getComments(this.opt);
     this.comments.comments = this.comments.comments.map((ch) => {
       ch.authorThumb.map((t) => {
         t.url = "/yt3" + new URL(t.url).pathname;

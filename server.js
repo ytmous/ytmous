@@ -766,7 +766,7 @@ app.get(["/vi*", "/sb/*"], (req, res) => {
   this.stream.on("response", (origin) => {
     res.setHeader("content-type", origin.headers["content-type"]);
     res.setHeader("content-length", origin.headers["content-length"]);
-    stream.pipe(res);
+    this.stream.pipe(res);
   });
 });
 

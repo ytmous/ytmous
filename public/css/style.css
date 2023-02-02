@@ -19,8 +19,19 @@ video {
   max-height: 70vh;
 }
 
+iframe {
+  z-index: 5;
+  height: 50%;
+  width: 70%;
+}
+
+#comments {
+  margin-bottom: 30px;
+}
+
 /* img only shows up for thumbnail, and they’re completely small. */
 img {
+  margin: 0;
   max-width: 150px;
 }
 
@@ -111,6 +122,10 @@ a {
 
   #thumbnail {
     max-width: 100%;
+  }
+
+  iframe {
+    width: 100%;
   }
   
   .rVideo, #chnInf, #vidInfo {

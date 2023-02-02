@@ -54,6 +54,36 @@
       </form>
     </div>
 
+    <!-- Comments -->
+    <div class="fixed border left" style="bottom: 30px; z-index: 4; max-width: 70%;">
+      <% if (comments) { %>
+      <a class="border" href="#comments">Comments <%= "(" + (comments.total || "0") + ")" %></a>
+      <marquee>
+      <% comments.comments.forEach(c => { %>
+        <span>
+          <span class="border">
+            <% if (c.authorThumb) { %>
+            <img lazy
+              src="/yt3<%= (new URL(c.authorThumb[0].url)).pathname %>"
+              style="border-radius: 50%; width: 17px; height: 17px"
+            />
+            <% } %>
+            <a href="/c/<%= c.authorId %>"><%= c.author %> </a>
+          </span>
+          <%- c.text.replace(RegExp("<br>", "g"), "; "); %>
+        </span>
+      <% }); %>
+      </marquee>
+      <% } else { %>
+      <span>No comments for this video.</span>
+      <% } %>
+    </div>
+
+    <div id="comments" class="border popup fixed bottom left">
+      <iframe loading="lazy" src="/cm/<%= id %>"></iframe>
+      <a href="#"><small>Close</small></a>
+    </div>
+
     <!-- Video Player -->
     <div id="player" class="left">
       <video
@@ -214,6 +244,7 @@
     <style>
       #relatedVideos {
         float: right;
+        margin-bottom: 50px;
       }
 
       .rVideoInfo {

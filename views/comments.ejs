@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/Toard.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <title><%= comments.total || 0 %> comments for <%= id %></title>
+  </head>
+  <body>
+    <div class="relatedVideos">
+      <% comments.comments.forEach(comment => { %>
+      <div class="rVideo">
+        <img lazy src="<%= comment.authorThumb[0].url %>"/>
+        <div class="rVideoInfo">
+          <h4><a href="/c/<%= comment.authorId %>"><%= comment.author %></a></h4>
+          <small><%= comment.time %><%= (comment.isVerified || comment.isOfficialArtist) ? " | Verified user" : "" %><%= comments.isMember ? " | Channel Member" : "" %><%= comment.isOwner ? " | Owner" : "" %><%= comment.isPinned ? " | Pinned" : "" %></small>
+          <pre><%- comment.text %></pre>
+          <small><%= comment.likes %> likes <%= comment.isHearted ? "| Hearted" : "" %></small><br>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+
+    <% if (isContinuation) { %>
+    <a class="fixed border bottom left" href="/cm/<%= id %>"
+      >Previous Page</a
+    >
+    <% } %>
+
+    <% if (comments.continuation) { %>
+    <a class="fixed border bottom right" href="/cm/<%= id %>?continuation=<%= comments.continuation %>"
+      >Next Page</a
+    >
+    <% } %>
+    <style>
+      body {
+        display: block;
+      }
+
+      img {
+        max-width: 50px;
+        width: 50px;
+        height: 50px;
+        padding: 10px;
+      }
+
+      pre {
+        max-width: 100%;
+      }
+    </style>
+  </body>
+</html>

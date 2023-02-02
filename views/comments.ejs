@@ -12,7 +12,7 @@
       <% comments.comments.forEach(comment => { %>
       <div class="rVideo">
         <img lazy src="<%= comment.authorThumb[0].url %>"/>
-        <div style="display: block;">
+        <div class="rVideoInfo">
           <h4><a href="/c/<%= comment.authorId %>"><%= comment.author %></a></h4>
           <small><%= comment.time %><%= (comment.isVerified || comment.isOfficialArtist) ? " | Verified user" : "" %><%= comments.isMember ? " | Channel Member" : "" %><%= comment.isOwner ? " | Owner" : "" %><%= comment.isPinned ? " | Pinned" : "" %></small>
           <pre><%- comment.text %></pre>
@@ -45,7 +45,8 @@
         padding: 10px;
       }
 
-      pre {
+      .rVideoInfo {
+        width: 100%;
         max-width: 100%;
       }
     </style>

@@ -12,7 +12,7 @@
       <% comments.comments.forEach(comment => { %>
       <div class="rVideo">
         <img lazy src="<%= comment.authorThumb[0].url %>"/>
-        <div class="rVideoInfo">
+        <div style="display: block;">
           <h4><a href="/c/<%= comment.authorId %>"><%= comment.author %></a></h4>
           <small><%= comment.time %><%= (comment.isVerified || comment.isOfficialArtist) ? " | Verified user" : "" %><%= comments.isMember ? " | Channel Member" : "" %><%= comment.isOwner ? " | Owner" : "" %><%= comment.isPinned ? " | Pinned" : "" %></small>
           <pre><%- comment.text %></pre>

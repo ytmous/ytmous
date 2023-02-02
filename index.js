@@ -6,13 +6,13 @@ const os = require("os");
 
 function run() {
   // In MB
-  this.freemem = Math.round(os.freemem() / 1024 / 1024);
-  this.limit = process.env.MAX_SPACE_SIZE || Math.floor(this.freemem / 1.2);
+  let freemem = Math.round(os.freemem() / 1024 / 1024);
+  let limit = process.env.MAX_SPACE_SIZE || Math.floor(freemem / 1.2);
 
   console.log((new Date()).toLocaleString(), "Starting process.");
-  console.log((new Date()).toLocaleString(), "Limiting memory to", this.limit, "MB");
+  console.log((new Date()).toLocaleString(), "Limiting memory to", limit, "MB");
 
-  let node = spawn("node", ["--max_old_space_size=" + this.limit, "server.js"], { 
+  let node = spawn("node", ["--max_old_space_size=" + limit, "server.js"], { 
     stdio: "inherit"
   });
 

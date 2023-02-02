@@ -23,7 +23,7 @@ ytmous is licensed under BSD 3 Clause and it's code is free. You can also host y
 ![ytmous_desktop_watch.png](https://raw.githubusercontent.com/Yonle/ytmous/nightly/screenshots/ytmous_desktop_watch.png)
 
 ## Server Requirement
-- Node v18+ is advised.
+- Node v16+ is advised.
 - Fast server network connection with ability to reach YouTube
 
 ## Configuration

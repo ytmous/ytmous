@@ -64,7 +64,7 @@
           <span class="border">
             <% if (c.authorThumb) { %>
             <img lazy
-              src="/yt3<%= (new URL(c.authorThumb[0].url)).pathname %>"
+              src="/yt3<%- (new URL(c.authorThumb[0].url)).pathname %>"
               style="border-radius: 50%; width: 17px; height: 17px"
             />
             <% } %>
@@ -104,7 +104,7 @@
           >
           <% if (info.videoDetails.author.thumbnails.length) { %>
           <img lazy
-            src="/yt3<%= (new URL(info.videoDetails.author.thumbnails.pop().url)).pathname %>"
+            src="/yt3<%- (new URL(info.videoDetails.author.thumbnails.pop().url)).pathname %>"
             style="border-radius: 50%; width: 15px; height: 15px"
           /><% } %>
           <a href="/c/<%= info.videoDetails.author.id %>"
@@ -152,7 +152,7 @@
             <span>
               <% if (video.author.thumbnails.length) { %>
               <img lazy
-                src="/yt3<%= (new URL(video.author.thumbnails.pop().url)).pathname %>"
+                src="/yt3<%- (new URL(video.author.thumbnails.pop().url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               />
               <% } %>

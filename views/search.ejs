@@ -51,7 +51,7 @@
             >
             <% if (video.author.bestAvatar) { %>
             <img lazy
-              src="/yt3<%= (new URL(video.author.bestAvatar.url)).pathname %>"
+              src="/yt3<%- (new URL(video.author.bestAvatar.url)).pathname %>"
               style="border-radius: 50%; width: 17px; height: 17px"
             /><% } %>
             <a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span
@@ -74,7 +74,7 @@
       </div>
       <% } else if (video.type === "channel") { %>
       <div class="rVideo" style="margin-top: 2px;">
-        <a href="/c/<%= video.channelID %>"><img lazy src="/yt3<%= (new URL(video.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
+        <a href="/c/<%= video.channelID %>"><img lazy src="/yt3<%- (new URL(video.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
         <div class="rVideoInfo">
           <h2><a href="/c/<%= video.channelID %>"><%= video.name %></a></h2>
           <span><%= video.description || video.descriptionShort %></span><br>
@@ -98,7 +98,7 @@
               >
               <% if (video.author.bestAvatar) { %>
               <img lazy
-                src="/yt3<%= (new URL(video.author.bestAvatar.url)).pathname %>"
+                src="/yt3<%- (new URL(video.author.bestAvatar.url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               /><% } %>
               <a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span
@@ -121,7 +121,7 @@
         </div>
         <% } else if (video.type === "channel") { %>
         <div class="rVideo" style="margin-top: 2px;">
-          <a href="/c/<%= video.channelID %>"><img lazy src="/yt3<%= (new URL(video.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
+          <a href="/c/<%= video.channelID %>"><img lazy src="/yt3<%- (new URL(video.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
           <div class="rVideoInfo">
             <h2><a href="/c/<%= video.channelID %>"><%= video.name %></a></h2>
             <span><%= video.description || video.descriptionShort %></span><br>

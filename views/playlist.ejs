@@ -27,7 +27,7 @@
     <div style="padding: 14px;">
       <small><%= playlist.estimatedItemCount %> videos</small>
       <h2><%= playlist.title %></h2>
-      <span><% if (playlist.author.bestAvatar) { %><img lazy src="/yt3<%= (new URL(playlist.author.bestAvatar.url)).pathname %>" style="border-radius: 50%; width: 17px; height: 17px" /><% } %><a href="/c/<%= playlist.author.channelID %>"><%= playlist.author.name %></a></span><br>
+      <span><% if (playlist.author.bestAvatar) { %><img lazy src="/yt3<%- (new URL(playlist.author.bestAvatar.url)).pathname %>" style="border-radius: 50%; width: 17px; height: 17px" /><% } %><a href="/c/<%= playlist.author.channelID %>"><%= playlist.author.name %></a></span><br>
       <small><%= playlist.lastUpdated %></small><br>
       <pre><%= playlist.description %></pre>
     </div>

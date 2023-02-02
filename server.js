@@ -31,9 +31,9 @@ let infos = {
 
 function getSize(url, opt) {
   return new Promise((resolv, reject) => {
-    let req = miniget(url, opt)
+    this.req = miniget(url, opt)
       .on("response", (res) => {
-        req.destroy();
+        this.req.destroy();
         resolv(res.headers["content-length"]);
       })
       .on("error", reject);
@@ -42,13 +42,13 @@ function getSize(url, opt) {
 
 function getCaptions(id, sub) {
   try {
-    let captions =
+    this.captions =
       infos[id].player_response.captions.playerCaptionsTracklistRenderer
         .captionTracks;
-    if (!captions || !captions.length) return [];
+    if (!this.captions || !this.captions.length) return [];
     if (!sub) return captions;
 
-    return captions.filter((c) => c.vssId === sub);
+    return this.captions.filter((c) => c.vssId === sub);
   } catch {
     return [];
   }
@@ -66,17 +66,17 @@ async function getComments(opt) {
 async function putInfoToCache(info) {
   if (process.env.NO_CACHE) return;
 
-  let id = info.videoDetails.videoId;
-  let timeout = info.player_response.streamingData.expiresInSeconds;
+  this.id = info.videoDetails.videoId;
+  this.timeout = info.player_response.streamingData.expiresInSeconds;
 
-  infos[id] = JSON.parse(JSON.stringify(info));
+  infos[this.id] = JSON.parse(JSON.stringify(info));
 
-  if (infos.timeouts[id]) clearTimeout(infos.timeouts[id]);
-  infos.timeouts[id] = setTimeout(() => {
-    delete infos[id];
-  }, parseInt(timeout));
+  if (infos.timeouts[this.id]) clearTimeout(infos.timeouts[this.id]);
+  infos.timeouts[this.id] = setTimeout(() => {
+    delete infos[this.id];
+  }, parseInt(this.timeout));
 
-  infos[id].comments = await getComments({ videoId: id });
+  infos[this.id].comments = await getComments({ videoId: this.id });
 
   return;
 }
@@ -89,9 +89,9 @@ app.use(express.static(__dirname + "/public"));
 
 // Trigger to limit caching
 app.use(["/w/*", "/s/*"], (req, res, next) => {
-  let IDs = Object.keys(infos);
-  if (IDs.length > (process.env.VIDINFO_LIMIT || 20)) {
-    delete infos[IDs.shift()];
+  this.IDs = Object.keys(infos);
+  if (this.IDs.length > (process.env.VIDINFO_LIMIT || 20)) {
+    delete infos[this.IDs.shift()];
   }
 
   next();
@@ -104,14 +104,14 @@ app.get("/", (req, res) => {
 
 // Search page
 app.get("/s", async (req, res) => {
-  let query = req.query.q;
-  let page = parseInt(req.query.p || 1);
-  if (!query) return res.redirect("/");
+  this.query = req.query.q;
+  this.page = parseInt(req.query.p || 1);
+  if (!this.query) return res.redirect("/");
   try {
     res.render("search.ejs", {
-      res: await ytsr(query, { limit, pages: page }),
-      query: query,
-      page,
+      res: await ytsr(this.query, { limit, pages: this.page }),
+      query: this.query,
+      page: this.page,
     });
   } catch (error) {
     console.error(error);
@@ -134,20 +134,20 @@ app.get("/w/:id", async (req, res) => {
       content: "Your requested video is invalid. Check your URL and try again.",
     });
   try {
-    let info = await ytdl.getInfo(req.params.id);
+    this.info = await ytdl.getInfo(req.params.id);
 
-    if (!info.formats.length) {
+    if (!this.info.formats.length) {
       return res.status(500).render("error.ejs", {
         title: "Region Lock",
         content: "Sorry. This video is not available for this server country.",
       });
     }
 
-    await putInfoToCache(info);
+    await putInfoToCache(this.info);
 
     res.render("watch.ejs", {
       id: req.params.id,
-      info,
+      info: this.info,
       q: req.query,
       captions: getCaptions(req.params.id).map((i) => {
         return {
@@ -183,11 +183,11 @@ app.get("/p/:id", async (req, res) => {
       content:
         "Your requested playlist is invalid. Check your URL and try again.",
     });
-  let page = parseInt(req.query.p || 1);
+  this.page = parseInt(req.query.p || 1);
   try {
     res.render("playlist.ejs", {
-      playlist: await ytpl(req.params.id, { limit, pages: page }),
-      page,
+      playlist: await ytpl(req.params.id, { limit, pages: this.page }),
+      page: this.page,
     });
   } catch (error) {
     console.error(error);
@@ -206,11 +206,11 @@ app.get("/c/:id", async (req, res) => {
       content:
         "Your requested channel is invalid. Check your URL and try again.",
     });
-  let page = parseInt(req.query.p || 1);
+  this.page = parseInt(req.query.p || 1);
   try {
     res.render("channel.ejs", {
-      channel: await ytpl(req.params.id, { limit, pages: page }),
-      page,
+      channel: await ytpl(req.params.id, { limit, pages: this.page }),
+      page: this.page,
     });
   } catch (error) {
     console.error(error);
@@ -230,14 +230,14 @@ app.get("/cm/:id", async (req, res) => {
     });
 
   try {
-    let opt = {
+    this.opt = {
       videoId: req.params.id,
     };
 
     if (req.query.continuation) opt.continuation = req.query.continuation;
 
-    comments = await getComments(opt);
-    comments.comments = comments.comments.map((ch) => {
+    this.comments = await getComments(opt);
+    this.comments.comments = this.comments.comments.map((ch) => {
       ch.authorThumb.map((t) => {
         t.url = "/yt3" + new URL(t.url).pathname;
         return t;
@@ -248,7 +248,7 @@ app.get("/cm/:id", async (req, res) => {
 
     res.render("comments.ejs", {
       id: req.params.id,
-      comments: comments,
+      comments: this.comments,
       isContinuation: req.query.continuations ? true : false
     });
   } catch (error) {
@@ -268,20 +268,20 @@ if (!process.env.NO_API_ENDPOINTS) {
 
   app.get("/api/search", async (req, res) => {
     try {
-      let result = await ytsr(req.query.q, {
+      this.result = await ytsr(req.query.q, {
         limit,
         pages: req.query.page || 1,
       });
-      delete result.continuation;
+      delete this.result.continuation;
 
-      let json = JSON.stringify(result).replace(
+      this.json = JSON.stringify(this.result).replace(
         RegExp("https://i.ytimg.com/", "g"),
         "/"
       );
-      json = json.replace(RegExp("https://yt3.ggpht.com", "g"), "/yt3");
+      this.json = this.json.replace(RegExp("https://yt3.ggpht.com", "g"), "/yt3");
 
       // Just make it simple. As long it works.
-      res.json(JSON.parse(json));
+      res.json(JSON.parse(this.json));
     } catch (e) {
       res.status(500).end(
         JSON.stringify({
@@ -300,20 +300,20 @@ if (!process.env.NO_API_ENDPOINTS) {
         .status(400)
         .end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
     try {
-      let result = await ytpl(req.params.id, {
+      this.result = await ytpl(req.params.id, {
         limit,
         pages: req.query.page || 1,
       });
-      delete result.continuation;
+      delete this.result.continuation;
 
-      let json = JSON.stringify(result).replace(
+      this.json = JSON.stringify(this.result).replace(
         RegExp("https://i.ytimg.com/", "g"),
         "/"
       );
-      json = json.replace(RegExp("https://yt3.ggpht.com", "g"), "/yt3");
+      this.json = this.json.replace(RegExp("https://yt3.ggpht.com", "g"), "/yt3");
 
       // Just make it simple. As long it works.
-      res.json(JSON.parse(json));
+      res.json(JSON.parse(this.json));
     } catch (e) {
       res.status(500).end(
         JSON.stringify({
@@ -332,13 +332,13 @@ if (!process.env.NO_API_ENDPOINTS) {
         .status(400)
         .end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
     try {
-      let info = await ytdl.getInfo(req.params.id);
-      putInfoToCache(info);
+      this.info = await ytdl.getInfo(req.params.id);
+      putInfoToCache(this.info);
 
-      let json = JSON.stringify({
-        ...info.videoDetails,
-        related_videos: info.related_videos,
-        streams: info.formats.map((i) => {
+      this.json = JSON.stringify({
+        ...this.info.videoDetails,
+        related_videos: this.info.related_videos,
+        streams: this.info.formats.map((i) => {
           i.url = "/s/" + req.params.id + "?itag=" + i.itag;
           return i;
         }),
@@ -352,8 +352,8 @@ if (!process.env.NO_API_ENDPOINTS) {
         }),
       });
 
-      json = json.replace(RegExp("https://i.ytimg.com/", "g"), "/");
-      json = json.replace(RegExp("https://yt3.ggpht.com", "g"), "/yt3");
+      this.json = this.json.replace(RegExp("https://i.ytimg.com/", "g"), "/");
+      this.json = this.json.replace(RegExp("https://yt3.ggpht.com", "g"), "/yt3");
 
       // Just make it simple. As long it works.
       res.json(JSON.parse(json));
@@ -374,19 +374,19 @@ if (!process.env.NO_API_ENDPOINTS) {
       return res
         .status(400)
         .end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
-    let comments = infos[req.params.id] && infos[req.params.id].comments;
+    this.comments = infos[req.params.id] && infos[req.params.id].comments;
 
-    if (!comments || req.query.continuation) {
+    if (!this.comments || req.query.continuation) {
       try {
-        let opt = {
+        this.opt = {
           videoId: req.params.id,
         };
 
         if (req.query.continuation) opt.continuation = req.query.continuation;
 
-        comments = await getComments(opt);
+        this.comments = await getComments(this.opt);
 
-        comments.comments = comments.comments.map((ch) => {
+        this.comments.comments = this.comments.comments.map((ch) => {
           ch.authorThumb.map((t) => {
             t.url = "/yt3" + new URL(t.url).pathname;
             return t;
@@ -395,7 +395,7 @@ if (!process.env.NO_API_ENDPOINTS) {
           return ch;
         });
 
-        res.json(comments);
+        res.json(this.comments);
       } catch (err) {
         return res.status(500).end(
           JSON.stringify({
@@ -417,49 +417,49 @@ if (!process.env.NO_API_ENDPOINTS) {
 app.get("/s/:id", async (req, res) => {
   if (!ytdl.validateID(req.params.id)) return res.redirect("/");
   try {
-    let info = infos[req.params.id];
-    if (!info) {
-      info = await ytdl.getInfo(req.params.id);
+    this.info = infos[req.params.id];
+    if (!this.info) {
+      this.info = await ytdl.getInfo(req.params.id);
       putInfoToCache(info);
     }
 
-    let formats = info.formats.filter((format) =>
+    this.formats = info.formats.filter((format) =>
       req.query.itag
         ? req.query.itag == format.itag
         : format.hasVideo && format.hasAudio
     );
 
-    if (!formats.length) {
+    if (!this.formats.length) {
       return res.status(500).send("This stream is unavailable.");
     }
 
-    let headers = {
+    this.headers = {
       "user-agent": user_agent,
     };
 
     // If user is seeking a video
     if (req.headers.range) {
-      headers.range = req.headers.range;
+      this.headers.range = req.headers.range;
     } else {
-      headers.range = "bytes=0-";
+      this.headers.range = "bytes=0-";
     }
 
-    if (formats[0].isHLS) {
-      let request = miniget(formats[0].url, {
+    if (this.formats[0].isHLS) {
+      this.request = miniget(formats[0].url, {
         headers: {
           "user-agent": headers["user-agent"],
         },
       }).on("response", async (r) => {
         ["content-type", "cache-control"].forEach((hed) => {
-          let head = r.headers[hed];
-          if (head) res.setHeader(hed, head);
+          this.head = r.headers[hed];
+          if (this.head) res.setHeader(hed, this.head);
         });
 
-        let body = await request.text();
+        this.body = await request.text();
 
         // Get the URLs
-        let urls = body.match(urlreg);
-        if (!urls)
+        this.urls = this.body.match(urlreg);
+        if (!this.urls)
           return res.status(500).end(
             JSON.stringify({
               error: {
@@ -469,33 +469,33 @@ app.get("/s/:id", async (req, res) => {
             })
           );
 
-        infos.HLSOrigin[req.params.id] = [];
+        this.infos.HLSOrigin[req.params.id] = [];
 
-        urls.forEach((url) => {
+        this.urls.forEach((url) => {
           // We just need the initial host, But not the Segment path
-          let splitted = url.split("index.m3u8");
+          this.splitted = url.split("index.m3u8");
 
-          if (!infos.HLSOrigin[req.params.id].includes(splitted[0]))
-            infos.HLSOrigin[req.params.id].push(splitted[0]);
+          if (!infos.HLSOrigin[req.params.id].includes(this.splitted[0]))
+            infos.HLSOrigin[req.params.id].push(this.splitted[0]);
 
-          body = body.replace(
-            splitted[0],
+          this.body = this.body.replace(
+            this.splitted[0],
             `/hs/${req.params.id}/${infos.HLSOrigin[req.params.id].length - 1}/`
           );
         });
 
-        res.end(body);
+        res.end(this.body);
       });
 
       return;
     }
 
-    if (formats[0].isDashMPD) {
-      return m3u8stream(formats[0].url, {
-        chunkReadahead: +info.live_chunk_readahead,
-        requestOptions: { headers: { "user-agent": headers["user-agent"] } },
-        parser: formats[0].isDashMPD ? "dash-mpd" : "m3u8",
-        id: formats[0].itag,
+    if (this.formats[0].isDashMPD) {
+      return m3u8stream(this.formats[0].url, {
+        chunkReadahead: +this.info.live_chunk_readahead,
+        requestOptions: { headers: { "user-agent": this.headers["user-agent"] } },
+        parser: this.formats[0].isDashMPD ? "dash-mpd" : "m3u8",
+        id: this.formats[0].itag,
       })
         .on("error", (err) => {
           res.status(500).end(err.toString());
@@ -504,62 +504,62 @@ app.get("/s/:id", async (req, res) => {
         .pipe(res);
     }
 
-    let h = headers.range
-      ? headers.range.split(",")[0].split("-")
+    this.h = this.headers.range
+      ? this.headers.range.split(",")[0].split("-")
       : ["bytes=0"];
 
-    let headersSetted = false;
-    if (!info.streamSize) info.streamSize = {};
-    if (!info.streamSize[formats[0].itag]) {
-      info.streamSize[formats[0].itag] = await getSize(formats[0].url, {
-        headers: { "user-agent": headers["user-agent"] },
+    this.headersSetted = false;
+    if (!this.info.streamSize) this.info.streamSize = {};
+    if (!this.info.streamSize[this.formats[0].itag]) {
+      this.info.streamSize[this.formats[0].itag] = await getSize(this.formats[0].url, {
+        headers: { "user-agent": this.headers["user-agent"] },
       });
     }
 
-    let streamSize = info.streamSize[formats[0].itag] - h[0].slice(6);
-    let isSeeking = false;
+    this.streamSize = this.info.streamSize[this.formats[0].itag] - this.h[0].slice(6);
+    this.isSeeking = false;
 
-    if (streamSize != info.streamSize[formats[0].itag]) isSeeking = true;
-    if (parseInt(h[1])) isSeeking = true;
-    let sentSize = 0;
-    let lastConnErr = 0;
+    if (this.streamSize != this.info.streamSize[this.formats[0].itag]) this.isSeeking = true;
+    if (parseInt(this.h[1])) this.isSeeking = true;
+    this.sentSize = 0;
+    this.lastConnErr = 0;
 
-    if (info.streamSize[formats[0].itag]) {
-      if (!streamSize || parseInt(h[1]) > info.streamSize[formats[0].itag])
+    if (this.info.streamSize[this.formats[0].itag]) {
+      if (!this.streamSize || parseInt(this.h[1]) > this.info.streamSize[this.formats[0].itag])
         return res.status(416).end("416 Range Not Satisfiable");
       res
         .status(isSeeking ? 206 : 200)
-        .setHeader("content-length", parseInt(h[1]) || streamSize);
+        .setHeader("content-length", parseInt(this.h[1]) || this.streamSize);
 
-      function getChunk(beginRange) {
+      this.getChunk = function getChunk(beginRange) {
         beginRange = parseInt(beginRange);
 
-        let endRange =
+        this.endRange =
           beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024);
         if (
-          endRange > streamSize ||
-          endRange > info.streamSize[formats[0].itag]
+          this.endRange > this.streamSize ||
+          this.endRange > this.info.streamSize[this.formats[0].itag]
         )
-          endRange = info.streamSize[formats[0].itag];
-        if (endRange > parseInt(h[1])) endRange = parseInt(h[1]);
+          this.endRange = this.info.streamSize[this.formats[0].itag];
+        if (this.endRange > parseInt(this.h[1])) this.endRange = parseInt(this.h[1]);
 
-        headers.range = `bytes=${beginRange}-${endRange}`;
+        this.headers.range = `bytes=${beginRange}-${this.endRange}`;
 
-        let s = miniget(formats[0].url, { headers })
+        this.s = miniget(this.formats[0].url, { headers: this.headers })
           .on("response", (r) => {
-            if (headersSetted) return;
+            if (this.headersSetted) return;
 
-            if (isSeeking && r.headers["content-range"])
+            if (this.isSeeking && r.headers["content-range"])
               res.setHeader("content-range", r.headers["content-range"]);
             ["accept-ranges", "content-type", "cache-control"].forEach(
               (hed) => {
-                let head = r.headers[hed];
-                if (head) res.setHeader(hed, head);
-                headersSetted = true;
+                this.head = r.headers[hed];
+                if (this.head) res.setHeader(hed, this.head);
+                this.headersSetted = true;
               }
             );
 
-            lastConnErr = 0;
+            this.lastConnErr = 0;
           })
 
           .on("error", (err) => {
@@ -571,13 +571,13 @@ app.get("/s/:id", async (req, res) => {
             )
               return;
             if (
-              lastConnErr > 3 ||
-              sentSize >= streamSize ||
-              sentSize >= info.streamSize[formats[0].itag]
+              this.lastConnErr > 3 ||
+              this.sentSize >= this.streamSize ||
+              this.sentSize >= this.info.streamSize[this.formats[0].itag]
             )
               return res.end();
-            getChunk(endRange + 1);
-            lastConnErr++;
+            this.getChunk(this.endRange + 1);
+            this.lastConnErr++;
           })
 
           .on("data", (c) => {
@@ -586,7 +586,7 @@ app.get("/s/:id", async (req, res) => {
               req.connection.ended ||
               req.connection.closed
             )
-              return s.destroy();
+              return this.s.destroy();
             res.write(c);
             sentSize += c.length;
           })
@@ -598,17 +598,17 @@ app.get("/s/:id", async (req, res) => {
               req.connection.closed
             )
               return;
-            if (sentSize >= streamSize) {
+            if (this.sentSize >= this.streamSize) {
               return res.end();
             }
 
-            getChunk(endRange + 1);
+            this.getChunk(this.endRange + 1);
           });
       }
 
-      getChunk(h[0].slice(6));
+      this.getChunk(this.h[0].slice(6));
     } else {
-      let s = miniget(formats[0].url, { headers })
+      this.s = miniget(formats[0].url, { headers: this.headers })
         .on("error", (err) => {
           if (
             req.connection.destroyed ||
@@ -627,11 +627,11 @@ app.get("/s/:id", async (req, res) => {
             "content-length",
             "cache-control",
           ].forEach((hed) => {
-            let head = r.headers[hed];
-            if (head) res.setHeader(hed, head);
+            this.head = r.headers[hed];
+            if (this.head) res.setHeader(hed, this.head);
           });
 
-          s.pipe(res);
+          this.s.pipe(res);
         });
     }
 
@@ -652,8 +652,8 @@ app.get("/cc/:id", async (req, res) => {
 
   try {
     if (!infos[req.params.id]) {
-      let info = await ytdl.getInfo(req.params.id);
-      putInfoToCache(info);
+      this.info = await ytdl.getInfo(req.params.id);
+      putInfoToCache(this.info);
     }
 
     if (!req.query.vssId)
@@ -668,7 +668,7 @@ app.get("/cc/:id", async (req, res) => {
         })
       );
 
-    let caption = getCaptions(req.params.id, req.query.vssId)[0];
+    this.caption = getCaptions(req.params.id, req.query.vssId)[0];
     if (!caption)
       return res.status(500).end(
         JSON.stringify({
@@ -703,7 +703,7 @@ app.get("/cc/:id", async (req, res) => {
 
 // Proxy for HLS chunks
 app.get("/hs/:id/:on/*", (req, res) => {
-  let origin = infos.HLSOrigin[req.params.id];
+  this.origin = infos.HLSOrigin[req.params.id];
   if (!origin || !origin[req.params.on])
     return res.status(400).end(
       JSON.stringify({
@@ -724,7 +724,7 @@ app.get("/hs/:id/:on/*", (req, res) => {
       })
     );
 
-  let stream = miniget(
+  this.stream = miniget(
     origin[req.params.on] + req.url.split("/").slice(4).join("/"),
     {
       headers: {
@@ -734,36 +734,36 @@ app.get("/hs/:id/:on/*", (req, res) => {
     }
   );
 
-  stream.on("error", (err) => {
+  this.stream.on("error", (err) => {
     console.log(err);
     res.status(500).end(err.toString());
   });
 
-  stream.on("response", (origin) => {
+  this.stream.on("response", (origin) => {
     ["accept-ranges", "content-range", "content-type", "cache-control"].forEach(
       (hed) => {
-        let head = origin.headers[hed];
-        if (head) res.setHeader(hed, head);
+        this.head = origin.headers[hed];
+        if (this.head) res.setHeader(hed, this.head);
       }
     );
-    stream.pipe(res);
+    this.stream.pipe(res);
   });
 });
 
 // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
 app.get(["/vi*", "/sb/*"], (req, res) => {
-  let stream = miniget("https://i.ytimg.com" + req.url, {
+  this.stream = miniget("https://i.ytimg.com" + req.url, {
     headers: {
       "user-agent": user_agent,
       range: req.headers.range || "bytes=0-",
     },
   });
-  stream.on("error", (err) => {
+  this.stream.on("error", (err) => {
     console.log(err);
     res.status(500).end(err.toString());
   });
 
-  stream.on("response", (origin) => {
+  this.stream.on("response", (origin) => {
     res.setHeader("content-type", origin.headers["content-type"]);
     res.setHeader("content-length", origin.headers["content-length"]);
     stream.pipe(res);
@@ -773,22 +773,22 @@ app.get(["/vi*", "/sb/*"], (req, res) => {
 // Proxy to yt3.ggpht.com, Where User avatar is being stored on that host.
 app.get(["/yt3/*", "/ytc/*"], (req, res) => {
   if (req.url.startsWith("/yt3/")) req.url = req.url.slice(4);
-  let stream = miniget("https://yt3.ggpht.com" + req.url, {
+  this.stream = miniget("https://yt3.ggpht.com" + req.url, {
     headers: {
       "user-agent": user_agent,
       range: req.headers.range || "bytes=0-",
     },
   });
 
-  stream.on("error", (err) => {
+  this.stream.on("error", (err) => {
     console.log(err);
     res.status(500).end(err.toString());
   });
 
-  stream.on("response", (origin) => {
+  this.stream.on("response", (origin) => {
     res.setHeader("content-type", origin.headers["content-type"]);
     res.setHeader("content-length", origin.headers["content-length"]);
-    stream.pipe(res);
+    this.stream.pipe(res);
   });
 });
 
@@ -812,14 +812,14 @@ process.on("unhandledRejection", console.error);
 let lastMemoryUsage = null;
 setInterval(() => {
   const { rss, external } = process.memoryUsage();
-  let memoryUsage = (rss + external) / 1024 / 1024;
+  this.memoryUsage = (rss + external) / 1024 / 1024;
 
-  if (Math.ceil(memoryUsage) == Math.ceil(lastMemoryUsage)) return;
+  if (Math.ceil(this.memoryUsage) == Math.ceil(lastMemoryUsage)) return;
   console.log(
     new Date().toLocaleTimeString(),
     "Memory Usage:",
-    memoryUsage.toFixed(2) + "M"
+    this.memoryUsage.toFixed(2) + "M"
   );
 
-  lastMemoryUsage = memoryUsage;
+  lastMemoryUsage = this.memoryUsage;
 }, 1000);

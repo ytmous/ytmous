@@ -12,7 +12,7 @@ function run() {
   console.log((new Date()).toLocaleString(), "Starting process.");
   console.log((new Date()).toLocaleString(), "Limiting memory to", limit, "MB");
 
-  let node = spawn("node", ["--trace-gc", "--max-old-space-size=" + limit, "server.js"], { 
+  let node = spawn("node", ["--max-old-space-size=" + limit, "server.js"], { 
     stdio: "inherit"
   });
 

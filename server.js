@@ -63,6 +63,15 @@ async function getComments(opt) {
   }
 }
 
+async function getCommentReplies(opt) {
+  try {
+    return await ytcs.getCommentReplies(opt);
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 async function putInfoToCache(info) {
   if (process.env.NO_CACHE) return;
 

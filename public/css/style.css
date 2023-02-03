@@ -126,8 +126,9 @@ a {
     max-width: 100%;
   }
 
-  iframe {
+  iframe, #comments {
     width: 100%;
+    max-width: 100%;
   }
   
   .rVideo, #chnInf, #vidInfo {

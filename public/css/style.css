@@ -21,12 +21,14 @@ video {
 
 iframe {
   z-index: 5;
-  height: 50%;
+  height: 60%;
   width: 70%;
 }
 
 #comments {
   margin-bottom: 30px;
+  max-height: 70%;
+  max-width: 90%;
 }
 
 /* img only shows up for thumbnail, and they’re completely small. */

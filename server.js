@@ -564,7 +564,7 @@ app.get("/s/:id", async (req, res) => {
           endRange > info.streamSize[formats[0].itag]
         )
           endRange = info.streamSize[formats[0].itag];
-        if (endRange > parseInt(h[1])) endRange = parseInt(h[1]);
+        if (endRange > parseInt(h[1]) && streamSize > parseInt(h[1])) endRange = parseInt(h[1]);
 
         headers.range = `bytes=${beginRange}-${endRange}`;
 

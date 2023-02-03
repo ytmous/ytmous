@@ -81,3 +81,15 @@ Endpoint to give information of an YouTube video.
 #### Parameters
 - `videoID` **(Required)**
   String of YouTube video ID
+
+### `/api/getComments/[videoID]`
+#### Parameters
+- `videoID` **(Required)**
+  String of YouTube video ID.
+
+#### Queries
+- `continuation` (String)
+  Continuation ID of an Comments. Used to fetch the next comment section.
+
+- `replyToken` (String)
+  Reply token. Used to view an reply of a comment.

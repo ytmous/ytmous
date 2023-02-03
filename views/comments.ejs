@@ -18,7 +18,7 @@
           <pre><%- comment.text %></pre>
           <small><%= comment.likes %> likes <%= comment.isHearted ? "| Hearted" : "" %></small><br>
           <% if (comment.replyToken) { %>
-          <small><a href="/cm/<%= id %>?replyToken=<%= comment.replyToken %>">View <%= comment.numReplies %> replies</a></small>
+          <small><a href="/cm/<%= id %>?replyToken=<%- encodeURIComponent(comment.replyToken) %>">View <%= comment.numReplies %> replies</a></small>
           <% } %>
         </div>
       </div>
@@ -26,13 +26,13 @@
     </div>
 
     <% if (prev) { %>
-    <a class="fixed border bottom left" href="/cm/<%= id %>?<%- (replyToken ? "replyToken=" : "continuation=") + prev %>"
+    <a class="fixed border bottom left" href="/cm/<%= id %>?<%- (replyToken ? "replyToken=" : "continuation=") + encodeURIComponent(prev) %>"
       >Previous Page</a
     >
     <% } %>
 
     <% if (comments.continuation) { %>
-    <a class="fixed border bottom right" href="/cm/<%= id %>?<%- (replyToken ? "replyToken=" : "continuation=") + comments.continuation %>&pref=<%= thisID || null %>"
+    <a class="fixed border bottom right" href="/cm/<%= id %>?<%- (replyToken ? "replyToken=" : "continuation=") + encodeURIComponent(comments.continuation) %><%= thisID ? "&prev=" + encodeURIComponent(thisID) : "" %>"
       >Next Page</a
     >
     <% } %>

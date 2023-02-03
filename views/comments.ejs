@@ -17,19 +17,22 @@
           <small><%= comment.time %><%= (comment.isVerified || comment.isOfficialArtist) ? " | Verified user" : "" %><%= comments.isMember ? " | Channel Member" : "" %><%= comment.isOwner ? " | Owner" : "" %><%= comment.isPinned ? " | Pinned" : "" %></small>
           <pre><%- comment.text %></pre>
           <small><%= comment.likes %> likes <%= comment.isHearted ? "| Hearted" : "" %></small><br>
+          <% if (comment.replyToken) { %>
+          <small><a href="/cm/<%= id %>?replyToken=<%= comment.replyToken %>">View <%= comment.numReplies %> replies</a></small>
+          <% } %>
         </div>
       </div>
       <% }); %>
     </div>
 
-    <% if (isContinuation) { %>
-    <a class="fixed border bottom left" href="/cm/<%= id %>"
+    <% if (prev) { %>
+    <a class="fixed border bottom left" href="/cm/<%= id %>?continuation=<%= prev %>&replyToken=<%= replyToken || null %>"
       >Previous Page</a
     >
     <% } %>
 
     <% if (comments.continuation) { %>
-    <a class="fixed border bottom right" href="/cm/<%= id %>?continuation=<%= comments.continuation %>"
+    <a class="fixed border bottom right" href="/cm/<%= id %>?continuation=<%= comments.continuation %>&pref=<%= prev || null %>&replyToken=<%= replyToken || null %>"
       >Next Page</a
     >
     <% } %>

@@ -236,7 +236,15 @@ app.get("/cm/:id", async (req, res) => {
 
     if (req.query.continuation) opt.continuation = req.query.continuation;
 
-    comments = await getComments(opt);
+    let comments;
+
+    if (!req.query.replyToken) {
+      comments = await getComments(opt);
+    } else {
+      opt.replyToken = req.query.replyToken;
+      comments = await getCommentReplies(opt);
+    }
+
     comments.comments = comments.comments.map((ch) => {
       ch.authorThumb.map((t) => {
         t.url = "/yt3" + new URL(t.url).pathname;
@@ -249,7 +257,8 @@ app.get("/cm/:id", async (req, res) => {
     res.render("comments.ejs", {
       id: req.params.id,
       comments: comments,
-      isContinuation: req.query.continuations ? true : false
+      prev: req.params.prev,
+      replyToken: req.query.replyToken
     });
   } catch (error) {
     console.error(error);
@@ -376,7 +385,7 @@ if (!process.env.NO_API_ENDPOINTS) {
         .end(JSON.stringify({ error: { description: "Invalid ID", code: 1 } }));
     let comments = infos[req.params.id] && infos[req.params.id].comments;
 
-    if (!comments || req.query.continuation) {
+    if (!comments || req.query.continuation || req.query.replyToken) {
       try {
         let opt = {
           videoId: req.params.id,
@@ -384,7 +393,12 @@ if (!process.env.NO_API_ENDPOINTS) {
 
         if (req.query.continuation) opt.continuation = req.query.continuation;
 
-        comments = await getComments(opt);
+        if (!req.query.replyToken) {
+          comments = await getComments(opt);
+        } else {
+          opt.replyToken = req.query.replyToken;
+          comments = await getCommentReplies(opt);
+        }
 
         comments.comments = comments.comments.map((ch) => {
           ch.authorThumb.map((t) => {

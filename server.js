@@ -154,8 +154,6 @@ app.get("/w/:id", async (req, res) => {
 
     await putInfoToCache(info);
 
-    res.setHeader("cache-control", "public,max-age=3600");
-
     res.render("watch.ejs", {
       id: req.params.id,
       info,
@@ -196,7 +194,6 @@ app.get("/p/:id", async (req, res) => {
     });
   let page = parseInt(req.query.p || 1);
   try {
-    res.setHeader("cache-control", "public,max-age=3600");
     res.render("playlist.ejs", {
       playlist: await ytpl(req.params.id, { limit, pages: page }),
       page,
@@ -265,8 +262,6 @@ app.get("/cm/:id", async (req, res) => {
 
       return ch;
     });
-
-    res.setHeader("cache-control", "public,max-age=3600");
 
     res.render("comments.ejs", {
       id: req.params.id,
@@ -478,7 +473,7 @@ app.get("/s/:id", async (req, res) => {
           "user-agent": headers["user-agent"],
         },
       }).on("response", async (r) => {
-        ["content-type"].forEach((hed) => {
+        ["content-type", "cache-control"].forEach((hed) => {
           let head = r.headers[hed];
           if (head) res.setHeader(hed, head);
         });
@@ -577,13 +572,9 @@ app.get("/s/:id", async (req, res) => {
           .on("response", (r) => {
             if (headersSetted) return;
 
-            // Make the client browser to cache.
-            res.setHeader("cache-control", "public,max-age=3600");
-
             if (isSeeking && r.headers["content-range"])
               res.setHeader("content-range", r.headers["content-range"]);
-
-            ["accept-ranges", "content-type"].forEach(
+            ["accept-ranges", "content-type", "cache-control"].forEach(
               (hed) => {
                 let head = r.headers[hed];
                 if (head) res.setHeader(hed, head);
@@ -711,8 +702,6 @@ app.get("/cc/:id", async (req, res) => {
         })
       );
 
-    res.setHeader("cache-control", "public,max-age=3600");
-
     miniget(caption.baseUrl + (req.query.fmt ? "&fmt=" + req.query.fmt : ""), {
       headers: {
         "user-agent": user_agent,
@@ -800,7 +789,6 @@ app.get(["/vi*", "/sb/*"], (req, res) => {
   stream.on("response", (origin) => {
     res.setHeader("content-type", origin.headers["content-type"]);
     res.setHeader("content-length", origin.headers["content-length"]);
-    res.setHeader("cache-control", "public,max-age=3600");
     stream.pipe(res);
   });
 });
@@ -823,7 +811,6 @@ app.get(["/yt3/*", "/ytc/*"], (req, res) => {
   stream.on("response", (origin) => {
     res.setHeader("content-type", origin.headers["content-type"]);
     res.setHeader("content-length", origin.headers["content-length"]);
-    res.setHeader("cache-control", "public,max-age=3600");
     stream.pipe(res);
   });
 });

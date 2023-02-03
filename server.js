@@ -267,7 +267,8 @@ app.get("/cm/:id", async (req, res) => {
       id: req.params.id,
       comments: comments,
       prev: req.params.prev,
-      replyToken: req.query.replyToken
+      replyToken: req.query.replyToken,
+      thisID: req.query.continuation || req.query.replyToken
     });
   } catch (error) {
     console.error(error);

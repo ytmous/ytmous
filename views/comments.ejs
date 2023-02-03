@@ -26,13 +26,13 @@
     </div>
 
     <% if (prev) { %>
-    <a class="fixed border bottom left" href="/cm/<%= id %>?continuation=<%= prev %>&replyToken=<%= replyToken || null %>"
+    <a class="fixed border bottom left" href="/cm/<%= id %>?<%- (replyToken ? "replyToken=" : "continuation=") + prev %>"
       >Previous Page</a
     >
     <% } %>
 
     <% if (comments.continuation) { %>
-    <a class="fixed border bottom right" href="/cm/<%= id %>?continuation=<%= comments.continuation %>&pref=<%= prev || null %>&replyToken=<%= replyToken || null %>"
+    <a class="fixed border bottom right" href="/cm/<%= id %>?<%- (replyToken ? "replyToken=" : "continuation=") + comments.continuation %>&pref=<%= thisID || null %>"
       >Next Page</a
     >
     <% } %>

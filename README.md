@@ -12,6 +12,9 @@ Only with a simple UI, ready for you to watch some videos in a second
 ### Free and Open source
 ytmous is licensed under BSD 3 Clause and it's code is free. You can also host your own ytmous server. <b>It's easy!</b>
 
+### Customizeable
+ytmous server owner could customize the frontend to what they would like. See [Customizing Frontend](#customizingfrontend)
+
 **DISCLAIMER:** ytmous could fetch, stream or download videos from YouTube, even copyrighted ones. Please respect all copyright laws.
 
 ## Screenshots
@@ -35,6 +38,7 @@ The code is reading the provided configuration from Environment Variable that co
 - `DLCHUNKSIZE`: Download Chunk Size. Default is 1 MB (1024 * 1024)
 - `NO_API_ENDPOINTS`: Disable API endpoints. By default, API Endpoints is enabled.
 - `NO_CACHE`: Disable Youtube Video Information caching. By default, caching is enabled for improving streaming speed, But also avoiding ratelimits as possible
+- `MAX_SPACE_SIZE`: `node --max-old-space-size=${process.env.MAX_SPACE_SIZE}`. By default `freemem / 1.2` MB.
 - `PORT`: Server port to listen to.
 
 ## Customizing frontend
@@ -42,6 +46,24 @@ You can customize your frontend by creating `local` directory to replace files f
 
 - `local/views/` for backend rendering (`views`)
 - `local/public/` for static page (`public`)
+
+```
+local
+├── public
+│   ├── Ubuntu-R.ttf
+│   ├── css
+│   │   ├── Toard.css
+│   │   └── style.css
+│   ├── index.html
+│   └── robots.txt
+└── views
+    ├── channel.ejs
+    ├── comments.ejs
+    ├── error.ejs
+    ├── playlist.ejs
+    ├── search.ejs
+    └── watch.ejs
+```
 
 ## Starting the server
 If this is your first time running this server, You may need to install it's dependencies first by executing `npm install`. 
@@ -93,3 +115,4 @@ Endpoint to give information of an YouTube video.
 
 - `replyToken` (String)
   Reply token. Used to view an reply of a comment.
+  To view continuation of an Reply comments, Put continuationID in `replyToken` query instead of `continuation`.

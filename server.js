@@ -845,5 +845,19 @@ setInterval(() => {
     memoryUsage.toFixed(2) + "M"
   );
 
+  if (Math.ceil(memoryUsage) > process.env.MAX_SPACE_SIZE) {
+    console.warn(
+      new Date().toLocaleTimeString(),
+      `WARN: Memory usage used more than ${process.env.MAX_SPACE_SIZE} MB.`
+    );
+
+    console.warn(
+      new Date().toLocaleTimeString(),
+      "KILL: Accho!!"
+    );
+
+    process.exit(0);
+  }
+
   lastMemoryUsage = memoryUsage;
 }, 1000);

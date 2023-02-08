@@ -845,7 +845,7 @@ setInterval(() => {
     memoryUsage.toFixed(2) + "M"
   );
 
-  if (Math.ceil(memoryUsage) > process.env.MAX_SPACE_SIZE) {
+  if (!process.env.NO_AUTO_KILL && (Math.ceil(memoryUsage) > process.env.MAX_SPACE_SIZE)) {
     console.warn(
       new Date().toLocaleTimeString(),
       `WARN: Memory usage used more than ${process.env.MAX_SPACE_SIZE} MB.`

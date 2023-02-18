@@ -88,7 +88,7 @@
         <% if (video.type === "video" || video.type === "short") { %>
         <div class="rVideo">
           <% if (video.type === "short") { video.author = video.channel; video.id = video.videoID; video.uploadedAt = video.views } %>
-          <a href="/w/<%= video.videoID %>"
+          <a href="/w/<%= video.id %>"
             ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
           /></a>
           <div class="rVideoInfo">

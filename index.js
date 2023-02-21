@@ -16,7 +16,7 @@ function run() {
   console.log((new Date()).toLocaleString(), "Starting process.");
   console.log((new Date()).toLocaleString(), "Limiting memory to", limit, "MB");
 
-  let node = spawn("node", ["--max-old-space-size=" + limit, "server.js"], {
+  let node = spawn("node", ["--max-old-space-size=" + limit, "--jitless", "server.js"], {
     stdio: "inherit",
     env: {
       MAX_SPACE_SIZE: limit,

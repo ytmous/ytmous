@@ -244,9 +244,8 @@
         if (Math.ceil(audio.currentTime) === Math.ceil(video.currentTime) || lastTime || !audio.buffered) return;
         if (delayCount >= 3) {
           console.log(`sync: Delayed for more than 3 times. Fixing.`);
-          video.pause();
-          video.play();
-          delayCount = 0;
+          audio.currentTime += lastDelay;
+          return delayCount = 0;
         }
 
         lastDelay = video.currentTime - audio.currentTime;

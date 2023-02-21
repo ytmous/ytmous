@@ -199,7 +199,11 @@
       }
 
       function seekAudio() {
-        audio.currentTime = lastTime || video.currentTime;
+        if (audio.fastSeek) {
+          ausio.fastSeek(lastTime || video.currentTime);
+        } else {
+          audio.currentTime = lastTime || video.currentTime;
+        }
         lastTime = null;
       }
 
@@ -234,7 +238,7 @@
       });
 
       setInterval(() => {
-        if (Math.ceil(audio.currentTime) === Math.ceil(video.currentTime)) return;
+        if (Math.ceil(audio.currentTime) === Math.ceil(video.currentTime) || lastTime) return;
         console.log(`sync: Audio synced from ${audio.currentTime} to ${video.currentTime}`);
         audio.playbackRate = video.playbackRate;
         seekAudio();

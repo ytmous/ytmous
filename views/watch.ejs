@@ -238,7 +238,7 @@
       });
 
       let lastDelay = 0;
-      video.addEventListener("timechange", () => {
+      video.addEventListener("timeupdate", () => {
         if (Math.ceil(audio.currentTime) === Math.ceil(video.currentTime) || lastTime) return;
 
         lastDelay = video.currentTime - audio.currentTime;

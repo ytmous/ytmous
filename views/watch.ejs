@@ -238,7 +238,7 @@
       });
 
       let lastDelay = 0;
-      setInterval(() => {
+      video.addEventListener("timechange", () => {
         if (Math.ceil(audio.currentTime) === Math.ceil(video.currentTime) || lastTime) return;
 
         lastDelay = video.currentTime - audio.currentTime;
@@ -246,7 +246,7 @@
         console.log(`sync: Audio synced from ${audio.currentTime} to ${video.currentTime} (${lastDelay}s late)`);
         audio.playbackRate = video.playbackRate;
         seekAudio();
-      }, 500);
+      });
     } catch (e) { alert(e.toString()) }
     </script>
     <style>

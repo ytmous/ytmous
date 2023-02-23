@@ -6,12 +6,8 @@ const os = require("os");
 
 function run() {
   // In MB
-  /*
   let freemem = Math.round(os.freemem() / 1024 / 1024);
   let limit = process.env.MAX_SPACE_SIZE || Math.floor(freemem / 1.2);
-  */
-
-  let limit = process.env.MAX_SPACE_SIZE || 512;
 
   console.log((new Date()).toLocaleString(), "Starting process.");
   console.log((new Date()).toLocaleString(), "Limiting memory to", limit, "MB");

@@ -30,4 +30,9 @@ console.log("Restarter initialized.");
 console.log("To change memory limit in your own,");
 console.log("Set MAX_SPACE_SIZE environment variable in MB.\n");
 
+console.log(`
+      ytmous - Anonymous Youtube Proxy
+  ....There we go back and forth again....
+`);
+
 run();

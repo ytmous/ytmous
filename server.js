@@ -29,6 +29,10 @@ let infos = {
   HLSOrigin: {},
 };
 
+function clearListener(s, events = ["response", "error", "data", "end"]) {
+  events.forEach(i => s.removeAllListeners(i));
+}
+
 function getSize(url, opt) {
   return new Promise((resolv, reject) => {
     let req = miniget(url, opt)
@@ -73,6 +77,7 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
     })
 
     .on("error", (err) => {
+      clearListener(s);
       console.error(err);
       if (
         req.connection.destroyed ||
@@ -100,8 +105,8 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
       res.write(c);
       sentSize += c.length;
     })
-
     .on("end", (_) => {
+      clearListener(s);
       if (
         req.connection.destroyed ||
         req.connection.ended ||

@@ -55,7 +55,7 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
 
   headers.range = `bytes=${beginRange}-${endRange}`;
 
-  let s = miniget(formats[0].url, { headers })
+  const s = miniget(formats[0].url, { headers })
     .on("response", (r) => {
       if (headersSetted) return;
 
@@ -753,7 +753,7 @@ app.get("/hs/:id/:on/*", (req, res) => {
       })
     );
 
-  let stream = miniget(
+  const stream = miniget(
     origin[req.params.on] + req.url.split("/").slice(4).join("/"),
     {
       headers: {
@@ -781,7 +781,7 @@ app.get("/hs/:id/:on/*", (req, res) => {
 
 // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
 app.get(["/vi*", "/sb/*"], (req, res) => {
-  let stream = miniget("https://i.ytimg.com" + req.url, {
+  const stream = miniget("https://i.ytimg.com" + req.url, {
     headers: {
       "user-agent": user_agent,
       range: req.headers.range || "bytes=0-",
@@ -802,7 +802,7 @@ app.get(["/vi*", "/sb/*"], (req, res) => {
 // Proxy to yt3.ggpht.com, Where User avatar is being stored on that host.
 app.get(["/yt3/*", "/ytc/*"], (req, res) => {
   if (req.url.startsWith("/yt3/")) req.url = req.url.slice(4);
-  let stream = miniget("https://yt3.ggpht.com" + req.url, {
+  const stream = miniget("https://yt3.ggpht.com" + req.url, {
     headers: {
       "user-agent": user_agent,
       range: req.headers.range || "bytes=0-",

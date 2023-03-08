@@ -97,6 +97,18 @@
         <track src="/cc/<%= id %>?vssId=<%= c.vssId %>&fmt=vtt" srclang="<%= c.languangeCode %>" label="<%= c.name %>">
         <% }); %>
         <% } %>
+
+        <ul>
+          <li><a href="/s/<%= id %>">Video</a></li>
+          <li><a href="/s/<%= info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag %>">Audio</a></li>
+          <li><a href="/s/<%= id %>" download>Video (Download)</a></li>
+          <li><a href="/s/<%= info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag %>" download>Audio (Download)</a></li>
+          <% if (captions && captions.length) { %>
+          <% captions.forEach(c => { %>
+          <li><a href="/cc/<%= id %>?vssId=<%= c.vssId %>&fmt=vtt" download>Subtitle (WebVTT): <%= c.name %></a></li>
+          <% }); %>
+          <% } %>
+        </ul>
       </video>
       <!-- Channel Information -->
       <div class="chnInf">

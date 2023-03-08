@@ -40,6 +40,82 @@ function getSize(url, opt) {
   });
 }
 
+function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSeeking = false, h, headersSetted = false, sentSize = 0, lastConnErr = 0) {
+  beginRange = parseInt(beginRange);
+
+  let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024);
+  if (endRange > streamSize || endRange > info.streamSize[formats[0].itag])
+    endRange = "";
+  if (endRange > parseInt(h[1]) && streamSize > parseInt(h[1]))
+    endRange = parseInt(h[1]);
+
+  headers.range = `bytes=${beginRange}-${endRange}`;
+
+  let s = miniget(formats[0].url, { headers })
+    .on("response", (r) => {
+      if (headersSetted) return;
+
+      if (isSeeking && r.headers["content-range"])
+        res.setHeader(
+          "content-range",
+          r.headers["content-range"].replace(
+            endRange,
+            h[1] ? h[1] : info.streamSize[formats[0].itag]
+          )
+        );
+      ["accept-ranges", "content-type", "cache-control"].forEach((hed) => {
+        let head = r.headers[hed];
+        if (head) res.setHeader(hed, head);
+        headersSetted = true;
+      });
+
+      lastConnErr = 0;
+    })
+
+    .on("error", (err) => {
+      console.error(err);
+      if (
+        req.connection.destroyed ||
+        req.connection.ended ||
+        req.connection.closed
+      )
+        return;
+      if (
+        lastConnErr > 3 ||
+        sentSize >= streamSize ||
+        sentSize >= info.streamSize[formats[0].itag]
+      )
+        return res.end();
+      getChunk(beginRange + sentSize + 1, req, res, headers, info, formats, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
+      lastConnErr++;
+    })
+
+    .on("data", (c) => {
+      if (
+        req.connection.destroyed ||
+        req.connection.ended ||
+        req.connection.closed
+      )
+        return s.destroy();
+      res.write(c);
+      sentSize += c.length;
+    })
+
+    .on("end", (_) => {
+      if (
+        req.connection.destroyed ||
+        req.connection.ended ||
+        req.connection.closed
+      )
+        return;
+      if (sentSize >= streamSize) {
+        return res.end();
+      }
+
+      getChunk(endRange + 1, req, res, headers, info, formats, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
+    });
+}
+
 function getCaptions(id, sub) {
   try {
     let captions =
@@ -268,7 +344,7 @@ app.get("/cm/:id", async (req, res) => {
       comments: comments,
       prev: req.params.prev,
       replyToken: req.query.replyToken,
-      thisID: req.query.continuation || req.query.replyToken
+      thisID: req.query.continuation || req.query.replyToken,
     });
   } catch (error) {
     console.error(error);
@@ -532,7 +608,6 @@ app.get("/s/:id", async (req, res) => {
       ? headers.range.split(",")[0].split("-")
       : ["bytes=0"];
 
-    let headersSetted = false;
     if (!info.streamSize) info.streamSize = {};
     if (!info.streamSize[formats[0].itag]) {
       info.streamSize[formats[0].itag] = await getSize(formats[0].url, {
@@ -545,8 +620,6 @@ app.get("/s/:id", async (req, res) => {
 
     if (streamSize != info.streamSize[formats[0].itag]) isSeeking = true;
     if (parseInt(h[1])) isSeeking = true;
-    let sentSize = 0;
-    let lastConnErr = 0;
 
     if (info.streamSize[formats[0].itag]) {
       if (!streamSize || parseInt(h[1]) > info.streamSize[formats[0].itag])
@@ -555,82 +628,7 @@ app.get("/s/:id", async (req, res) => {
         .status(isSeeking ? 206 : 200)
         .setHeader("content-length", parseInt(h[1]) || streamSize);
 
-      function getChunk(beginRange) {
-        beginRange = parseInt(beginRange);
-
-        let endRange =
-          beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024);
-        if (
-          endRange > streamSize ||
-          endRange > info.streamSize[formats[0].itag]
-        )
-          endRange = "";
-        if (endRange > parseInt(h[1]) && streamSize > parseInt(h[1])) endRange = parseInt(h[1]);
-
-        headers.range = `bytes=${beginRange}-${endRange}`;
-
-        let s = miniget(formats[0].url, { headers })
-          .on("response", (r) => {
-            if (headersSetted) return;
-
-            if (isSeeking && r.headers["content-range"])
-              res.setHeader("content-range", r.headers["content-range"].replace(endRange, h[1] ? h[1] : info.streamSize[formats[0].itag]));
-            ["accept-ranges", "content-type", "cache-control"].forEach(
-              (hed) => {
-                let head = r.headers[hed];
-                if (head) res.setHeader(hed, head);
-                headersSetted = true;
-              }
-            );
-
-            lastConnErr = 0;
-          })
-
-          .on("error", (err) => {
-            console.error(err);
-            if (
-              req.connection.destroyed ||
-              req.connection.ended ||
-              req.connection.closed
-            )
-              return;
-            if (
-              lastConnErr > 3 ||
-              sentSize >= streamSize ||
-              sentSize >= info.streamSize[formats[0].itag]
-            )
-              return res.end();
-            getChunk(beginRange + sentSize + 1);
-            lastConnErr++;
-          })
-
-          .on("data", (c) => {
-            if (
-              req.connection.destroyed ||
-              req.connection.ended ||
-              req.connection.closed
-            )
-              return s.destroy();
-            res.write(c);
-            sentSize += c.length;
-          })
-
-          .on("end", (_) => {
-            if (
-              req.connection.destroyed ||
-              req.connection.ended ||
-              req.connection.closed
-            )
-              return;
-            if (sentSize >= streamSize) {
-              return res.end();
-            }
-
-            getChunk(endRange + 1);
-          });
-      }
-
-      getChunk(h[0].slice(6));
+      getChunk(h[0].slice(6), req, res, headers, info, formats, streamSize, isSeeking, h);
     } else {
       let s = miniget(formats[0].url, { headers })
         .on("error", (err) => {
@@ -845,16 +843,16 @@ setInterval(() => {
     memoryUsage.toFixed(2) + "M"
   );
 
-  if (!process.env.NO_AUTO_KILL && (Math.ceil(memoryUsage) > process.env.MAX_SPACE_SIZE)) {
+  if (
+    !process.env.NO_AUTO_KILL &&
+    Math.ceil(memoryUsage) > process.env.MAX_SPACE_SIZE
+  ) {
     console.warn(
       new Date().toLocaleTimeString(),
       `WARN: Memory usage used more than ${process.env.MAX_SPACE_SIZE} MB.`
     );
 
-    console.warn(
-      new Date().toLocaleTimeString(),
-      "KILL: Accho!!"
-    );
+    console.warn(new Date().toLocaleTimeString(), "KILL: Accho!!");
 
     process.exit(0);
   }

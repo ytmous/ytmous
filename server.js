@@ -100,8 +100,10 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
         req.connection.destroyed ||
         req.connection.ended ||
         req.connection.closed
-      )
+      ) {
+        clearListener(s);
         return s.destroy();
+      }
       res.write(c);
       sentSize += c.length;
     })

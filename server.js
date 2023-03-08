@@ -569,7 +569,7 @@ app.get("/s/:id", async (req, res) => {
 
         headers.range = `bytes=${beginRange}-${endRange}`;
 
-        let s = miniget(formats[0].url + `&range=${beginRange}-${endRange}`, { headers })
+        let s = miniget(formats[0].url, { headers })
           .on("response", (r) => {
             if (headersSetted) return;
 

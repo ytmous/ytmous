@@ -574,7 +574,7 @@ app.get("/s/:id", async (req, res) => {
             if (headersSetted) return;
 
             if (isSeeking && r.headers["content-range"])
-              res.setHeader("content-range", r.headers["content-range"]);
+              res.setHeader("content-range", r.headers["content-range"].replace(endRange, h[1] ? h[1] : info.streamSize[formats[0].itag]));
             ["accept-ranges", "content-type", "cache-control"].forEach(
               (hed) => {
                 let head = r.headers[hed];

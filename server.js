@@ -600,7 +600,7 @@ app.get("/s/:id", async (req, res) => {
               sentSize >= info.streamSize[formats[0].itag]
             )
               return res.end();
-            getChunk(endRange + 1);
+            getChunk(beginRange + sentSize + 1);
             lastConnErr++;
           })
 

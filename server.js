@@ -59,14 +59,6 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
     .on("response", (r) => {
       if (headersSetted) return;
 
-      if (isSeeking && r.headers["content-range"])
-        res.setHeader(
-          "content-range",
-          r.headers["content-range"].replace(
-            endRange,
-            h[1] ? h[1] : info.streamSize[formats[0].itag]
-          )
-        );
       ["accept-ranges", "content-type", "cache-control"].forEach((hed) => {
         let head = r.headers[hed];
         if (head) res.setHeader(hed, head);
@@ -634,6 +626,8 @@ app.get("/s/:id", async (req, res) => {
       res
         .status(isSeeking ? 206 : 200)
         .setHeader("content-length", parseInt(h[1]) || streamSize);
+
+      if (isSeeking) res.setHeader("content-range", `bytes ${h[0].slice(6)}-${h[1] || info.streamSize[formats[0].itag]}/${info.streamSize[formats[0].itag]}`);
 
       getChunk(h[0].slice(6), req, res, headers, info, formats, streamSize, isSeeking, h);
     } else {

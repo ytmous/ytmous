@@ -1,3 +1,4 @@
+const compression = require("compression");
 const m3u8stream = require("m3u8stream");
 const ytdl = require("ytdl-core");
 const ytsr = require("ytsr");
@@ -97,6 +98,7 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
         return s.destroy();
       }
       res.write(c);
+      res.flush();
       sentSize += c.length;
     })
     .on("end", (_) => {
@@ -164,6 +166,8 @@ async function putInfoToCache(info) {
 
   return;
 }
+
+app.use(compression());
 
 app.set("views", [__dirname + "/local/views", __dirname + "/views"]);
 app.set("view engine", "ejs");

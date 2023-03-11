@@ -54,8 +54,6 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
   if (endRange >= info.streamSize[formats[0].itag])
     endRange = "";
 
-  if (beginRange > endRange) return res.end();
-
   headers.Range = `bytes=${beginRange}-${endRange}`;
 
   const s = miniget(formats[0].url, { headers })
@@ -622,7 +620,7 @@ app.get("/s/:id", async (req, res) => {
 
     let beginRange = h[0].startsWith("bytes=") ? h[0].slice(6) : h[0];
 
-    let streamSize = info.streamSize[formats[0].itag] - (h[1] || beginRange);
+    let streamSize = h[1] ? ((parseInt(h[1])-h[0]) || 1) : (info.streamSize[formats[0].itag] - beginRange);
     let isSeeking = req.headers.range ? true : false;
 
     if (streamSize != info.streamSize[formats[0].itag]) isSeeking = true;
@@ -633,7 +631,7 @@ app.get("/s/:id", async (req, res) => {
         return res.status(416).end("416 Range Not Satisfiable");
       res
         .status(isSeeking ? 206 : 200)
-        .setHeader("Content-Length", h[1] ? ((parseInt(h[1])-h[0]) || 1) : streamSize);
+        .setHeader("Content-Length", streamSize);
 
       if (isSeeking) res.setHeader("Content-Range", `bytes ${beginRange}-${h[1] || info.streamSize[formats[0].itag]-1}/${info.streamSize[formats[0].itag]}`);
 

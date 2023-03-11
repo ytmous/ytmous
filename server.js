@@ -625,7 +625,7 @@ app.get("/s/:id", async (req, res) => {
     if (parseInt(h[1])) isSeeking = true;
 
     if (info.streamSize[formats[0].itag]) {
-      if (!streamSize || parseInt(h[1]) > info.streamSize[formats[0].itag])
+      if (!streamSize || parseInt(h[1]) >= info.streamSize[formats[0].itag])
         return res.status(416).end("416 Range Not Satisfiable");
       res
         .status(isSeeking ? 206 : 200)

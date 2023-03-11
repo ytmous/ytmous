@@ -54,14 +54,14 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
   if (endRange > parseInt(h[1]) && streamSize > parseInt(h[1]))
     endRange = parseInt(h[1]);
 
-  headers.range = `bytes=${beginRange}-${endRange}`;
+  headers.Range = `bytes=${beginRange}-${endRange}`;
 
   const s = miniget(formats[0].url, { headers })
     .on("response", (r) => {
       if (headersSetted) return;
 
-      ["accept-ranges", "content-type", "cache-control"].forEach((hed) => {
-        let head = r.headers[hed];
+      ["Accept-Ranges", "Content-Type", "Cache-Control"].forEach((hed) => {
+        let head = r.headers[hed.toLowerCase()];
         if (head) res.setHeader(hed, head);
         headersSetted = true;
       });
@@ -537,14 +537,14 @@ app.get("/s/:id", async (req, res) => {
     }
 
     let headers = {
-      "user-agent": user_agent,
+      "User-Agent": user_agent,
     };
 
     // If user is seeking a video
     if (req.headers.range) {
-      headers.range = req.headers.range;
+      headers.Range = req.headers.range;
     } else {
-      headers.range = "bytes=0-";
+      headers.Range = "bytes=0-";
     }
 
     if (formats[0].isHLS) {
@@ -553,8 +553,8 @@ app.get("/s/:id", async (req, res) => {
           "user-agent": headers["user-agent"],
         },
       }).on("response", async (r) => {
-        ["content-type", "cache-control"].forEach((hed) => {
-          let head = r.headers[hed];
+        ["Content-Type", "Cache-Control"].forEach((hed) => {
+          let head = r.headers[hed.toLowerCase()];
           if (head) res.setHeader(hed, head);
         });
 
@@ -614,7 +614,7 @@ app.get("/s/:id", async (req, res) => {
     if (!info.streamSize) info.streamSize = {};
     if (!info.streamSize[formats[0].itag]) {
       info.streamSize[formats[0].itag] = await getSize(formats[0].url, {
-        headers: { "user-agent": headers["user-agent"] },
+        headers: { "User-Agent": headers["User-Agent"] },
       });
     }
 
@@ -629,9 +629,9 @@ app.get("/s/:id", async (req, res) => {
         return res.status(416).end("416 Range Not Satisfiable");
       res
         .status(isSeeking ? 206 : 200)
-        .setHeader("content-length", parseInt(h[1]) || streamSize);
+        .setHeader("Content-Length", parseInt(h[1]) || streamSize);
 
-      if (isSeeking) res.setHeader("content-range", `bytes ${h[0].slice(6)}-${h[1] || info.streamSize[formats[0].itag]}/${info.streamSize[formats[0].itag]}`);
+      if (isSeeking) res.setHeader("Content-Range", `bytes ${h[0].slice(6)}-${h[1] || info.streamSize[formats[0].itag]}/${info.streamSize[formats[0].itag]}`);
 
       getChunk(h[0].slice(6), req, res, headers, info, formats, streamSize, isSeeking, h);
     } else {
@@ -648,13 +648,13 @@ app.get("/s/:id", async (req, res) => {
         .on("response", (r) => {
           res.status(r.statusCode);
           [
-            "accept-ranges",
-            "content-type",
-            "content-range",
-            "content-length",
-            "cache-control",
+            "Accept-Ranges",
+            "Content-Type",
+            "Content-Range",
+            "Content-Length",
+            "Cache-Control",
           ].forEach((hed) => {
-            let head = r.headers[hed];
+            let head = r.headers[hed.toLowerCase()];
             if (head) res.setHeader(hed, head);
           });
 
@@ -708,7 +708,7 @@ app.get("/cc/:id", async (req, res) => {
 
     miniget(caption.baseUrl + (req.query.fmt ? "&fmt=" + req.query.fmt : ""), {
       headers: {
-        "user-agent": user_agent,
+        "User-Agent": user_agent,
       },
     })
       .on("error", (err) => {
@@ -755,8 +755,8 @@ app.get("/hs/:id/:on/*", (req, res) => {
     origin[req.params.on] + req.url.split("/").slice(4).join("/"),
     {
       headers: {
-        "user-agent": user_agent,
-        range: req.headers.range || "bytes=0-",
+        "User-Agent": user_agent,
+        Range: req.headers.range || "bytes=0-",
       },
     }
   );
@@ -767,9 +767,9 @@ app.get("/hs/:id/:on/*", (req, res) => {
   });
 
   stream.on("response", (origin) => {
-    ["accept-ranges", "content-range", "content-type", "cache-control"].forEach(
+    ["Accept-Ranges", "Content-Range", "Content-Type", "Cache-Control"].forEach(
       (hed) => {
-        let head = origin.headers[hed];
+        let head = origin.headers[hed.toLowerCase()];
         if (head) res.setHeader(hed, head);
       }
     );
@@ -781,8 +781,8 @@ app.get("/hs/:id/:on/*", (req, res) => {
 app.get(["/vi*", "/sb/*"], (req, res) => {
   const stream = miniget("https://i.ytimg.com" + req.url, {
     headers: {
-      "user-agent": user_agent,
-      range: req.headers.range || "bytes=0-",
+      "User-Agent": user_agent,
+      Range: req.headers.range || "bytes=0-",
     },
   });
   stream.on("error", (err) => {
@@ -791,8 +791,8 @@ app.get(["/vi*", "/sb/*"], (req, res) => {
   });
 
   stream.on("response", (origin) => {
-    res.setHeader("content-type", origin.headers["content-type"]);
-    res.setHeader("content-length", origin.headers["content-length"]);
+    res.setHeader("Content-Type", origin.headers["content-type"]);
+    res.setHeader("Content-Length", origin.headers["content-length"]);
     stream.pipe(res);
   });
 });
@@ -802,8 +802,8 @@ app.get(["/yt3/*", "/ytc/*"], (req, res) => {
   if (req.url.startsWith("/yt3/")) req.url = req.url.slice(4);
   const stream = miniget("https://yt3.ggpht.com" + req.url, {
     headers: {
-      "user-agent": user_agent,
-      range: req.headers.range || "bytes=0-",
+      "User-Agent": user_agent,
+      Range: req.headers.range || "bytes=0-",
     },
   });
 
@@ -813,8 +813,8 @@ app.get(["/yt3/*", "/ytc/*"], (req, res) => {
   });
 
   stream.on("response", (origin) => {
-    res.setHeader("content-type", origin.headers["content-type"]);
-    res.setHeader("content-length", origin.headers["content-length"]);
+    res.setHeader("Content-Type", origin.headers["content-type"]);
+    res.setHeader("Content-Length", origin.headers["content-length"]);
     stream.pipe(res);
   });
 });

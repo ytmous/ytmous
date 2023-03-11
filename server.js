@@ -620,7 +620,7 @@ app.get("/s/:id", async (req, res) => {
 
     let beginRange = h[0].startsWith("bytes=") ? h[0].slice(6) : h[0];
 
-    let streamSize = h[1] ? ((parseInt(h[1])-h[0]) || 1) : (info.streamSize[formats[0].itag] - beginRange);
+    let streamSize = h[1] ? ((parseInt(h[1])-beginRange) || 1) : (info.streamSize[formats[0].itag] - beginRange);
     let isSeeking = req.headers.range ? true : false;
 
     if (streamSize != info.streamSize[formats[0].itag]) isSeeking = true;

@@ -550,7 +550,7 @@ app.get("/s/:id", async (req, res) => {
     if (formats[0].isHLS) {
       let request = miniget(formats[0].url, {
         headers: {
-          "user-agent": headers["user-agent"],
+          "User-Agent": headers["User-Agent"],
         },
       }).on("response", async (r) => {
         ["Content-Type", "Cache-Control"].forEach((hed) => {
@@ -596,7 +596,7 @@ app.get("/s/:id", async (req, res) => {
     if (formats[0].isDashMPD) {
       return m3u8stream(formats[0].url, {
         chunkReadahead: +info.live_chunk_readahead,
-        requestOptions: { headers: { "user-agent": headers["user-agent"] } },
+        requestOptions: { headers: { "User-Agent": headers["User-Agent"] } },
         parser: formats[0].isDashMPD ? "dash-mpd" : "m3u8",
         id: formats[0].itag,
       })
@@ -607,8 +607,8 @@ app.get("/s/:id", async (req, res) => {
         .pipe(res);
     }
 
-    let h = headers.range
-      ? headers.range.split(",")[0].split("-")
+    let h = headers.Range
+      ? headers.Range.split(",")[0].split("-")
       : ["bytes=0"];
 
     if (!info.streamSize) info.streamSize = {};

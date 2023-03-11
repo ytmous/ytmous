@@ -212,7 +212,7 @@
 
       function seekAudio() {
         if (audio.fastSeek) {
-          ausio.fastSeek(lastTime || video.currentTime);
+          audio.fastSeek(lastTime || video.currentTime);
         } else {
           audio.currentTime = lastTime || video.currentTime;
         }

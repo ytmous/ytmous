@@ -49,10 +49,12 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
   beginRange = parseInt(beginRange);
 
   let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024);
+  if (endRange > parseInt(h[1]))
+    endRange = parseInt(h[1]);
   if (endRange >= streamSize || endRange >= info.streamSize[formats[0].itag])
     endRange = "";
-  if (endRange > parseInt(h[1]) && streamSize > parseInt(h[1]))
-    endRange = parseInt(h[1]);
+
+  if (beginRange > endRange) return res.end();
 
   headers.Range = `bytes=${beginRange}-${endRange}`;
 
@@ -620,8 +622,8 @@ app.get("/s/:id", async (req, res) => {
 
     let beginRange = h[0].startsWith("bytes=") ? h[0].slice(6) : h[0];
 
-    let streamSize = info.streamSize[formats[0].itag] - beginRange;
-    let isSeeking = false;
+    let streamSize = info.streamSize[formats[0].itag] - (h[1] || beginRange);
+    let isSeeking = req.headers.range ? true : false;
 
     if (streamSize != info.streamSize[formats[0].itag]) isSeeking = true;
     if (parseInt(h[1])) isSeeking = true;

@@ -49,7 +49,7 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
   beginRange = parseInt(beginRange);
 
   let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024);
-  if (endRange > streamSize || endRange > info.streamSize[formats[0].itag])
+  if (endRange >= streamSize || endRange >= info.streamSize[formats[0].itag])
     endRange = "";
   if (endRange > parseInt(h[1]) && streamSize > parseInt(h[1]))
     endRange = parseInt(h[1]);

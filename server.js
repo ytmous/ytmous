@@ -51,7 +51,7 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
   let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024);
   if (endRange > parseInt(h[1]))
     endRange = parseInt(h[1]);
-  if (endRange >= streamSize || endRange >= info.streamSize[formats[0].itag])
+  if (endRange >= info.streamSize[formats[0].itag])
     endRange = "";
 
   if (beginRange > endRange) return res.end();
@@ -633,7 +633,7 @@ app.get("/s/:id", async (req, res) => {
         return res.status(416).end("416 Range Not Satisfiable");
       res
         .status(isSeeking ? 206 : 200)
-        .setHeader("Content-Length", parseInt(h[1]) || streamSize);
+        .setHeader("Content-Length", parseInt((h[1]+1)-h[0]) || streamSize);
 
       if (isSeeking) res.setHeader("Content-Range", `bytes ${beginRange}-${h[1] || info.streamSize[formats[0].itag]-1}/${info.streamSize[formats[0].itag]}`);
 

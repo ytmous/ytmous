@@ -631,7 +631,7 @@ app.get("/s/:id", async (req, res) => {
         .status(isSeeking ? 206 : 200)
         .setHeader("Content-Length", parseInt(h[1]) || streamSize);
 
-      if (isSeeking) res.setHeader("Content-Range", `bytes ${h[0].slice(6)}-${h[1] || info.streamSize[formats[0].itag]}/${info.streamSize[formats[0].itag]}`);
+      if (isSeeking) res.setHeader("Content-Range", `bytes ${h[0].slice(6)}-${h[1] || info.streamSize[formats[0].itag]-1}/${info.streamSize[formats[0].itag]}`);
 
       getChunk(h[0].slice(6), req, res, headers, info, formats, streamSize, isSeeking, h);
     } else {

@@ -633,7 +633,7 @@ app.get("/s/:id", async (req, res) => {
         return res.status(416).end("416 Range Not Satisfiable");
       res
         .status(isSeeking ? 206 : 200)
-        .setHeader("Content-Length", (((parseInt(h[1])-h[0]) || 1) : streamSize);
+        .setHeader("Content-Length", ((parseInt(h[1])-h[0]) || 1) : streamSize);
 
       if (isSeeking) res.setHeader("Content-Range", `bytes ${beginRange}-${h[1] || info.streamSize[formats[0].itag]-1}/${info.streamSize[formats[0].itag]}`);
 

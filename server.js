@@ -81,7 +81,8 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
       if (
         lastConnErr > 3 ||
         sentSize >= streamSize ||
-        sentSize >= info.streamSize[formats[0].itag]
+        sentSize >= info.streamSize[formats[0].itag] ||
+        beginRange >= endRange
       )
         return res.end();
       getChunk(beginRange + sentSize + 1, req, res, headers, info, formats, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);

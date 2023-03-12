@@ -110,7 +110,6 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
       )
         return;
       if (sentSize >= streamSize) {
-        console.log(`Sent size is ${sentSize} and stream size is ${streamSize}. Header: ${h.join("-")}`)
         return res.end();
       }
 

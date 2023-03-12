@@ -110,6 +110,7 @@ function getChunk(beginRange, req, res, headers, info, formats, streamSize, isSe
       )
         return;
       if (sentSize >= streamSize) {
+        console.log(`Sent size is ${sentSize} and stream size is ${streamSize}. Header: ${h.join("-")}`)
         return res.end();
       }
 
@@ -620,7 +621,7 @@ app.get("/s/:id", async (req, res) => {
 
     let beginRange = h[0].startsWith("bytes=") ? h[0].slice(6) : h[0];
 
-    let streamSize = h[1] ? ((parseInt(h[1])-beginRange) || 1) : (info.streamSize[formats[0].itag] - beginRange);
+    let streamSize = h[1] ? (((parseInt(h[1])+1)-beginRange) || 1) : (info.streamSize[formats[0].itag] - beginRange);
     let isSeeking = req.headers.range ? true : false;
 
     if (streamSize != info.streamSize[formats[0].itag]) isSeeking = true;

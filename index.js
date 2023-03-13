@@ -1,38 +1,95 @@
-// This is the restarter script of ytmous server
-// To stop the memory leak effect.
+const express = require("express");
+const compression = require("compression");
+const YouTubeJS = require("youtubei.js");
 
-const { spawn } = require("child_process");
-const os = require("os");
+const proxyHandler = require("./etc/proxy");
+const util = require("./etc/util");
 
-function run() {
-  // In MB
-  let freemem = Math.round(os.freemem() / 1024 / 1024);
-  let limit = process.env.MAX_SPACE_SIZE || Math.floor(freemem / 1.2);
+let app = express();
+let client;
 
-  console.log((new Date()).toLocaleString(), "Starting process.");
-  console.log((new Date()).toLocaleString(), "Limiting memory to", limit, "MB");
+app.use(compression());
+app.use(express.static(__dirname + "/local/public"));
+app.use(express.static(__dirname + "/public"));
 
-  let node = spawn("node", ["--max-old-space-size=" + limit, "server.js"], {
-    stdio: "inherit",
-    env: {
-      MAX_SPACE_SIZE: limit,
-      ...process.env
-    }
+app.set("views", [__dirname + "/local/views", __dirname + "/views"]);
+app.set("view engine", "ejs");
+
+// Search page
+app.get("/s", async (req, res) => {
+  let query = req.query.q;
+  let page = parseInt(req.query.p || 1);
+  if (!query) return res.redirect("/");
+  try {
+    res.render("search.ejs", {
+      res: await client.search(query),
+      query: query,
+      page,
+    });
+  } catch (error) {
+    util.sendError(res, error);
+  }
+});
+
+// Watch Page
+app.get("/w/:id", async (req, res) => {
+  if (!util.validateID(req.params.id)) return util.sendInvalidIDError(res);
+  try {
+    res.render("watch.ejs", {
+      id: req.params.id,
+      info: await client.getInfo(req.params.id),
+      comments: null,
+      captions: null
+    });
+  } catch (e) {
+    util.sendError(res, error);
+  }
+});
+
+// Playlist page
+app.get("/p/:id", async (req, res) => {
+});
+
+// Channel page
+app.get("/c/:id", async (req, res) => {
+});
+
+app.get("/cm/:id", async (req, res) => {
+})
+
+proxyHandler(app);
+
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).render("error.ejs", {
+    title: "404 Not found",
+    content: "A resource that you tried to get is not found or deleted.",
   });
+});
 
-  node.on('exit', (c) => {
-    console.log((new Date()).toLocaleString(), "Process exited with code", c);
-    run();
-  });
-}
+app.on("error", console.error);
 
-console.log("Restarter initialized.");
-console.log("To change memory limit in your own,");
-console.log("Set MAX_SPACE_SIZE environment variable in MB.\n");
+async function initInnerTube() {
+  console.log("--- Initializing InnerTube Client...");
+  try {
+    client = await YouTubeJS.Innertube.create();
+    console.log("--- InnerTube client ready.");
 
-console.log(`
-      ytmous - Anonymous Youtube Proxy
-  ....There we go back and forth again....
-`);
+    proxyHandler.setClient(client);
 
-run();
+    const listener = app.listen(process.env.PORT || 3000, () => {
+      console.log("-- ytmous is now listening on port", listener.address().port);
+    });
+  } catch (e) {
+    console.error("--- Failed to initialize InnerTube.");
+    console.error(e);
+
+    console.log("--- Trying again in 10 seconds....");
+    setTimeout(initInnerTube, 10000);
+  };
+};
+
+// Handle any unhandled promise rejection.
+process.on("unhandledRejection", console.error);
+
+initInnerTube();

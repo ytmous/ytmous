@@ -10,6 +10,7 @@
     "express": "^4.18.2",
     "m3u8stream": "^0.8.6",
     "miniget": "^4.2.2",
+    "youtubei.js": "^3.3.0",
     "ytdl-core": "4.11.2",
     "ytpl": "^2.3.0",
     "ytsr": "https://github.com/Yonle/node-ytsr.git"

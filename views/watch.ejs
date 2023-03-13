@@ -10,12 +10,12 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
-    <title><%= info.videoDetails.title %></title>
-    <meta name="description" content="<%= info.videoDetails.description || ""
+    <title><%= info.basic_info.title %></title>
+    <meta name="description" content="<%= info.secondary_info.description || ""
     %>">
     <meta
       property="og:title"
-      content="<%= info.videoDetails.title %>"
+      content="<%= info.basic_info.title %>"
     />
     <meta property="og:type" content="video" />
     <meta property="og:video" content="/s/<%= id %>" />
@@ -26,7 +26,7 @@
       name="twitter:image"
       content="/vi/<%= id %>/hqdefault.jpg"
     />
-    <meta property="og:description" content="<%= info.videoDetails.description
+    <meta property="og:description" content="<%= info.secondary_info.description
     || "" %>">
     <meta property="og:site_name" content="ytmous | Anonymous Youtube Proxy" />
     <meta
@@ -100,9 +100,9 @@
 
         <ul>
           <li><a href="/s/<%= id %>">Video</a></li>
-          <li><a href="/s/<%= info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag %>">Audio</a></li>
+          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video)[0].itag %>">Audio</a></li>
           <li><a href="/s/<%= id %>" download>Video (Download)</a></li>
-          <li><a href="/s/<%= info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag %>" download>Audio (Download)</a></li>
+          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video)[0].itag %>" download>Audio (Download)</a></li>
           <% if (captions && captions.length) { %>
           <% captions.forEach(c => { %>
           <li><a href="/cc/<%= id %>?vssId=<%= c.vssId %>&fmt=vtt" download>Subtitle (WebVTT): <%= c.name %></a></li>
@@ -114,15 +114,14 @@
       <div class="chnInf">
         <h4
           >
-          <% if (info.videoDetails.author.thumbnails.length) { %>
+          <% if (info.secondary_info.owner.author.thumbnails.length) { %>
           <img lazy
-            src="/yt3<%- (new URL(info.videoDetails.author.thumbnails.pop().url)).pathname %>"
+            src="/yt3<%- (new URL(info.secondary_info.owner.author.thumbnails[0].url)).pathname %>"
             style="border-radius: 50%; width: 15px; height: 15px"
           /><% } %>
-          <a href="/c/<%= info.videoDetails.author.id %>"
-            ><%= info.videoDetails.author.name %></a
-          ><small style="color: gray;"> • <%= info.videoDetails.author.subscriber_count %> subscribers.</small></h4
-        >
+          <a href="/c/<%= info.secondary_info.owner.author.id %>">
+            <%= info.secondary_info.owner.author.name %></a>
+          <small style="color: gray;"> • <%= info.secondary_info.owner.subscriber_count.text %></small></h4>
       </div>
       <!-- Video Information -->
       <div id="vidInfo">
@@ -130,41 +129,37 @@
         <details class="border right" id="qs">
           <summary>Quality Selection</summary>
           <ul>
-          <% info.formats.filter(i => !i.hasAudio && !i.isDashMPD).forEach(i => { %>
-            <li><a href="#" onclick="<%= `cq(${i.itag}, ${info.formats.filter(i => i.hasAudio && !i.hasVideo)[0].itag})` %>"><b><%= i.qualityLabel %></b> <%= i.mimeType %></a></li>
+          <% info.streaming_data.adaptive_formats.filter(i => !i.has_audio && !i.isDashMPD).forEach(i => { %>
+            <li><a href="#" onclick="<%= `cq(${i.itag}, ${info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video)[0].itag})` %>"><b><%= i.quality_label %></b> <%= i.mime_type %></a></li>
           <% }); %>
           </ul>
         </details>
-        <h2><%= info.videoDetails.title %></h2>
-        <span
-          ><%- (info.videoDetails.description || "").replace(/\n/g, "<br />")
-          %></span
-        ><br><br>
-        <small>Likes: <b><%= info.videoDetails.likes || 0 %></b></small><br>
-        <small>Dislikes: <b><%= info.videoDetails.dislikes || 0 %></b></small><br>
-        <small>Viewers: <b><%= info.videoDetails.viewCount %></b></small><br>
-        <small>Category: <b><%= info.videoDetails.category %></b></small><br>
-        <small>Uploaded at <b><%= info.videoDetails.uploadDate %></b></small><br>
-        <small>Published at <b><%= info.videoDetails.publishDate %></b></small><br>
-        <small>Private video: <b><%= info.videoDetails.isPrivate ? "yes" : "no" %></b></small><br>
-        <small>Age restricted: <b><%= info.videoDetails.age_restricted ? "yes" : "no" %></b></small><br>
-        <small>Crawlable: <b><%= info.videoDetails.isCrawlable ? "yes" : "no" %></b></small><br>
+        <h2><%= info.basic_info.title %></h2>
+        <pre style="font-family: sans-serif;"><%- (info.secondary_info.description || "") %></pre>
+        <br><br>
+        <small>Likes: <b><%= info.basic_info.like_count || 0 %></b></small><br>
+        <small>Viewers: <b><%= info.primary_info.view_count %></b></small><br>
+        <small>Category: <b><%= info.basic_info.category %></b></small><br>
+        <small>Published: <b><%= info.primary_info.relative_date.text %>,<%= info.primary_info.published.text %></b></small><br>
+        <small>Family Safe: <b><%= info.basic_info.is_family_safe ? "yes" : "no" %></b></small><br>
+        <small>Unlisted: <b><%= info.basic_info.is_unlisted ? "yes" : "no" %></b></small></br>
+        <small>Crawlable: <b><%= info.basic_info.is_crawlable ? "yes" : "no" %></b></small><br>
       </div>
     </div>
     <!-- Related Video section -->
     <div id="relatedVideos" class="right">
-      <% info.related_videos.forEach(video => { %>
+      <% info.watch_next_feed.filter(video => video.type === "CompactVideo").forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
           ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
         /></a>
         <div class="rVideoInfo">
-          <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
+          <h4><a href="/w/<%= video.id %>"><%= video.title.text %></a></h4>
           <div class="chnInf">
             <span>
               <% if (video.author.thumbnails.length) { %>
               <img lazy
-                src="/yt3<%- (new URL(video.author.thumbnails.pop().url)).pathname %>"
+                src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               />
               <% } %>
@@ -172,7 +167,11 @@
                 <%= video.author.name %>
               </a>
             </span><br>
-            <small><%= video.short_view_count_text %> viewers • <%= video.published %></small>
+            <small><%= video.published.text %> • <%= video.duration.text %></small><br>
+            <% video.badges.forEach(badge => { %>
+            <small class="border"><%= badge.label %></small>
+            <% }); %>
+            <small><%= video.short_view_count.text %></small>
           </div>
         </div>
       </div>

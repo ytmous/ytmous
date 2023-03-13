@@ -167,7 +167,7 @@
                 <%= video.author.name %>
               </a>
             </span><br>
-            <small><%= video.published.text %> • <%= video.duration.text %></small><br>
+            <small><%= video.published.text %> • Duration: <b><%= video.duration.text %></b></small><br>
             <% video.badges.forEach(badge => { %>
             <small class="border"><%= badge.label %></small>
             <% }); %>

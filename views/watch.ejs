@@ -135,12 +135,12 @@
           </ul>
         </details>
         <h2><%= info.basic_info.title %></h2>
-        <pre style="font-family: sans-serif;"><%- (info.basic_info.short_description || "") %></pre>
+        <pre style="font-family: sans-serif;"><%= (info.basic_info.short_description || "") %></pre>
         <br><br>
         <small>Likes: <b><%= info.basic_info.like_count || 0 %></b></small><br>
         <small>Viewers: <b><%= info.primary_info.view_count %></b></small><br>
         <small>Category: <b><%= info.basic_info.category %></b></small><br>
-        <small>Published: <b><%= info.primary_info.relative_date.text %>,<%= info.primary_info.published.text %></b></small><br>
+        <small>Published: <b><%= info.primary_info.relative_date.text %>, <%= info.primary_info.published.text %></b></small><br>
         <small>Family Safe: <b><%= info.basic_info.is_family_safe ? "yes" : "no" %></b></small><br>
         <small>Unlisted: <b><%= info.basic_info.is_unlisted ? "yes" : "no" %></b></small></br>
         <small>Crawlable: <b><%= info.basic_info.is_crawlable ? "yes" : "no" %></b></small><br>

@@ -2,7 +2,9 @@ const miniget = require("miniget");
 const util = require("./util");
 
 let user_agent = process.env.USER_AGENT || "googlebot";
+let urlreg = /(https?:\/\/[^\s]+)/g;
 let client = null;
+let HLSOrigin = {};
 
 module.exports = (app) => {
   // Proxy to i.ytimg.com, Where Video Thumbnail is stored here.
@@ -50,19 +52,24 @@ module.exports = (app) => {
   app.get("/s/:id", async (req, res) => {
     if (!util.validateID(req.params.id)) return res.redirect("/");
     try {
-      let streamingData = await client.getStreamingData(req.params.id);
-      if (!streamingData.url) streamingData.url = await streamingData.decipher(client.session.player);
+      let info = await client.getInfo(req.params.id);
 
+      let streamingData = util.filterFormat(info.streaming_data.formats, req.query.itag);
+      let isAdaptiveFormat = util.filterFormat(info.streaming_data.adaptive_formats, req.query.itag);
 
-/*      let formats = streamingData.filter((format) =>
-        req.query.itag
-          ? req.query.itag == format.itag
-          : format.hasVideo && format.hasAudio
-      );
+      if (!streamingData && isAdaptiveFormat) streamingData = isAdaptiveFormat;
+      if (info.basic_info.is_live && info.streaming_data.hls_manifest_url) {
+        streamingData = {};
+        streamingData.isHLS = true;
+        streamingData.url = info.streaming_data.hls_manifest_url;
+      }
 
-      if (!formats.length) {
-        return res.status(500).send("This stream is unavailable.");
-      }*/
+      if (!streamingData) {
+        return util.sendError(res, "This stream is unavailable", "Unavailable stream", 500, true);
+      }
+
+      if (!streamingData.url)
+        streamingData.url = await streamingData.decipher(client.session.player);
 
       let headers = {
         "User-Agent": user_agent,
@@ -74,7 +81,7 @@ module.exports = (app) => {
       } else {
         headers.Range = "bytes=0-";
       }
-/*
+
       if (streamingData.isHLS) {
         let request = miniget(streamingData.url, {
           headers: {
@@ -91,28 +98,21 @@ module.exports = (app) => {
           // Get the URLs
           let urls = body.match(urlreg);
           if (!urls)
-            return res.status(500).end(
-              JSON.stringify({
-                error: {
-                  description: "No URL for m3u8 chunks",
-                  code: 2,
-                },
-              })
-            );
+            return util.sendError(res, "No URL for m3u8 chunks", "No chunk found", 500, true);
 
-          infos.HLSOrigin[req.params.id] = [];
+          HLSOrigin[req.params.id] = [];
 
           urls.forEach((url) => {
             // We just need the initial host, But not the Segment path
             let splitted = url.split("index.m3u8");
 
-            if (!infos.HLSOrigin[req.params.id].includes(splitted[0]))
-              infos.HLSOrigin[req.params.id].push(splitted[0]);
+            if (!HLSOrigin[req.params.id].includes(splitted[0]))
+              HLSOrigin[req.params.id].push(splitted[0]);
 
             body = body.replace(
               splitted[0],
-              `/hs/${req.params.id}/${
-                infos.HLSOrigin[req.params.id].length - 1
+              `${req.headers["x-forwarded-proto"] || "http"}://${req.headers["host"]}/hs/${req.params.id}/${
+                HLSOrigin[req.params.id].length - 1
               }/`
             );
           });
@@ -136,7 +136,7 @@ module.exports = (app) => {
           })
           .pipe(res);
       }
-*/
+
       let h = headers.Range
         ? headers.Range.split(",")[0].split("-")
         : ["bytes=0"];
@@ -166,9 +166,9 @@ module.exports = (app) => {
         if (isSeeking)
           res.setHeader(
             "Content-Range",
-            `bytes ${beginRange}-${
-              h[1] || streamingData.content_length - 1
-            }/${streamingData.content_length}`
+            `bytes ${beginRange}-${h[1] || streamingData.content_length - 1}/${
+              streamingData.content_length
+            }`
           );
 
         util.getChunk(
@@ -217,6 +217,106 @@ module.exports = (app) => {
       res.status(500).end(error.toString());
     }
   });
+
+  // Proxy to subtitles
+  app.get("/cc/:id", async (req, res) => {
+    if (!util.validateID(req.params.id))
+      return util.sendInvalidID(res, true);
+
+    try {
+      let info = await client.getInfo(req.params.id);
+
+      if (!req.query.vss_id)
+        return res.json(
+          util.getCaptions(req.params.id).map((i) => {
+            return {
+              name: i.name.text,
+              languange_code: i.languange_code,
+              vss_id: i.vss_id,
+              url: "/cc/" + req.params.id + "?vss_id=" + i.vss_id,
+            };
+          })
+        );
+
+      let caption = util.getCaptions(req.params.id, req.query.vss_id)[0];
+      if (!caption)
+        return util.sendError(res, `No subtitle found for ${req.query.vss_is}`, "No subtitle found", 500, true);
+
+      miniget(
+        caption.base_url + (req.query.fmt ? "&fmt=" + req.query.fmt : ""),
+        {
+          headers: {
+            "User-Agent": user_agent,
+          },
+        }
+      )
+        .on("error", (err) => {
+          console.log(err);
+          return util.sendError(res, err, "Failed to fetch Subtitle.", 500, true);
+        })
+        .pipe(res);
+    } catch (err) {
+      return util.sendError(res, err, "Failed to fetch video info.", 500, true);
+    }
+  });
+
+  app.get("/hs/:id/:on/*", (req, res) => {
+    let origin = HLSOrigin[req.params.id];
+    if (!origin || !origin[req.params.on])
+      return util.sendError(res, "No origin chunk URL for " + req.params.id, "Failed to forward M3U8.", 400, true, 3);
+
+    if (!req.params[0])
+      return util.sendError(res, "No fullpath provided for " + req.params.id, "No full path.", 400, true, 3);
+
+    const stream = miniget(
+      origin[req.params.on] + req.url.split("/").slice(4).join("/"),
+      {
+        headers: {
+          "User-Agent": user_agent,
+          Range: req.headers.range || "bytes=0-",
+        },
+      }
+    );
+
+    stream.on("error", (err) => {
+      console.log(err);
+      return util.sendError(res, err, "Failed to fetch M3U8.", 500, true);
+    });
+
+    stream.on("response", async (origin) => {
+      ["Accept-Ranges", "Content-Range", "Content-Type", "Cache-Control"].forEach(
+        (hed) => {
+          let head = origin.headers[hed.toLowerCase()];
+          if (head) res.setHeader(hed, head);
+        }
+      );
+
+      if (origin.headers["content-type"] === "application/vnd.apple.mpegurl") {
+        let body = await stream.text();
+        let urls = body.match(urlreg);
+        if (!urls)
+          return util.sendError(res, "No URL for m3u8 chunks", "No chunk found", 500, true);
+
+        urls.forEach((url) => {
+          // We just need the initial host, But not the Segment path
+          let splitted = url.split("index.m3u8");
+
+          if (!HLSOrigin[req.params.id].includes(splitted[0]))
+            HLSOrigin[req.params.id].push(splitted[0]);
+
+          body = body.replace(                                                                                                    splitted[0],
+            `${req.headers["x-forwarded-proto"] || "http"}://${req.headers["host"]}/hs/${req.params.id}/${
+              HLSOrigin[req.params.id].length - 1
+            }/`
+          );
+        });
+
+        return res.end(body);
+      }
+
+      stream.pipe(res);
+    });
+  });
 };
 
-module.exports.setClient = newClient => client = newClient;
+module.exports.setClient = (newClient) => (client = newClient);

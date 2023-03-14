@@ -35,11 +35,11 @@ app.get("/s", async (req, res) => {
 app.get("/w/:id", async (req, res) => {
   if (!util.validateID(req.params.id)) return util.sendInvalidIDError(res);
   try {
+    let info = await client.getInfo(req.params.id);
     res.render("watch.ejs", {
-      id: req.params.id,
-      info: await client.getInfo(req.params.id),
+      id: req.params.id, info,
       comments: null,
-      captions: null
+      captions: util.getCaptions(info)
     });
   } catch (e) {
     util.sendError(res, error);

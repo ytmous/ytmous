@@ -92,11 +92,11 @@ function getChunk(beginRange, req, res, headers, streamingData, streamSize, isSe
 function getCaptions(info, sub) {
   try {
     let captions =
-      info.captions.playerCaptionsTracklistRenderer.captionTracks;
+      info.captions.caption_tracks;
     if (!captions || !captions.length) return [];
     if (!sub) return captions;
 
-    return captions.filter((c) => c.vssId === sub);
+    return captions.filter((c) => c.vss_id === sub);
   } catch {
     return [];
   }
@@ -139,4 +139,10 @@ async function getInfo(client, id) {
   return res;
 }
 
-module.exports = { clearListener, getSize, getChunk, getCaptions, sendError, validateID, sendInvalidIDError };
+function filterFormat(formats, itag) {
+  return formats.filter((format) =>
+    itag ? itag == format.itag : format.has_video && format.has_audio
+  ).pop();
+}
+
+module.exports = { clearListener, getSize, getChunk, getCaptions, sendError, validateID, sendInvalidIDError, filterFormat };

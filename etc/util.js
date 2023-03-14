@@ -89,11 +89,10 @@ function getChunk(beginRange, req, res, headers, streamingData, streamSize, isSe
     });
 }
 
-function getCaptions(id, sub) {
+function getCaptions(info, sub) {
   try {
     let captions =
-      infos[id].player_response.captions.playerCaptionsTracklistRenderer
-        .captionTracks;
+      info.captions.playerCaptionsTracklistRenderer.captionTracks;
     if (!captions || !captions.length) return [];
     if (!sub) return captions;
 
@@ -131,6 +130,13 @@ function validateID(id) {
 
 function sendInvalidIDError(res, isAPI) {
   return module.exports.sendError(res, "Your requested video is invalid. Check your URL and try again.", "Invalid Video ID", 400, isAPI, 1);
+}
+
+async function getInfo(client, id) {
+  let res = await client.getInfo(id);
+  res.comments = await client.getComments(id);
+
+  return res;
 }
 
 module.exports = { clearListener, getSize, getChunk, getCaptions, sendError, validateID, sendInvalidIDError };

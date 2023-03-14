@@ -6,18 +6,24 @@
     <title>ytmous</title>
     <meta name="description" content="Anonymous YouTube Proxy" />
   </head>
+  <style>
+    .formtext {
+      font-size: 15px;
+    }
+  </style>
   <body style="color: grey;">
     <div style="text-align: center; margin-top: 25vh;">
       <center>
         <h1>ytmous</h1>
         <form action="/s" method="GET">
-          <input name="q" type="text" style="font-size: 20px;" placeholder="Search Video...." />
-        </form>
+          <input class="formtext" name="q" type="text" placeholder="Search Video...." />
+          <input class="formtext" type="submit" value="Search" />
+        </form><br>
+        <small><a href="https://github.com/ytmous/ytmous" style="color: black;">Source Code</a> • Licensed under <b>BSD-3-Clause</b></small>
       </center>
     </div>
 
     <div style="padding: 15px; position: absolute; bottom: 5px; text-align: center;">
-      <span><a href="https://github.com/ytmous/ytmous" style="color: black;">Source Code</a> • Licensed under <b>BSD-3-Clause</b></span><br>
       <small><b>DISCLAIMER:</b> ytmous could fetch, stream or download videos from YouTube, even copyrighted ones. Please respect all copyright laws.</small>
     </div>
   </body>

@@ -38,10 +38,10 @@ app.get("/w/:id", async (req, res) => {
     let info = await client.getInfo(req.params.id);
     res.render("watch.ejs", {
       id: req.params.id, info,
-      comments: null,
+      comments: await client.getComments(req.params.id),
       captions: util.getCaptions(info)
     });
-  } catch (e) {
+  } catch (error) {
     util.sendError(res, error);
   }
 });
@@ -54,7 +54,17 @@ app.get("/p/:id", async (req, res) => {
 app.get("/c/:id", async (req, res) => {
 });
 
+// Comments
 app.get("/cm/:id", async (req, res) => {
+  if (!util.validateID(req.params.id)) return util.sendInvalidIDError(res);
+  try {
+    res.render("comments.ejs", {
+      id: req.params.id,
+      comments: await client.getComments(req.params.id)
+    });
+  } catch (error) {
+    util.sendError(res, error, "Failed to fetch comments");
+  }
 })
 
 proxyHandler(app);

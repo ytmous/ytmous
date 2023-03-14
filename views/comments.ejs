@@ -5,37 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/Toard.css" />
     <link rel="stylesheet" href="/css/style.css" />
-    <title><%= comments.total || 0 %> comments for <%= id %></title>
+    <title><%= comments.header.count.text %> for <%= id %></title>
   </head>
   <body>
     <div>
-      <% comments.comments.forEach(comment => { %>
+      <% comments.contents.forEach(CommentThread => { %>
       <div style="display: flex;">
-        <img lazy src="<%= comment.authorThumb[0].url %>"/>
+        <img lazy src="/yt3<%= (new URL(CommentThread.comment.author.thumbnails[0].url)).pathname %>"/>
         <div class="rVideoInfo">
-          <h4><a href="/c/<%= comment.authorId %>"><%= comment.author %></a></h4>
-          <small><%= comment.time %><%= (comment.isVerified || comment.isOfficialArtist) ? " | Verified user" : "" %><%= comments.isMember ? " | Channel Member" : "" %><%= comment.isOwner ? " | Owner" : "" %><%= comment.isPinned ? " | Pinned" : "" %></small>
-          <pre><%- comment.text %></pre>
-          <small><%= comment.likes %> likes <%= comment.isHearted ? "| Hearted" : "" %></small><br>
-          <% if (comment.replyToken) { %>
-          <small><a href="/cm/<%= id %>?replyToken=<%- encodeURIComponent(comment.replyToken) %>">View <%= comment.numReplies %> replies</a></small>
+          <h4><a href="/c/<%= CommentThread.comment.author.id %>"><%= CommentThread.comment.author.name %></a></h4>
+          <small><%= CommentThread.comment.published.text %><%= (CommentThread.comment.author.is_verified || CommentThread.comment.author.is_verified_artist) ? " | Verified user" : "" %><%= CommentThread.comment.is_member ? " | Member" : "" %><%= CommentThread.comment.author_is_channel_owner ? " | Owner" : "" %><%= CommentThread.comment.is_pinned ? " | Pinned" : "" %></small>
+          <pre><%= CommentThread.comment.content.text %></pre>
+          <small><%= CommentThread.comment.vote_count %> likes <%= CommentThread.comment.is_hearted ? "| Hearted" : "" %></small><br>
+          <% if (CommentThread.has_replies) { %>
+          <small><a href="#">View <%= CommentThread.comment.reply_count %> replies</a></small>
           <% } %>
         </div>
       </div>
       <% }); %>
     </div>
-
-    <% if (prev) { %>
-    <a class="fixed border bottom left" href="/cm/<%= id %>?<%- (replyToken ? "replyToken=" : "continuation=") + encodeURIComponent(prev) %>"
-      >Previous Page</a
-    >
-    <% } %>
-
-    <% if (comments.continuation) { %>
-    <a class="fixed border bottom right" href="/cm/<%= id %>?<%- (replyToken ? "replyToken=" : "continuation=") + encodeURIComponent(comments.continuation) %><%= thisID ? "&prev=" + encodeURIComponent(thisID) : "" %>"
-      >Next Page</a
-    >
-    <% } %>
     <style>
       body {
         display: block;

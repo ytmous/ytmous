@@ -54,36 +54,6 @@
       </form>
     </div>
 
-    <!-- Comments -->
-    <div class="fixed border left" style="bottom: 30px; z-index: 4; max-width: 70%;">
-      <% if (comments && comments.comments && comments.comments.length) { %>
-      <a class="border" href="#comments">Comments <%= "(" + (comments.total || "0") + ")" %></a>
-      <marquee>
-      <% comments.comments.forEach(c => { %>
-        <span>
-          <span class="border">
-            <% if (c.authorThumb) { %>
-            <img lazy
-              src="/yt3<%- (new URL(c.authorThumb[0].url)).pathname %>"
-              style="border-radius: 50%; width: 17px; height: 17px"
-            />
-            <% } %>
-            <a href="/c/<%= c.authorId %>"><%= c.author %> </a>
-          </span>
-          <%- c.text.replace(RegExp("<br>", "g"), "; "); %>
-        </span>
-      <% }); %>
-      </marquee>
-      <% } else { %>
-      <span>No comments for this video.</span>
-      <% } %>
-    </div>
-
-    <div id="comments" class="border popup fixed bottom left">
-      <iframe loading="lazy" src="/cm/<%= id %>"></iframe><br>
-      <a href="#"><small>Close</small></a>
-    </div>
-
     <!-- Video Player -->
     <div id="player" class="left">
       <video
@@ -100,7 +70,7 @@
 
         <ul>
           <li><a href="/s/<%= id %>">Video</a></li>
-          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).shift().itag %>">Audio</a></li>
+          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag %>">Audio</a></li>
           <li><a href="/s/<%= id %>" download>Video (Download)</a></li>
           <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag %>" download>Audio (Download)</a></li>
           <% if (captions && captions.length) { %>
@@ -122,7 +92,8 @@
           <a href="/c/<%= info.secondary_info.owner.author.id %>">
             <%= info.secondary_info.owner.author.name %></a>
           <small style="color: gray;"> • <%= info.secondary_info.owner.subscriber_count.text %></small></h4>
-      </div>
+      </div>     
+
       <!-- Video Information -->
       <div id="vidInfo">
         <!-- Quality Selection -->
@@ -130,7 +101,7 @@
           <summary>Quality Selection</summary>
           <ul>
           <% info.streaming_data.adaptive_formats.filter(i => !i.has_audio && !i.isDashMPD).forEach(i => { %>
-            <li><a href="#" onclick="<%= `cq(${i.itag}, ${info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).shift().itag})` %>"><b><%= i.quality_label %></b> <%= i.mime_type %></a></li>
+            <li><a href="#" onclick="<%= `cq(${i.itag}, ${info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag})` %>"><b><%= i.quality_label %></b> <%= i.mime_type %></a></li>
           <% }); %>
           </ul>
         </details>
@@ -176,6 +147,38 @@
         </div>
       </div>
       <% }); %>
+    </div>
+
+    <!-- Comments -->
+    <div id="comments" class="border popup fixed bottom left">
+      <iframe loading="lazy" src="/cm/<%= id %>">
+        View this video <a href="/cm/<%= id %>">comments</a>.
+      </iframe><br>
+      <a href="#"><small>Close</small></a>
+    </div>
+
+    <div class="fixed border left" style="bottom: 30px; z-index: 3; max-width: 70%;">
+      <% if (comments && comments.contents && comments.contents.length) { %>
+      <a class="border" href="#comments"><%= comments.header.count.text || "0 Comments" %></a>
+      <marquee>
+      <% comments.contents.forEach(c => { %>
+        <span>
+          <span class="border">
+            <% if (c.comment.author.thumbnails) { %>
+            <img lazy
+              src="/yt3<%- (new URL(c.comment.author.thumbnails[0].url)).pathname %>"
+              style="border-radius: 50%; width: 17px; height: 17px"
+            />
+            <% } %>
+            <a href="/c/<%= c.authorId %>"><%= c.comment.author.name %> </a>
+          </span>
+          <span><%= c.comment.content.text.replace(RegExp("\n", "g"), "; "); %></span>
+        </span>
+      <% }); %>
+      </marquee>
+      <% } else { %>
+      <span>No comments for this video.</span>
+      <% } %>
     </div>
 
     <script>

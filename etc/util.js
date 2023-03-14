@@ -145,4 +145,12 @@ function filterFormat(formats, itag) {
   ).pop();
 }
 
-module.exports = { clearListener, getSize, getChunk, getCaptions, sendError, validateID, sendInvalidIDError, filterFormat };
+async function getComments(client, id) {
+  try {
+    return await client.getComments(id);
+  } catch {
+    return null;
+  }
+}
+
+module.exports = { clearListener, getSize, getChunk, getCaptions, sendError, validateID, sendInvalidIDError, filterFormat, getComments };

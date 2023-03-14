@@ -38,7 +38,7 @@ app.get("/w/:id", async (req, res) => {
     let info = await client.getInfo(req.params.id);
     res.render("watch.ejs", {
       id: req.params.id, info,
-      comments: await client.getComments(req.params.id),
+      comments: await util.getComments(client, req.params.id),
       captions: util.getCaptions(info)
     });
   } catch (error) {

@@ -57,7 +57,11 @@ module.exports = (app) => {
       let streamingData = util.filterFormat(info.streaming_data.formats, req.query.itag);
       let isAdaptiveFormat = util.filterFormat(info.streaming_data.adaptive_formats, req.query.itag);
 
-      if (!streamingData && isAdaptiveFormat) streamingData = isAdaptiveFormat;
+      if (!streamingData && isAdaptiveFormat) {
+        streamingData = isAdaptiveFormat;
+        streamingData.isAdaptive = true;
+      };
+
       if (info.basic_info.is_live && info.streaming_data.hls_manifest_url) {
         streamingData = {};
         streamingData.isHLS = true;
@@ -238,9 +242,9 @@ module.exports = (app) => {
           })
         );
 
-      let caption = util.getCaptions(req.params.id, req.query.vss_id)[0];
+      let caption = util.getCaptions(info, req.query.vss_id)[0];
       if (!caption)
-        return util.sendError(res, `No subtitle found for ${req.query.vss_is}`, "No subtitle found", 500, true);
+        return util.sendError(res, `No subtitle found for ${req.query.vss_id}`, "No subtitle found", 500, true);
 
       miniget(
         caption.base_url + (req.query.fmt ? "&fmt=" + req.query.fmt : ""),

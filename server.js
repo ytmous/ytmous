@@ -170,18 +170,18 @@ async function putInfoToCache(info) {
 
 app.use(compression());
 
-app.set("views", [__dirname + "/local/views", __dirname + "/views"]);
-app.set("view engine", "ejs");
-
-app.use(express.static(__dirname + "/local/public"));
-app.use(express.static(__dirname + "/public"));
-
 // Add some security header response
 app.use(function (req, res, next) {
   res.setHeader('X-Frame-Options', "SAMEORIGIN");
   res.setHeader('X-Content-Type-Options', "nosniff");
   next();
 });
+
+app.set("views", [__dirname + "/local/views", __dirname + "/views"]);
+app.set("view engine", "ejs");
+
+app.use(express.static(__dirname + "/local/public"));
+app.use(express.static(__dirname + "/public"));
 
 // Trigger to limit caching
 app.use(["/w/*", "/s/*"], (req, res, next) => {

@@ -170,6 +170,13 @@ async function putInfoToCache(info) {
 
 app.use(compression());
 
+// Add some security header response
+app.use(function (req, res, next) {
+  res.setHeader('X-Frame-Options', "SAMEORIGIN");
+  res.setHeader('X-Content-Type-Options', "nosniff");
+  next();
+});
+
 app.set("views", [__dirname + "/local/views", __dirname + "/views"]);
 app.set("view engine", "ejs");
 

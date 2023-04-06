@@ -80,7 +80,7 @@
       </div>
       <% } else if (video.type === "Channel") { %>
       <div class="rVideo" style="margin-top: 2px;">
-        <a href="/c/<%= video.author.id %>"><img lazy src="/yt3<%- (new URL("https:" + video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
+        <a href="/c/<%= video.author.id %>"><img lazy src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
         <div class="rVideoInfo">
           <h2><a href="/c/<%= video.author.id %>"><%= video.author.name %></a></h2>
           <span><%= video.description_snippet.text %></span><br>
@@ -90,52 +90,58 @@
       <% } else if (video.type === "shelf") { %>
       <details class="shelf border" style="margin-top: 2px;" open>
         <summary class="shelfTitle"><%= video.title %></summary>
-        <% video.items.forEach(video => { %>
-        <% if (video.type === "video" || video.type === "short") { %>
+	<% video.results %>
+
+	<% if (video.type === "Video") { %>
         <div class="rVideo">
-          <% if (video.type === "short") { video.author = video.channel; video.id = video.videoID; video.uploadedAt = video.views } %>
           <a href="/w/<%= video.id %>"
             ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
           /></a>
           <div class="rVideoInfo">
-            <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
+            <h4><a href="/w/<%= video.id %>"><%= video.title.text %></a></h4>
             <% if (video.author) { %>
             <span
               >
-              <% if (video.author.bestAvatar) { %>
+              <% if (video.author?.thumbnails.length) { %>
               <img lazy
-                src="/yt3<%- (new URL(video.author.bestAvatar.url)).pathname %>"
+                src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               /><% } %>
-              <a href="/c/<%= video.author.channelID %>"><%= video.author.name %></a></span
+              <a href="/c/<%= video.author.id %>"><%= video.author.name %></a></span
             >
             <% } %>
             <br>
-            <small><%= video.uploadedAt %> • Duration: <b><%= video.isLive ? "LIVE" : video.duration %></b></small>
+            <small><%= video.published.text %> • Duration: <b><%= video.duration.text %></b></small><br>
+            <% video.badges.forEach(badge => { %>
+            <small class="border"><%= badge.label %></small>
+            <% }); %>
+            <small><%= video.view_count.text %></small>
           </div>
         </div>
-        <% } else if (video.type === "playlist") { %>
+        <% } else if (video.type === "Playlist") { %>
         <div class="rVideo">
-          <a href="/p/<%= video.playlistID %>"><img lazy src="/vi/<%= video.firstVideo.id %>/mqdefault.jpg"/></a>
+          <a href="/p/<%= video.id %>"><img lazy src="/vi/<%= video.first_videos[0].id %>/mqdefault.jpg"/></a>
           <div class="rVideoInfo">
-            <h4><a href="/p/<%= video.playlistID %>"><%= video.title %></a></h4>
-            <% if (video.owner) { %>
-            <span><a href="/c/<%= video.owner.channelID %>"><%= video.owner.name %></a></span><br>
+            <h4><a href="/p/<%= video.id %>"><%= video.title.text %></a></h4>
+            <% if (video.author) { %>
+            <span><a href="/c/<%= video.author.id %>"><%= video.author.name %> <%= video.author.is_verified ? "<small class=\"border\">Verified</small>" : "" %></a></span><br>
             <% } %>
-            <small>Playlist: <b><%= video.length %></b> videos.</small>
+            <small>Playlist: <b><%= video.video_count.text %></b></small><br>
+            <% video.badges.forEach(badge => { %>
+            <small class="border"><%= badge.label %></small>
+            <% }); %>
           </div>
         </div>
-        <% } else if (video.type === "channel") { %>
+        <% } else if (video.type === "Channel") { %>
         <div class="rVideo" style="margin-top: 2px;">
-          <a href="/c/<%= video.channelID %>"><img lazy src="/yt3<%- (new URL(video.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
+          <a href="/c/<%= video.author.id %>"><img lazy src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
           <div class="rVideoInfo">
-            <h2><a href="/c/<%= video.channelID %>"><%= video.name %></a></h2>
-            <span><%= video.description || video.descriptionShort %></span><br>
-            <small><b><%= video.subscribers %></b></small>
+            <h2><a href="/c/<%= video.author.id %>"><%= video.author.name %></a></h2>
+            <span><%= video.description_snippet.text %></span><br>
+            <small><b><%= video.subscribers.text %></b> • <%= video.videos.text %></small>
           </div>
         </div>
         <% } %>
-        <% }); %>
       </details>
       <% } %>
       <% }); %>

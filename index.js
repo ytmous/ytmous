@@ -9,6 +9,14 @@ let app = express();
 let client;
 
 app.use(compression());
+
+// https://github.com/ytmous/ytmous/pull/25
+app.use(function (req, res, next) {
+  res.setHeader('X-Frame-Options', "SAMEORIGIN");
+  res.setHeader('X-Content-Type-Options', "nosniff");
+  next();
+});
+
 app.use(express.static(__dirname + "/local/public"));
 app.use(express.static(__dirname + "/public"));
 

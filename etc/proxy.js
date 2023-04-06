@@ -122,6 +122,9 @@ module.exports = (app) => {
           });
 
           res.end(body);
+        }).on('error', err => {
+          res.status(500).end(err.toString());
+          console.error(err);
         });
 
         return;

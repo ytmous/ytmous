@@ -80,7 +80,7 @@
       </div>
       <% } else if (video.type === "Channel") { %>
       <div class="rVideo" style="margin-top: 2px;">
-        <a href="/c/<%= video.author.id %>"><img lazy src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
+        <a href="/c/<%= video.author.id %>"><img lazy src="/yt3<%- (new URL(video.author.thumbnails[0].url.startsWith("http") ? video.author.thumbnails[0].url : "https:" + video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
         <div class="rVideoInfo">
           <h2><a href="/c/<%= video.author.id %>"><%= video.author.name %></a></h2>
           <span><%= video.description_snippet.text %></span><br>

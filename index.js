@@ -56,10 +56,18 @@ app.get("/w/:id", async (req, res) => {
 
 // Playlist page
 app.get("/p/:id", async (req, res) => {
+  res.status(500).render("error.ejs", {
+    title: "Sorry. Not implemented yet",
+    content: "Viewing playlist is not available in ytmous nightly yet."
+  });
 });
 
 // Channel page
 app.get("/c/:id", async (req, res) => {
+  res.status(500).render("error.ejs", {
+    title: "Sorry. Not implemented yet",
+    content: "Viewing channel is not available in ytmous nightly yet."
+  });
 });
 
 // Comments
@@ -81,7 +89,7 @@ proxyHandler(app);
 app.use((req, res) => {
   res.status(404).render("error.ejs", {
     title: "404 Not found",
-    content: "A resource that you tried to get is not found or deleted.",
+    content: "A resource that you tried to get is not available.",
   });
 });
 

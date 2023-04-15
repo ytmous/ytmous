@@ -3,29 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/Toard.css" />
-    <link rel="stylesheet" href="/css/style.css" />
     <title><%= title %></title>
+    <meta name="description" content="<%= content %>" />
   </head>
-  <body>
-    <span class="fixed border bottom left"
-      ><a href="/"><b>ytmous</b></a> - Anonymous Youtube Proxy</span
-    >
-    <a class="fixed border bottom right" id="sbtn" href="#sbox">Search</a>
-    <div id="sbox" class="border fixed bottom right popup">
+  <style>
+    h2 {
+      margin-bottom: 5px;
+    }
+
+    form {
+      margin-top: 50px;
+    }
+  </style>
+  <body style="color: grey; font-family: sans-serif;">
+    <div style="margin-top: 25vh; margin-left: 5px;">
+      <h2><%= title || "Sorry, an error just occured." %></h2>
+      <small><%= content %></small><br>
       <form action="/s" method="GET">
-        <input
-          name="q"
-          class="border"
-          type="text"
-          placeholder="Search video...."
-        />
+        <small style="color: black;"><b>ytmous</b> - Anonymous YouTube Proxy</small><br>
+        <input class="formtext" name="q" type="text" placeholder="Search Videos...." />
+        <input class="formtext" type="submit" value="Search" />
       </form>
     </div>
 
-    <div style="padding: 25px">
-      <h2><%= title %></h2>
-      <span><%= content.toString() %></span>
+    <div style="padding: 5px; position: absolute; bottom: 5px;">
+      <small>If you are this server owner, Check server log for more information about this error.</small>
     </div>
   </body>
 </html>

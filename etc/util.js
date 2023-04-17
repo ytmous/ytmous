@@ -56,8 +56,8 @@ function getChunk(beginRange, req, res, headers, streamingData, streamSize, isSe
         beginRange >= endRange
       )
         return res.end();
-      getChunk(beginRange + sentSize + 1, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
       lastConnErr++;
+      getChunk(sentSize + 1, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
     })
 
     .on("data", (c) => {

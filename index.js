@@ -98,7 +98,7 @@ app.on("error", console.error);
 async function initInnerTube() {
   console.log("--- Initializing InnerTube Client...");
   try {
-    client = await YouTubeJS.Innertube.create();
+    client = await YouTubeJS.Innertube.create({ location: process.env.GEOLOCATION || "US" });
     console.log("--- InnerTube client ready.");
 
     proxyHandler.setClient(client);

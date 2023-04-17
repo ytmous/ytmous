@@ -32,6 +32,7 @@ ytmous server owner could customize the frontend to what they would like. See [C
 ## Configuration
 The code is reading the provided configuration from Environment Variable that comes from your system. These variable is **optional**.
 
+- `GEOLOCATION`: YouTube Geolocation. Default is `US`.
 - `LIMIT`: Search / Video result from playlist, channel, or search result limit. The smaller, The faster.
 - `VIDINFO_LIMIT`: Video information caching limit, Mostly used for streaming after watch page has been loaded. Default is `20`.
 - `USER_AGENT`: This variable is where we fake our user agent to request youtube.

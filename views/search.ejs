@@ -42,7 +42,7 @@
       <% if (video.type === "Video") { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
+          ><img loading="lazy" src="/vi/<%= video.id %>/mqdefault.jpg"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title.text %></a></h4>
@@ -50,7 +50,7 @@
           <span
             >
             <% if (video.author?.thumbnails.length) { %>
-            <img lazy
+            <img loading="lazy"
               src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>"
               style="border-radius: 50%; width: 17px; height: 17px"
             /><% } %>
@@ -67,7 +67,7 @@
       </div>
       <% } else if (video.type === "Playlist") { %>
       <div class="rVideo">
-        <a href="/p/<%= video.id %>"><img lazy src="/vi/<%= video.first_videos[0].id %>/mqdefault.jpg"/></a>
+        <a href="/p/<%= video.id %>"><img loading="lazy" src="/vi/<%= video.first_videos[0].id %>/mqdefault.jpg"/></a>
         <div class="rVideoInfo">
           <h4><a href="/p/<%= video.id %>"><%= video.title.text %></a></h4>
           <% if (video.author) { %>
@@ -81,7 +81,7 @@
       </div>
       <% } else if (video.type === "Channel") { %>
       <div class="rVideo" style="margin-top: 2px;">
-        <a href="/c/<%= video.author.id %>"><img lazy src="/yt3<%- (new URL(video.author.thumbnails[0].url.startsWith("http") ? video.author.thumbnails[0].url : "https:" + video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
+        <a href="/c/<%= video.author.id %>"><img loading="lazy" src="/yt3<%- (new URL(video.author.thumbnails[0].url.startsWith("http") ? video.author.thumbnails[0].url : "https:" + video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
         <div class="rVideoInfo">
           <h2><a href="/c/<%= video.author.id %>"><%= video.author.name %></a></h2>
           <span><%= video.description_snippet.text %></span><br>
@@ -96,7 +96,7 @@
 	<% if (video.type === "Video") { %>
         <div class="rVideo">
           <a href="/w/<%= video.id %>"
-            ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
+            ><img loading="lazy" src="/vi/<%= video.id %>/mqdefault.jpg"
           /></a>
           <div class="rVideoInfo">
             <h4><a href="/w/<%= video.id %>"><%= video.title.text %></a></h4>
@@ -104,7 +104,7 @@
             <span
               >
               <% if (video.author?.thumbnails.length) { %>
-              <img lazy
+              <img loading="lazy"
                 src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               /><% } %>
@@ -121,7 +121,7 @@
         </div>
         <% } else if (video.type === "Playlist") { %>
         <div class="rVideo">
-          <a href="/p/<%= video.id %>"><img lazy src="/vi/<%= video.first_videos[0].id %>/mqdefault.jpg"/></a>
+          <a href="/p/<%= video.id %>"><img loading="lazy" src="/vi/<%= video.first_videos[0].id %>/mqdefault.jpg"/></a>
           <div class="rVideoInfo">
             <h4><a href="/p/<%= video.id %>"><%= video.title.text %></a></h4>
             <% if (video.author) { %>
@@ -135,7 +135,7 @@
         </div>
         <% } else if (video.type === "Channel") { %>
         <div class="rVideo" style="margin-top: 2px;">
-          <a href="/c/<%= video.author.id %>"><img lazy src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
+          <a href="/c/<%= video.author.id %>"><img loading="lazy" src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
           <div class="rVideoInfo">
             <h2><a href="/c/<%= video.author.id %>"><%= video.author.name %></a></h2>
             <span><%= video.description_snippet.text %></span><br>

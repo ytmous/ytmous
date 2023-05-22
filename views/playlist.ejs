@@ -23,11 +23,11 @@
       </form>
     </div>
 
-    <img lazy src="/vi/<%= playlist.items[0].id %>/hqdefault.jpg" id="thumbnail"/>
+    <img loading="lazy" src="/vi/<%= playlist.items[0].id %>/hqdefault.jpg" id="thumbnail"/>
     <div style="padding: 14px;">
       <small><%= playlist.estimatedItemCount %> videos</small>
       <h2><%= playlist.title %></h2>
-      <span><% if (playlist.author.bestAvatar) { %><img lazy src="/yt3<%- (new URL(playlist.author.bestAvatar.url)).pathname %>" style="border-radius: 50%; width: 17px; height: 17px" /><% } %><a href="/c/<%= playlist.author.channelID %>"><%= playlist.author.name %></a></span><br>
+      <span><% if (playlist.author.bestAvatar) { %><img loading="lazy" src="/yt3<%- (new URL(playlist.author.bestAvatar.url)).pathname %>" style="border-radius: 50%; width: 17px; height: 17px" /><% } %><a href="/c/<%= playlist.author.channelID %>"><%= playlist.author.name %></a></span><br>
       <small><%= playlist.lastUpdated %></small><br>
       <pre><%= playlist.description %></pre>
     </div>
@@ -35,7 +35,7 @@
       <% playlist.items.forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
+          ><img loading="lazy" src="/vi/<%= video.id %>/mqdefault.jpg"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>

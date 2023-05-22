@@ -11,7 +11,7 @@
     <div>
       <% comments.contents.forEach(CommentThread => { %>
       <div style="display: flex;">
-        <img lazy src="/yt3<%= (new URL(CommentThread.comment.author.thumbnails[0].url)).pathname %>"/>
+        <img loading="lazy" src="/yt3<%= (new URL(CommentThread.comment.author.thumbnails[0].url)).pathname %>"/>
         <div class="rVideoInfo">
           <h4><a href="/c/<%= CommentThread.comment.author.id %>"><%= CommentThread.comment.author.name %></a></h4>
           <small><%= CommentThread.comment.published.text %><%= (CommentThread.comment.author.is_verified || CommentThread.comment.author.is_verified_artist) ? " | Verified user" : "" %><%= CommentThread.comment.is_member ? " | Member" : "" %><%= CommentThread.comment.author_is_channel_owner ? " | Owner" : "" %><%= CommentThread.comment.is_pinned ? " | Pinned" : "" %></small>

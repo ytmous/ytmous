@@ -85,7 +85,7 @@
         <h4
           >
           <% if (info.secondary_info.owner.author.thumbnails.length) { %>
-          <img lazy
+          <img loading="lazy"
             src="/yt3<%- (new URL(info.secondary_info.owner.author.thumbnails[0].url)).pathname %>"
             style="border-radius: 50%; width: 15px; height: 15px"
           /><% } %>
@@ -122,14 +122,14 @@
       <% info.watch_next_feed.filter(video => video.type === "CompactVideo").forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
+          ><img loading="lazy" src="/vi/<%= video.id %>/mqdefault.jpg"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title.text %></a></h4>
           <div class="chnInf">
             <span>
               <% if (video.author.thumbnails.length) { %>
-              <img lazy
+              <img loading="lazy"
                 src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>"
                 style="border-radius: 50%; width: 17px; height: 17px"
               />
@@ -165,7 +165,7 @@
         <span>
           <span class="border">
             <% if (c.comment.author.thumbnails) { %>
-            <img lazy
+            <img loading="lazy"
               src="/yt3<%- (new URL(c.comment.author.thumbnails[0].url)).pathname %>"
               style="border-radius: 50%; width: 17px; height: 17px"
             />

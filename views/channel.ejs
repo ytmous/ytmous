@@ -23,10 +23,10 @@
       </form>
     </div>
 
-    <!-- <img lazy src="<%- (new URL(channel.bestThumbnail.url)).pathname %>" id="thumbnail"/> -->
+    <!-- <img loading="lazy" src="<%- (new URL(channel.bestThumbnail.url)).pathname %>" id="thumbnail"/> -->
     <div id="relatedVideos">
       <div class="rVideo">
-        <a href="/c/<%= channel.author.channelID %>"><% if (channel.author.bestAvatar) { %><img lazy src="/yt3<%- (new URL(channel.author.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/><% } %></a>
+        <a href="/c/<%= channel.author.channelID %>"><% if (channel.author.bestAvatar) { %><img loading="lazy" src="/yt3<%- (new URL(channel.author.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/><% } %></a>
         <div class="rVideoInfo">
           <small><%= channel.estimatedItemCount %> videos</small><br>
           <h2><%= channel.author.name %></h2>
@@ -38,14 +38,14 @@
       <% channel.items.forEach(video => { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
-          ><img lazy src="/vi/<%= video.id %>/mqdefault.jpg"
+          ><img loading="lazy" src="/vi/<%= video.id %>/mqdefault.jpg"
         /></a>
         <div class="rVideoInfo">
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <span
             >
             <% if (channel.author.bestAvatar) { %>
-            <img lazy
+            <img loading="lazy"
               src="/yt3/<%- (new URL(channel.author.bestAvatar.url)).pathname %>"
               style="border-radius: 50%; width: 20px; height: 20px"
             /><% } %>

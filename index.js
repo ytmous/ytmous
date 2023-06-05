@@ -1,3 +1,24 @@
+const cluster = require("cluster");
+const os = require("os");
+
+if (cluster.isPrimary) {
+  const numClusters = process.env.CLUSTERS || (os.availableParallelism ? os.availableParallelism() : (os.cpus().length || 2))
+
+  console.log(`Primary ${process.pid} is running. Will fork ${numClusters} clusters.`);
+
+  // Fork workers.
+  for (let i = 0; i < numClusters; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died. Forking another one....`);
+    cluster.fork();
+  });
+
+  return true;
+}
+
 const express = require("express");
 const compression = require("compression");
 const YouTubeJS = require("youtubei.js");
@@ -96,21 +117,21 @@ app.use((req, res) => {
 app.on("error", console.error);
 
 async function initInnerTube() {
-  console.log("--- Initializing InnerTube Client...");
+  console.log(process.pid, "--- Initializing InnerTube Client...");
   try {
     client = await YouTubeJS.Innertube.create({ location: process.env.GEOLOCATION || "US" });
-    console.log("--- InnerTube client ready.");
+    console.log(process.pid, "--- InnerTube client ready.");
 
     proxyHandler.setClient(client);
 
     const listener = app.listen(process.env.PORT || 3000, () => {
-      console.log("-- ytmous is now listening on port", listener.address().port);
+      console.log(process.pid, "-- ytmous is now listening on port", listener.address().port);
     });
   } catch (e) {
-    console.error("--- Failed to initialize InnerTube.");
+    console.error(process.pid, "--- Failed to initialize InnerTube.");
     console.error(e);
 
-    console.log("--- Trying again in 10 seconds....");
+    console.log(process.pid, "--- Trying again in 10 seconds....");
     setTimeout(initInnerTube, 10000);
   };
 };

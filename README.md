@@ -41,6 +41,7 @@ The code is reading the provided configuration from Environment Variable that co
 - `NO_CACHE`: Disable Youtube Video Information caching. By default, caching is enabled for improving streaming speed, But also avoiding ratelimits as possible
 - `MAX_SPACE_SIZE`: `node --max-old-space-size=${process.env.MAX_SPACE_SIZE}`. Default is `freemem / 1.2` MB.
 - `NO_AUTO_KILL`: Do not automatically exit when memory usage reached `MAX_SPACE_SIZE` limit. By default, Server automatically exit and restart when limit reached.
+- `CLUSTERS`: Number of clusters to fork. By default is depending on `os.availableParallelism()` integer or `os.cpus().length`.
 - `PORT`: Server port to listen to.
 
 ## Customizing frontend

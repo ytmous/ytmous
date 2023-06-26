@@ -85,10 +85,18 @@ app.get("/p/:id", async (req, res) => {
 
 // Channel page
 app.get("/c/:id", async (req, res) => {
-  res.status(500).render("error.ejs", {
-    title: "Sorry. Not implemented yet",
-    content: "Viewing channel is not available in ytmous nightly yet."
-  });
+  try {
+    const channel = await client.getChannel(req.params.id);
+    const about = await channel.getAbout();
+
+    res.render("channel.ejs", { channel, about });
+  } catch (err) {
+    console.error("Failed to fetch channel", req.params.id, err);
+    res.status(500).render("error.ejs", {
+      title: "Sorry. Something went wrong",
+      content: "Failed to fetch channel information:\n" + err.toString()
+    });
+  }
 });
 
 // Comments

@@ -29,7 +29,7 @@
     </div>
     <div>
       <% if (channel.header.banner?.length) { %>
-        <img id="channelThumbnail" src="/yt3<%- (new URL(channel.header.banner[0].url)).pathname %>" /><br>
+        <img style="width: 100vw; max-width: 100vw;" src="/yt3<%- (new URL(channel.header.banner[0].url)).pathname %>" /><br>
       <% } %>
       <div>
         <% if (channel.metadata.thumbnail?.length) { %>

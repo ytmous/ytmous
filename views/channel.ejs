@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="/css/style.css" />
     <title><%= channel.metadata.title %></title>
     <meta name="description" content="<%= about.description %>" />
-    <meta property="og:image" content="/yt3<%- (new URL(channel.metadata.thumbnail[0]?.url)).pathname %>" />
+    <% if (channel.metadata.thumbnail?.length) { %><meta property="og:image" content="/yt3<%- (new URL(channel.metadata.thumbnail[0]?.url)).pathname %>" /><% } %>
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/yt3<%- (new URL(channel.header.banner[0].url)).pathname %>" />
+    <% if (channel.header.banner?.length) { %><meta name="twitter:image" content="/yt3<%- (new URL(channel.header.banner[0].url)).pathname %>" /><% } %>
     <meta name="author" content="ytmous - Anonymous YouTube proxy" />
   </head>
   <body>

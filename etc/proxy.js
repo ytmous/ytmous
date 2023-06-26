@@ -163,7 +163,7 @@ module.exports = (app) => {
       if (streamSize != streamingData.content_length) isSeeking = true;
       if (parseInt(h[1])) isSeeking = true;
 
-      if (streamingData.content_length) {
+      if (streamingData.content_length && streamingData.isAdaptive) {
         if (!streamSize || parseInt(h[1]) >= streamingData.content_length)
           return res.status(416).end("416 Range Not Satisfiable");
         res

@@ -19,7 +19,7 @@ function getSize(url, opt) {
 function getChunk(beginRange, req, res, headers, streamingData, streamSize, isSeeking = false, h, headersSetted = false, sentSize = 0, lastConnErr = 0) {
   beginRange = parseInt(beginRange);
 
-  let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024);
+  let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024 * 10);
   if (endRange > parseInt(h[1]))
     endRange = parseInt(h[1]);
   if (endRange >= streamingData.content_length)

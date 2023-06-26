@@ -33,14 +33,9 @@ ytmous server owner could customize the frontend to what they would like. See [C
 The code is reading the provided configuration from Environment Variable that comes from your system. These variable is **optional**.
 
 - `GEOLOCATION`: YouTube Geolocation. Default is `US`.
-- `LIMIT`: Search / Video result from playlist, channel, or search result limit. The smaller, The faster.
-- `VIDINFO_LIMIT`: Video information caching limit, Mostly used for streaming after watch page has been loaded. Default is `20`.
 - `USER_AGENT`: This variable is where we fake our user agent to request youtube.
 - `DLCHUNKSIZE`: Download Chunk Size. Default is 10 MB (1024 * 1024 * 10)
-- `NO_API_ENDPOINTS`: Disable API endpoints. By default, API Endpoints is enabled.
-- `NO_CACHE`: Disable Youtube Video Information caching. By default, caching is enabled for improving streaming speed, But also avoiding ratelimits as possible
-- `MAX_SPACE_SIZE`: `node --max-old-space-size=${process.env.MAX_SPACE_SIZE}`. Default is `freemem / 1.2` MB.
-- `NO_AUTO_KILL`: Do not automatically exit when memory usage reached `MAX_SPACE_SIZE` limit. By default, Server automatically exit and restart when limit reached.
+- `NO_CLUSTERS`: Do not run ytmous with clusters. Useful for debugging
 - `CLUSTERS`: Number of clusters to fork. By default is depending on `os.availableParallelism()` integer or `os.cpus().length`.
 - `PORT`: Server port to listen to.
 

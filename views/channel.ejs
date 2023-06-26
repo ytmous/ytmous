@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/Toard.css" />
     <link rel="stylesheet" href="/css/style.css" />
-    <title><%= channel.author.name %></title>
+    <title><%= channel.metadata.title %></title>
+    <meta name="description" content="<%= about.description %>" />
+    <meta property="og:image" content="/yt3<%- (new URL(channel.metadata.thumbnail[0]?.url)).pathname %>" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/yt3<%- (new URL(channel.header.banner[0].url)).pathname %>" />
+    <meta name="author" content="ytmous - Anonymous YouTube proxy" />
   </head>
   <body>
     <span class="fixed border bottom left"
       ><a href="/"><b>ytmous</b></a> - Anonymous Youtube Proxy</span
     >
     <a class="fixed border bottom right" id="sbtn" href="#sbox">Search</a>
-    <div id="sbox" class="border fixed bottom right popup">
+    <div id="sbox" class="fixed bottom right popup">
       <form action="/s" method="GET">
         <input
           name="q"
@@ -22,20 +27,30 @@
         />
       </form>
     </div>
-
-    <!-- <img loading="lazy" src="<%- (new URL(channel.bestThumbnail.url)).pathname %>" id="thumbnail"/> -->
-    <div id="relatedVideos">
-      <div class="rVideo">
-        <a href="/c/<%= channel.author.channelID %>"><% if (channel.author.bestAvatar) { %><img loading="lazy" src="/yt3<%- (new URL(channel.author.bestAvatar.url)).pathname %>" style="padding: 25px; width: 90px;"/><% } %></a>
-        <div class="rVideoInfo">
-          <small><%= channel.estimatedItemCount %> videos</small><br>
-          <h2><%= channel.author.name %></h2>
-          <small><%= channel.lastUpdated %></small><br>
-          <pre><%= channel.description %></pre>
+    <div>
+      <% if (channel.header.banner?.length) { %>
+        <img id="channelThumbnail" src="/yt3<%- (new URL(channel.header.banner[0].url)).pathname %>" /><br>
+      <% } %>
+      <div>
+        <% if (channel.metadata.thumbnail?.length) { %>
+          <img src="/yt3<%- (new URL(channel.metadata.thumbnail[0]?.url)).pathname %>" style="width: 90px; float: left; padding: 25px; border-radius: 50%;" />
+        <% } %>
+        <div style="padding: 30px;">
+          <h3><%= channel.metadata.title %></h3>
+          <span><%= channel.header.subscribers.text %></span><br>
+          <small style="color: gray;"><%= channel.header.videos_count.text %></small>
         </div>
+      </div><br>
+      <div style="padding: 15px;">
+        <span>ℹ️ <%= about.joined.text %></span><br>
+        <span>🌐 <%= about.country.text %></span><br>
+        <span>📊 <%= about.views.text %></span><br>
+        <pre style="margin-top: 20px;"><%= about.description %></pre>
       </div>
-
-      <% channel.items.forEach(video => { %>
+    </div>
+    
+    <div id="relatedVideos">
+      <% if (false) { %>
       <div class="rVideo">
         <a href="/w/<%= video.id %>"
           ><img loading="lazy" src="/vi/<%= video.id %>/mqdefault.jpg"
@@ -44,9 +59,9 @@
           <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
           <span
             >
-            <% if (channel.author.bestAvatar) { %>
+            <% if (channel.metadata.bestAvatar) { %>
             <img loading="lazy"
-              src="/yt3/<%- (new URL(channel.author.bestAvatar.url)).pathname %>"
+              src="/yt3/<%- (new URL(channel.metadata.bestAvatar.url)).pathname %>"
               style="border-radius: 50%; width: 20px; height: 20px"
             /><% } %>
             <%= video.author.name %></span
@@ -54,16 +69,8 @@
           <small>Duration: <b><%= video.isLive ? "LIVE" : video.duration %></b></small>
         </div>
       </div>
-      <% }); %>
+      <% } %>
     </div>
-    <% if (page > 1) { %>
-    <a class="fixed border left" style="bottom: 30px" href="/c/<%= channel.id %>?p=<%= page-1 %>"
-      >Previous Page</a
-    >
-    <% } %>
-    <a class="fixed border right" style="bottom: 30px" href="/c/<%= channel.id %>?p=<%= page+1 %>"
-      >Next Page</a
-    >
     <style>
       body {
         display: block;

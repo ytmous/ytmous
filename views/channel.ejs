@@ -43,7 +43,7 @@
       </div><br>
       <div style="padding: 15px;">
         <span>ℹ️ <%= about.joined.text %></span><br>
-        <span>🌐 <%= about.country.text %></span><br>
+        <% if (about.country?.text) { %><span>🌐 <%= about.country.text %></span><br><% } %>
         <span>📊 <%= about.views.text %></span><br>
         <pre style="margin-top: 20px;"><%= about.description %></pre>
       </div>

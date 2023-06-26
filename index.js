@@ -1,7 +1,7 @@
 const cluster = require("cluster");
 const os = require("os");
 
-if (!process.env.NO_CLUSTER && cluster.isPrimary) {
+if (!process.env.NO_CLUSTERS && cluster.isPrimary) {
   const numClusters = process.env.CLUSTERS || (os.availableParallelism ? os.availableParallelism() : (os.cpus().length || 2))
 
   console.log(`Primary ${process.pid} is running. Will fork ${numClusters} clusters.`);
@@ -117,21 +117,17 @@ app.use((req, res) => {
 app.on("error", console.error);
 
 async function initInnerTube() {
-  console.log(process.pid, "--- Initializing InnerTube Client...");
   try {
     client = await YouTubeJS.Innertube.create({ location: process.env.GEOLOCATION || "US" });
-    console.log(process.pid, "--- InnerTube client ready.");
-
     proxyHandler.setClient(client);
 
     const listener = app.listen(process.env.PORT || 3000, () => {
-      console.log(process.pid, "-- ytmous is now listening on port", listener.address().port);
+      console.log(process.pid, "-- Ready. ytmous is now listening on port", listener.address().port);
     });
   } catch (e) {
-    console.error(process.pid, "--- Failed to initialize InnerTube.");
+    console.error(process.pid, "--- Failed to initialize InnerTube. Trying again in 10 seconds....");
     console.error(e);
 
-    console.log(process.pid, "--- Trying again in 10 seconds....");
     setTimeout(initInnerTube, 10000);
   };
 };

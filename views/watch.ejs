@@ -70,9 +70,9 @@
 
         <ul>
           <li><a href="/s/<%= id %>">Video</a></li>
-          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).shift().itag %>">Audio</a></li>
+          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag %>">Audio</a></li>
           <li><a href="/s/<%= id %>" download>Video (Download)</a></li>
-          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).shift().itag %>" download>Audio (Download)</a></li>
+          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag %>" download>Audio (Download)</a></li>
           <% if (captions && captions.length) { %>
           <% captions.forEach(c => { %>
           <li><a href="/cc/<%= id %>?vssId=<%= c.vssId %>&fmt=vtt" download>Subtitle (WebVTT): <%= c.name %></a></li>
@@ -101,7 +101,7 @@
           <summary>Quality Selection</summary>
           <ul>
           <% info.streaming_data.adaptive_formats.filter(i => !i.has_audio && !i.isDashMPD).forEach(i => { %>
-            <li><a href="#" onclick="<%= `cq(${i.itag}, ${info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).shift().itag})` %>"><b><%= i.quality_label %></b> <%= i.mime_type %></a></li>
+            <li><a href="#" onclick="<%= `cq(${i.itag}, ${info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag})` %>"><b><%= i.quality_label %></b> <%= i.mime_type %></a></li>
           <% }); %>
           </ul>
         </details>

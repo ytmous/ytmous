@@ -1,3 +1,4 @@
+<% if (video && video.type.startsWith("Grid")) console.log(video) %>
 <% if (!video) return; %>
 <% if (video.type.endsWith("Video")) { %>
   <div class="rVideo">
@@ -21,7 +22,7 @@
       <% video.badges?.forEach(badge => { %>
         <small class="border"><%= badge.label %></small>
       <% }); %>
-      <small><%= video.view_count?.text %></small>
+      <small><%= video.view_count?.text || video.short_view_count?.text %></small>
     </div>
   </div>
 <% } else if (video.type.endsWith("Playlist")) { %>

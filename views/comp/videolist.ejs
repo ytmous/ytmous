@@ -26,7 +26,7 @@
   </div>
 <% } else if (video.type.endsWith("Playlist")) { %>
   <div class="rVideo">
-    <a href="/p/<%= video.id %>"><img loading="lazy" src="/vi/<%= video.first_videos[0].id %>/mqdefault.jpg"/></a>
+    <a href="/p/<%= video.id %>"><img loading="lazy" src="/vi/<%= video?.endpoint?.payload?.videoId || video.first_videos[0]?.id %>/mqdefault.jpg"/></a>
     <div class="rVideoInfo">
       <h4><a href="/p/<%= video.id %>"><%= video.title.text %></a></h4>
       <% if (video.author) { %>
@@ -43,12 +43,12 @@
     <a href="/c/<%= video.author.id %>"><img loading="lazy" src="/yt3<%- (new URL(video.author.thumbnails[0].url.startsWith("http") ? video.author.thumbnails[0].url : "https:" + video.author.thumbnails[0].url)).pathname %>" style="padding: 25px; width: 90px;"/></a>
     <div class="rVideoInfo">
       <h2><a href="/c/<%= video.author.id %>"><%= video.author.name %></a></h2>
-      <span><%= video.description_snippet.text %></span><br>
-      <small><b><%= video.subscribers.text %></b> • <%= video.videos.text %></small>
+      <span><%= video.description_snippet?.text %></span><br>
+      <small><b><%= video.subscribers?.text %></b> • <%= video.videos?.text || video.video_count?.text %></small>
     </div>
   </div>
 <% } else if (video.type === "Shelf") { %>
-  <details class="shelf border" style="margin-top: 2px;" open>
+  <details class="shelf border" style="margin-top: 8px;" open>
     <summary class="shelfTitle"><%= video.title.text %></summary>
     <% video.content?.items?.forEach(video => { %>
       <%- include("videolist.ejs", { video }); %>

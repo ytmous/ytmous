@@ -48,29 +48,18 @@
         <pre style="margin-top: 20px;"><%= about.description %></pre>
       </div>
     </div>
-    
+
     <div id="relatedVideos">
-      <% if (false) { %>
-      <div class="rVideo">
-        <a href="/w/<%= video.id %>"
-          ><img loading="lazy" src="/vi/<%= video.id %>/mqdefault.jpg"
-        /></a>
-        <div class="rVideoInfo">
-          <h4><a href="/w/<%= video.id %>"><%= video.title %></a></h4>
-          <span
-            >
-            <% if (channel.metadata.bestAvatar) { %>
-            <img loading="lazy"
-              src="/yt3/<%- (new URL(channel.metadata.bestAvatar.url)).pathname %>"
-              style="border-radius: 50%; width: 20px; height: 20px"
-            /><% } %>
-            <%= video.author.name %></span
-          ><br>
-          <small>Duration: <b><%= video.isLive ? "LIVE" : video.duration %></b></small>
-        </div>
-      </div>
-      <% } %>
+      <% channel.current_tab?.content?.contents?.forEach(video => { %>
+        <% video.contents.forEach(video => { %>
+          <%- include("comp/videolist.ejs", { video }); %>
+        <% }); %>
+      <% }); %>
+      <% videos.current_tab?.content?.contents?.forEach(video => { %>
+        <%- include("comp/videolist.ejs", { video: video.content }); %>
+      <% }); %>
     </div>
+    
     <style>
       body {
         display: block;

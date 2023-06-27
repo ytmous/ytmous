@@ -119,33 +119,8 @@
     </div>
     <!-- Related Video section -->
     <div id="relatedVideos" class="right">
-      <% info.watch_next_feed.filter(video => video.type === "CompactVideo").forEach(video => { %>
-      <div class="rVideo">
-        <a href="/w/<%= video.id %>"
-          ><img loading="lazy" src="/vi/<%= video.id %>/mqdefault.jpg"
-        /></a>
-        <div class="rVideoInfo">
-          <h4><a href="/w/<%= video.id %>"><%= video.title.text %></a></h4>
-          <div class="chnInf">
-            <span>
-              <% if (video.author.thumbnails.length) { %>
-              <img loading="lazy"
-                src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>"
-                style="border-radius: 50%; width: 17px; height: 17px"
-              />
-              <% } %>
-              <a href="/c/<%= video.author.id %>">
-                <%= video.author.name %>
-              </a>
-            </span><br>
-            <small><%= video.published.text %> • Duration: <b><%= video.duration.text %></b></small><br>
-            <% video.badges.forEach(badge => { %>
-            <small class="border"><%= badge.label %></small>
-            <% }); %>
-            <small><%= video.short_view_count.text %></small>
-          </div>
-        </div>
-      </div>
+      <% info.watch_next_feed.forEach(video => { %>
+        <%- include("comp/videolist.ejs", { video }); %>
       <% }); %>
     </div>
 

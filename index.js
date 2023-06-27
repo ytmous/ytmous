@@ -88,8 +88,9 @@ app.get("/c/:id", async (req, res) => {
   try {
     const channel = await client.getChannel(req.params.id);
     const about = await channel.getAbout();
+    const videos = await channel.getVideos();
 
-    res.render("channel.ejs", { channel, about });
+    res.render("channel.ejs", { channel, about, videos });
   } catch (err) {
     console.error("Failed to fetch channel", req.params.id, err);
     res.status(500).render("error.ejs", {

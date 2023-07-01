@@ -43,10 +43,6 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
       res.write(data);
       res.flush();
       sentSize += data.length;
-      if (sentSize >= streamSize) {
-        res.end();
-        break;
-      }
     }
 
     getChunk(endRange + 1, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);

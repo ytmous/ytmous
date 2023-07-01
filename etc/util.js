@@ -68,7 +68,7 @@ async function proxy(url, req, res, ua, errLength = 0, transmittedLength = 0, he
     })
 
     if (!headersForwarded) {
-      res.writeHead(request.statusCode);
+      res.status(request.statusCode);
       for (h of ["Accept-Ranges", "Content-Type", "Content-Range", "Content-Length", "Cache-Control"]) {
         const headerValue = request.headers[h.toLowerCase()];
         if (headerValue) res.setHeader(h, headerValue);

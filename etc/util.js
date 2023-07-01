@@ -23,6 +23,7 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
   let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024 * 10);
   if (endRange > parseInt(h[1])) endRange = parseInt(h[1]);
   if (endRange >= streamingData.content_length) endRange = "";
+  if (sentSize) beginRange++;
   if (beginRange >= streamingData.content_length) return res.end();
 
   headers.Range = `bytes=${beginRange}-${endRange}`;
@@ -53,32 +54,41 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
     lastConnErr++;
 
     if (lastConnErr >= 5) return res.end();
-    getChunk(sentSize + 1, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
+    getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
   }
 }
 
-async function proxy(url, req, res, ua) {
+async function proxy(url, req, res, ua, errLength = 0, transmittedLength = 0, headersForwarded = false) {
   try {
     const request = await undici.request(url, {
       headers: {
         "User-Agent": ua,
-        Range: req.headers.range || "bytes=0-",
+        Range: transmittedLength ? `bytes=${transmittedLength+1}-` : (req.headers.range || "bytes=0-"),
       },
     })
 
-    for (h of ["Accept-Ranges", "Content-Type", "Content-Range", "Content-Length", "Cache-Control"]) {
-      const headerValue = request.headers[h.toLowerCase()];
-      if (headerValue) res.setHeader(h, headerValue);
+    if (!headersForwarded) {
+      for (h of ["Accept-Ranges", "Content-Type", "Content-Range", "Content-Length", "Cache-Control"]) {
+        const headerValue = request.headers[h.toLowerCase()];
+        if (headerValue) res.setHeader(h, headerValue);
+      }
     }
+
+    errLength = 0;
 
     for await (const data of request.body) {
       res.write(data);
+      transmittedLength += data.length;
     }
 
     res.end();
   } catch (err) {
-    console.log(err);
-    res.status(500).end(err.toString());
+    if (errLength >= 5) {
+      console.log(err);
+      res.end();
+    } else {
+      proxy(url, req, res, ua, errLength+1, transmittedLength, true);
+    }
   }
 }
 

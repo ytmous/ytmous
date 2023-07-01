@@ -61,7 +61,7 @@
         controls
         autoplay
       >
-        <source src="/s/<%= id %>">
+        <% if (info.streaming_data) { %><source src="/s/<%= id %>"><% } %>
         <% if (captions && captions.length) { %>
         <% captions.forEach(c => { %>
         <track src="/cc/<%= id %>?vss_id=<%= c.vss_id %>&fmt=vtt" srclang="<%= c.languange_code %>" label="<%= c.name.text %>">
@@ -69,10 +69,14 @@
         <% } %>
 
         <ul>
-          <li><a href="/s/<%= id %>">Video</a></li>
-          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag %>">Audio</a></li>
-          <li><a href="/s/<%= id %>" download>Video (Download)</a></li>
-          <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag %>" download>Audio (Download)</a></li>
+          <% if (info.streaming_data) { %>
+            <li><a href="/s/<%= id %>">Video</a></li>
+            <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag %>">Audio</a></li>
+            <li><a href="/s/<%= id %>" download>Video (Download)</a></li>
+            <li><a href="/s/<%= info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag %>" download>Audio (Download)</a></li>
+          <% } else { %>
+            <li>This video is unavailable for this server.</li>
+          <% } %>
           <% if (captions && captions.length) { %>
           <% captions.forEach(c => { %>
           <li><a href="/cc/<%= id %>?vssId=<%= c.vssId %>&fmt=vtt" download>Subtitle (WebVTT): <%= c.name %></a></li>
@@ -98,12 +102,17 @@
       <div id="vidInfo">
         <!-- Quality Selection -->
         <details class="border right" id="qs">
-          <summary>Quality Selection</summary>
-          <ul>
-          <% info.streaming_data.adaptive_formats.filter(i => !i.has_audio && !i.isDashMPD).forEach(i => { %>
-            <li><a href="#" onclick="<%= `cq(${i.itag}, ${info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag})` %>"><b><%= i.quality_label %></b> <%= i.mime_type %></a></li>
-          <% }); %>
-          </ul>
+          <% if (info.streaming_data) { %>
+            <summary>Quality Selection</summary>
+            <ul>
+            <% info.streaming_data.adaptive_formats.filter(i => !i.has_audio && !i.isDashMPD).forEach(i => { %>
+              <li><a href="#" onclick="<%= `cq(${i.itag}, ${info.streaming_data.adaptive_formats.filter(i => i.has_audio && !i.has_video).pop().itag})` %>"><b><%= i.quality_label %></b> <%= i.mime_type %></a></li>
+            <% }); %>
+            </ul>
+          <% } else { %>
+            <summary>Video unavailable</summary>
+            <p>This video is unavailable for this server, Or only available at certain servers / country.</p>
+          <% } %>
         </details>
         <h2><%= info.basic_info.title %></h2>
         <pre style="font-family: sans-serif;"><%= (info.basic_info.short_description || "") %></pre>
@@ -115,6 +124,7 @@
         <small>Family Safe: <b><%= info.basic_info.is_family_safe ? "yes" : "no" %></b></small><br>
         <small>Unlisted: <b><%= info.basic_info.is_unlisted ? "yes" : "no" %></b></small></br>
         <small>Crawlable: <b><%= info.basic_info.is_crawlable ? "yes" : "no" %></b></small><br>
+        <% if (!info.streaming_data) { %><small>This video is unavailable for this server.</small><br><% } %>
       </div>
     </div>
     <!-- Related Video section -->

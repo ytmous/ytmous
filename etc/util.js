@@ -133,7 +133,7 @@ async function getInfo(client, id) {
 }
 
 function filterFormat(formats, itag) {
-  return formats.filter((format) =>
+  return formats?.filter((format) =>
     itag ? itag == format.itag : format.has_video && format.has_audio
   ).pop();
 }

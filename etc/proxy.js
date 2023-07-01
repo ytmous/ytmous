@@ -23,8 +23,8 @@ module.exports = (app) => {
     try {
       let info = await client.getInfo(req.params.id);
 
-      let streamingData = util.filterFormat(info.streaming_data.formats, req.query.itag);
-      let isAdaptiveFormat = util.filterFormat(info.streaming_data.adaptive_formats, req.query.itag);
+      let streamingData = util.filterFormat(info.streaming_data?.formats, req.query.itag);
+      let isAdaptiveFormat = util.filterFormat(info.streaming_data?.adaptive_formats, req.query.itag);
 
       if (!streamingData && isAdaptiveFormat) {
         streamingData = isAdaptiveFormat;

@@ -68,7 +68,7 @@ async function proxy(url, req, res, ua, errLength = 0, transmittedLength = 0, he
       },
     })
 
-    if (request.statusCode === 302) return proxy(res.headers.location, req, res, ua);
+    if (request.statusCode === 302) return proxy(request.headers.location, req, res, ua);
 
     if (!headersForwarded) {
       res.status(request.statusCode);

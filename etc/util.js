@@ -31,7 +31,7 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
     const request = await undici.request(streamingData.url, { headers })
     if (request.statusCode === 302) {
       streamingData.url = request.header.location;
-      return getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted);
+      return await getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted);
     };
     if (!headersSetted) {
       for (hed of ["Accept-Ranges", "Content-Type", "Cache-Control"]) {
@@ -68,7 +68,7 @@ async function proxy(url, req, res, ua, errLength = 0, transmittedLength = 0, he
       },
     })
 
-    if (res.statusCode === 302) return proxy(res.headers.location, req, res, ua);
+    if (res.statusCode === 302) return await proxy(res.headers.location, req, res, ua);
 
     if (!headersForwarded) {
       res.status(request.statusCode);

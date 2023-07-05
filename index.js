@@ -127,7 +127,7 @@ app.on("error", console.error);
 
 async function initInnerTube() {
   try {
-    client = await YouTubeJS.Innertube.create({ location: process.env.GEOLOCATION || "US" });
+    client = await YouTubeJS.Innertube.create({ location: process.env.GEOLOCATION || "US", cache: new YouTubeJS.UniversalCache(true, process.env.CACHE_DIR || "./.cache") });
     proxyHandler.setClient(client);
 
     const listener = app.listen(process.env.PORT || 3000, () => {

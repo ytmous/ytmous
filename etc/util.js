@@ -26,8 +26,10 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
   if (sentSize >= streamSize) return res.end();
   if (sentSize) beginRange++;
 
+  headers.Range = `bytes=${beginRange}-${endRange}`;
+
   try {
-    const request = await undici.request(streamingData.url + `&range=${beginRange}-${endRange}`, { headers })
+    const request = await undici.request(streamingData.url, { headers })
     if (request.statusCode === 302) {
       streamingData.url = request.header.location;
       return getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, sentSize);

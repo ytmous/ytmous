@@ -44,6 +44,8 @@ module.exports = (app) => {
       if (!streamingData.url)
         streamingData.url = await streamingData.decipher(client.session.player);
 
+      streamingData.url += "&cpr=" + info.cpr;
+
       let headers = {
         "User-Agent": user_agent,
       };

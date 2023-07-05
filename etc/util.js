@@ -31,8 +31,9 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
     const request = await undici.request(streamingData.url, { headers })
     if (request.statusCode === 302) {
       streamingData.url = request.header.location;
-      return getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted);
+      return getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize);
     };
+
     if (!headersSetted) {
       for (hed of ["Accept-Ranges", "Content-Type", "Cache-Control"]) {
         const head = request.headers[hed.toLowerCase()];

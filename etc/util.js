@@ -49,7 +49,7 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
       sentSize += data.length;
     }
 
-    getChunk(endRange + 1, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
+    getChunk(endRange, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
   } catch (err) {
     lastConnErr++;
 

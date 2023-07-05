@@ -17,7 +17,7 @@ async function getSize(url, ua) {
   return length;
 }
 
-async function getChunk(beginRange, req, res, headers, streamingData, streamSize, isSeeking = false, h, headersSetted = false, sentSize = 0, lastConnErr = 0) {
+async function getChunk(beginRange, req, res, headers, streamingData, streamSize, isSeeking = false, h, sentSize = 0, lastConnErr = 0) {
   beginRange = parseInt(beginRange);
 
   let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024 * 10);
@@ -26,21 +26,12 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
   if (sentSize >= streamSize) return res.end();
   if (sentSize) beginRange++;
 
-  headers.Range = `bytes=${beginRange}-${endRange}`;
   try {
-    const request = await undici.request(streamingData.url, { headers })
+    const request = await undici.request(streamingData.url + `&range=${beginRange}-${endRange}`, { headers })
     if (request.statusCode === 302) {
       streamingData.url = request.header.location;
-      return getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize);
+      return getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, sentSize);
     };
-
-    if (!headersSetted) {
-      for (hed of ["Accept-Ranges", "Content-Type", "Cache-Control"]) {
-        const head = request.headers[hed.toLowerCase()];
-        if (head) res.setHeader(hed, head);
-        headersSetted = true;
-      };
-    }
 
     lastConnErr = 0;
 
@@ -50,12 +41,12 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
       sentSize += data.length;
     }
 
-    getChunk(endRange, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
+    getChunk(endRange, req, res, headers, streamingData, streamSize, isSeeking, h, sentSize, lastConnErr);
   } catch (err) {
     lastConnErr++;
 
     if (lastConnErr >= 5) return res.end();
-    getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, headersSetted, sentSize, lastConnErr);
+    getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, sentSize, lastConnErr);
   }
 }
 

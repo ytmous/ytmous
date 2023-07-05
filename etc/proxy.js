@@ -144,6 +144,10 @@ module.exports = (app) => {
             }`
           );
 
+        res.setHeader("Accept-Ranges", "bytes");
+        res.setHeader("Cache-Control", "private, max-age=21299");
+        res.setHeader("Content-Type", streamingData.mime_type);
+
         util.getChunk(
           beginRange,
           req,

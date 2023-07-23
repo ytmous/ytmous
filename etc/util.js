@@ -18,6 +18,7 @@ async function getSize(url, ua) {
 }
 
 async function getChunk(beginRange, req, res, headers, streamingData, streamSize, isSeeking = false, h, sentSize = 0, lastConnErr = 0) {
+  if (res.closed) return;
   beginRange = parseInt(beginRange);
 
   let endRange = beginRange + parseInt(process.env.DLCHUNKSIZE || 1024 * 1024 * 10);
@@ -38,6 +39,7 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
     lastConnErr = 0;
 
     for await (const data of request.body) {
+      if (res.closed) break;
       res.write(data);
       res.flush();
       sentSize += data.length;
@@ -75,6 +77,7 @@ async function proxy(url, req, res, ua, errLength = 0, transmittedLength = 0, he
     errLength = 0;
 
     for await (const data of request.body) {
+      if (res.closed) break;
       res.write(data);
       transmittedLength += data.length;
     }

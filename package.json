@@ -9,7 +9,7 @@
     "express": "^4.18.2",
     "m3u8stream": "^0.8.6",
     "undici": "^5.22.1",
-    "youtubei.js": "^5.1.0"
+    "youtubei.js": "latest"
   },
   "description": "Anonymous Youtube Proxy",
   "repository": {

@@ -129,7 +129,10 @@ function sendError(res, error, title = "YouTubeJS error", status = 500, isAPI, c
 }
 
 function validateID(id) {
-  return videoIDRegex.test(id.trim());
+  if (typeof id === 'string') {
+    return videoIDRegex.test(id.trim());
+  }
+  return false;
 }
 
 function sendInvalidIDError(res, isAPI) {

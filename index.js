@@ -61,13 +61,14 @@ app.get("/s", async (req, res) => {
 });
 
 // Watch Page
-app.get("/w/:id", async (req, res) => {
-  if (!util.validateID(req.params.id)) return util.sendInvalidIDError(res);
+app.get(["/w/:id", "/embed/:id", "/live/:id", "/shorts/:id", "/watch"], async (req, res) => {
+  if (!util.validateID(req.params.id) && !util.validateID(req.query.v)) return util.sendInvalidIDError(res);
   try {
-    let info = await client.getInfo(req.params.id);
+    let id = req.params.id || req.query.v;
+    let info = await client.getInfo(id);
     res.render("watch.ejs", {
-      id: req.params.id, info,
-      comments: await util.getComments(client, req.params.id),
+      id: id, info,
+      comments: await util.getComments(client, id),
       captions: util.getCaptions(info)
     });
   } catch (error) {

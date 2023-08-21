@@ -216,6 +216,7 @@
       video.addEventListener("loadedmetadata", () => {
         if (!lastTime) return;
         video.currentTime = lastTime;
+        lastTime = null;
       });
 
       video.addEventListener("seeked", seekAudio);
@@ -243,6 +244,19 @@
         audio.playbackRate = video.playbackRate;
         seekAudio();
       }, 1000);
+
+      // Let's handle errors...
+
+      video.addEventListener("error", () => {
+        console.error("Error in video element. Reloading....");
+        lastTime = video.currentTime;
+        video.load();
+      });
+
+      audio.addEventListener("error", () => {
+        console.error("Error in Audio(). Reloading....");
+        audio.load();
+      });
     } catch (e) { alert(e.toString()) }
     </script>
     <style>

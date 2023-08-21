@@ -175,11 +175,13 @@
       let lastTime = null;
       let changeTime = true;
 
-      video.mediaGroup = "<%= id %>";
-      audio.mediaGroup = "<%= id %>";
-
       function cq(vid, aid) {
         if (!lastTime) lastTime = video.currentTime;
+
+        if (audio.error || !audio.currentSrc.endsWith("/s/<%= id %>?itag=" + aid)) {
+          audio.src = "/s/<%= id %>?itag=" + aid;
+          audio.load();
+        }
 
         if (video.error || !video.currentSrc.endsWith("/s/<%= id %>?itag=" + vid)) {
           let lastTracks = video.textTracks;
@@ -189,19 +191,14 @@
           video.load();
         }
 
-        if (audio.error || !audio.currentSrc.endsWith("/s/<%= id %>?itag=" + aid)) {
-          audio.src = "/s/<%= id %>?itag=" + aid;
-          audio.load();
-        }
-
         document.getElementById("qs").open = false;
       }
 
       function seekAudio() {
         if (audio.fastSeek) {
-          audio.fastSeek(lastTime || video.currentTime);
+          audio.fastSeek((lastTime || video.currentTime)) + 0.05;
         } else {
-          audio.currentTime = lastTime || video.currentTime;
+          audio.currentTime = (lastTime || video.currentTime) + 0.05;
         }
         lastTime = null;
       }

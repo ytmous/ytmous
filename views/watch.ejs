@@ -249,7 +249,7 @@
 
       video.addEventListener("error", () => {
         console.error("Error in video element. Reloading....");
-        lastTime = video.currentTime;
+        if (!lastTime) lastTime = video.currentTime;
         video.load();
       });
 

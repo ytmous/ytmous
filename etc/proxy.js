@@ -65,7 +65,7 @@ module.exports = (app) => {
           },
         })
 
-        for (hed of ["Content-Type", "Cache-Control"]) {
+        for (const hed of ["Content-Type", "Cache-Control"]) {
           const head = request.headers[hed.toLowerCase()];
           if (head) res.setHeader(hed, head);
         };
@@ -221,7 +221,7 @@ module.exports = (app) => {
         }
       );
 
-      for (hed of ["Accept-Ranges", "Content-Range", "Content-Type", "Cache-Control"]) {
+      for (const hed of ["Accept-Ranges", "Content-Range", "Content-Type", "Cache-Control"]) {
         const head = request.headers[hed.toLowerCase()];
         if (head) res.setHeader(hed, head);
       }

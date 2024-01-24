@@ -1,3 +1,4 @@
+"use strict";
 const undici = require("undici");
 const util = require("./util");
 

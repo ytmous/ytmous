@@ -1,3 +1,4 @@
+"use strict";
 const undici = require("undici");
 const videoIDRegex = /^[a-zA-Z0-9-_]{11}$/;
 
@@ -30,11 +31,7 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
   headers.Range = `bytes=${beginRange}-${endRange}`;
 
   try {
-    const request = await undici.request(streamingData.url, { headers })
-    if (request.statusCode === 302) {
-      streamingData.url = request.header.location;
-      return getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, sentSize);
-    };
+    const request = await undici.request(streamingData.url, { headers, maxRedirections: 4 });
 
     lastConnErr = 0;
 
@@ -48,7 +45,7 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
     getChunk(endRange, req, res, headers, streamingData, streamSize, isSeeking, h, sentSize, lastConnErr);
   } catch (err) {
     lastConnErr++;
-
+    console.log(err);
     if (lastConnErr >= 5) return res.end();
     getChunk(sentSize, req, res, headers, streamingData, streamSize, isSeeking, h, sentSize, lastConnErr);
   }

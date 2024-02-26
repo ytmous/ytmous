@@ -51,8 +51,8 @@ async function getChunk(beginRange, req, res, headers, streamingData, streamSize
   }
 }
 
-async function proxy(url, req, res, ua, errLength = 0, transmittedLength = 0, headersForwarded = false) {
-  const range = transmittedLength ? `bytes=${transmittedLength+1}-` : req.headers.range;
+async function proxy(url, req, res, ua, errLength = 0, headersForwarded = false) {
+  const range = req.headers.range;
   try {
     const request = await undici.request(url, {
       headers: {
@@ -71,21 +71,9 @@ async function proxy(url, req, res, ua, errLength = 0, transmittedLength = 0, he
     }
 
     errLength = 0;
-
-    for await (const data of request.body) {
-      if (res.closed) break;
-      res.write(data);
-      transmittedLength += data.length;
-    }
-
-    res.end();
+    request.body.pipe(res);
   } catch (err) {
-    if (errLength >= 5) {
-      console.log(err);
-      res.end();
-    } else {
-      proxy(url, req, res, ua, errLength+1, transmittedLength, true);
-    }
+    res.destroy();
   }
 }
 

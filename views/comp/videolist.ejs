@@ -44,7 +44,7 @@
     <div class="rVideoInfo">
       <h2><a href="/c/<%= video.author.id %>"><%= video.author.name %></a></h2>
       <span><%= video.description_snippet?.text %></span><br>
-      <small><b><%= video.subscribers?.text %></b> • <%= video.videos?.text || video.video_count?.text %></small>
+      <small><b><%= video.subscriber_count?.text %></b> • <%= video.videos?.text || video.video_count?.text %></small>
     </div>
   </div>
 <% } else if (video.type === "Shelf") { %>

@@ -37,14 +37,14 @@
         <% } %>
         <div style="padding: 30px;">
           <h3><%= channel.metadata.title %></h3>
-          <span><%= channel.header.subscriber_count.text %></span><br>
+          <span><%= channel.header.subscribers.text %></span><br>
           <small style="color: gray;"><%= channel.header.videos_count.text %></small>
         </div>
       </div><br>
       <div style="padding: 15px;">
-        <span>ℹ️ <%= about.joined.text %></span><br>
-        <% if (about.country?.text) { %><span>🌐 <%= about.country.text %></span><br><% } %>
-        <span>📊 <%= about.views.text %></span><br>
+        <span>ℹ️ <%= about.joined?.text || "No joined date" %></span><br>
+        <span>🌐 <%= about.country?.text || "No country info provided" %></span><br>
+        <span>📊 <%= about.views?.text || "No channel views info provided" %></span><br>
         <pre style="margin-top: 20px;"><%= about.description %></pre>
       </div>
     </div>

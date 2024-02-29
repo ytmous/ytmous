@@ -9,16 +9,16 @@
   </head>
   <body>
     <div>
-      <% comments.contents.forEach(CommentThread => { %>
+      <% comments.contents.filter(c => c.comment).forEach(CommentThread => { %>
       <div style="display: flex;">
-        <img loading="lazy" src="/yt3<%= (new URL(CommentThread.comment.author.thumbnails[0].url)).pathname %>"/>
+        <img loading="lazy" src="/yt3<%= (new URL(CommentThread.comment?.author.thumbnails[0].url)).pathname %>"/>
         <div class="rVideoInfo">
-          <h4><a href="/c/<%= CommentThread.comment.author.id %>"><%= CommentThread.comment.author.name %></a></h4>
-          <small><%= CommentThread.comment.published.text %><%= (CommentThread.comment.author.is_verified || CommentThread.comment.author.is_verified_artist) ? " | Verified user" : "" %><%= CommentThread.comment.is_member ? " | Member" : "" %><%= CommentThread.comment.author_is_channel_owner ? " | Owner" : "" %><%= CommentThread.comment.is_pinned ? " | Pinned" : "" %></small>
-          <pre><%= CommentThread.comment.content.text %></pre>
-          <small><%= CommentThread.comment.vote_count %> likes <%= CommentThread.comment.is_hearted ? "| Hearted" : "" %></small><br>
+          <h4><a href="/c/<%= CommentThread.comment?.author.id %>"><%= CommentThread.comment?.author.name || "(Unable to parse author name)" %></a></h4>
+          <small><%= CommentThread.comment?.published.text || "(Unable to parse publish date)" %><%= (CommentThread.comment?.author.is_verified || CommentThread.comment?.author.is_verified_artist) ? " | Verified user" : "" %><%= CommentThread.comment?.is_member ? " | Member" : "" %><%= CommentThread.comment?.author_is_channel_owner ? " | Owner" : "" %><%= CommentThread.comment?.is_pinned ? " | Pinned" : "" %></small>
+          <pre><%= CommentThread.comment?.content.text || "(Unable to parse comment)" %></pre>
+          <small><%= CommentThread.comment?.vote_count %> likes <%= CommentThread.comment?.is_hearted ? "| Hearted" : "" %></small><br>
           <% if (CommentThread.has_replies) { %>
-          <small><a href="#">View <%= CommentThread.comment.reply_count %> replies</a></small>
+          <small><a href="#">View <%= CommentThread.comment?.reply_count %> replies</a></small>
           <% } %>
         </div>
       </div>

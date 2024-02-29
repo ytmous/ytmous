@@ -146,7 +146,7 @@
       <% if (comments && comments.contents && comments.contents.length) { %>
       <a class="border" href="#comments"><%= comments.header.count.text || "0 Comments" %></a>
       <marquee>
-      <% comments.contents.forEach(c => { %>
+      <% comments.contents.filter(c => c.comment).forEach(c => { %>
         <span>
           <span class="border">
             <% if (c.comment?.author.thumbnails) { %>

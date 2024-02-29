@@ -149,15 +149,15 @@
       <% comments.contents.forEach(c => { %>
         <span>
           <span class="border">
-            <% if (c.comment.author.thumbnails) { %>
+            <% if (c.comment?.author.thumbnails) { %>
             <img loading="lazy"
               src="/yt3<%- (new URL(c.comment.author.thumbnails[0].url)).pathname %>"
               style="border-radius: 50%; width: 17px; height: 17px"
             />
             <% } %>
-            <a href="/c/<%= c.authorId %>"><%= c.comment.author.name %> </a>
+            <a href="/c/<%= c.authorId %>"><%= c.comment?.author?.name || "(Unable to parse name)"; %> </a>
           </span>
-          <span><%= c.comment.content.text.replace(RegExp("\n", "g"), "; "); %></span>
+          <span><%= c.comment?.content?.text.replace(RegExp("\n", "g"), "; ") || "(Unable to parse comment)"; %></span>
         </span>
       <% }); %>
       </marquee>

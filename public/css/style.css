@@ -73,8 +73,8 @@ a {
   padding-left: 10px;
 }
 
-.rVideoInfo img {
-  float: left;
+.rVideoAuthor {
+  display: inline-block;
 }
 
 .shelf {
@@ -92,7 +92,7 @@ a {
   border: solid 1px;
   border-radius: 2px;
   max-width: 72%;
-  display: flex;
+  display: inline-block;
 }
 
 #qs {

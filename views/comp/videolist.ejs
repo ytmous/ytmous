@@ -7,7 +7,7 @@
     <div class="rVideoInfo">
       <h4><a href="/w/<%= video.id %>"><%= video.title.text %></a></h4>
       <% if (video.author) { %>
-        <span>
+        <span class="rVideoAuthor">
         <% if (video.author?.thumbnails.length) { %>
           <img loading="lazy"
             src="/yt3<%- (new URL(video.author.thumbnails[0].url)).pathname %>"
@@ -30,7 +30,7 @@
     <div class="rVideoInfo">
       <h4><a href="/p/<%= video.id %>"><%= video.title.text %></a></h4>
       <% if (video.author) { %>
-        <span><a href="/c/<%= video.author.id %>"><%= video.author.name %> <%= video.author.is_verified ? "<small class=\"border\">Verified</small>" : "" %></a></span><br>
+        <span class="rVideoAuthor"><a href="/c/<%= video.author.id %>"><%= video.author.name %> <%= video.author.is_verified ? "<small class=\"border\">Verified</small>" : "" %></a></span><br>
       <% } %>
       <small>Playlist: <b><%= video.video_count?.text %></b></small><br>
       <% video.badges?.forEach(badge => { %>

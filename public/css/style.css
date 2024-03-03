@@ -64,6 +64,7 @@ a {
 .rVideo {
   display: flex;
   padding: 3px;
+  margin-bottom: 1em;
   border-bottom: 1px dotted gray;
 }
 

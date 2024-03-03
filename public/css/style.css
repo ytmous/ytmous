@@ -51,8 +51,8 @@ a {
 
 #relatedVideos {
   z-index: -1;
-  position: static;
   margin-bottom: 25px;
+  display: grid;
 }
 
 #thumbnail {
@@ -68,7 +68,7 @@ a {
 
 .rVideoInfo {
   display: block;
-  padding: 10px;
+  padding-left: 10px;
 }
 
 .rVideoInfo img {
@@ -117,7 +117,6 @@ a {
 
   #relatedVideos {
     float: left;
-    position: relative;
     padding: 2px;
   }
 

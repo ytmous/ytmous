@@ -14,13 +14,19 @@
     form {
       margin-top: 50px;
     }
+
+    small { color: black; }
+
+    @media (prefers-color-scheme: dark) {
+      * { background: black; color: white; }
+    }
   </style>
   <body style="color: grey; font-family: sans-serif;">
     <div style="margin-top: 25vh; margin-left: 5px;">
       <h2><%= title || "Sorry, an error just occured." %></h2>
       <small><%= content %></small><br>
       <form action="/s" method="GET">
-        <small style="color: black;"><b>ytmous</b> - Anonymous YouTube Proxy</small><br>
+        <small><b>ytmous</b> - Anonymous YouTube Proxy</small><br>
         <input class="formtext" name="q" type="text" placeholder="Search Videos...." />
         <input class="formtext" type="submit" value="Search" />
       </form>

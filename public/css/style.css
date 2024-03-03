@@ -1,6 +1,5 @@
 @font-face {
-  font-family: ubuntu-regular;
-  src: url(/Ubuntu-R.ttf);
+  font-family: monospace;
 }
 
 summary {
@@ -155,4 +154,8 @@ a {
     width: 100%;
     max-width: 100%;
   }
+}
+
+@media (prefers-color-scheme: dark) {
+  body, a, .border, #player, #vidInfo { background: black; color: white; }
 }
